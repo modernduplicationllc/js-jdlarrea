@@ -54,8 +54,9 @@
 	--color-btn-tertiary-300: #3a3530;
 
 	/* FONTS: main */
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-sans-alt: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
 
 	/* BREAKPOINTS: main */
 	--breakpoint-brm48: 480px;
