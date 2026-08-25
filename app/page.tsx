@@ -12,10 +12,10 @@ export default function Home() {
 
 			<StatsRibbon
 				items={[
-					{ number: "10+", description: "years experience" },
-					{ number: "30+", description: "projects shipped" },
-					{ number: "8+", description: "industries served" },
-					{ number: "100%", description: "mobile responsive" },
+					{ id: 'years', statNum: "10+", description: "years experience" },
+					{ id: 'projects', statNum: "30+", description: "projects shipped" },
+					{ id: 'industries', statNum: "8+", description: "industries served" },
+					{ id: 'habit', statNum: "100%", description: "mobile responsive" },
 				]}
 			/>
 

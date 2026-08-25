@@ -1,15 +1,19 @@
 type Stat = {
-	number: string,
-	description: string
+	id: string;
+	statNum: string;
+	description: string;
 }
 
 export default function StatsRibbon( { items }: { items: Stat[] } ) {
 	return (
-		<div className="stats-ribbon">
+		<div className="stats-ribbon bg-blue-800">
 			{
-				items.map((item: Stat) => (
-					<div className="stats-item">
-						<div className="number">{item.number}</div>
+				items.map((item) => (
+					<div
+						className="stats-item"
+						key={item.id}
+					>
+						<div className="statNum">{item.statNum}</div>
 						<div className="description">{item.description}</div>
 					</div>
 				))
