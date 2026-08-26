@@ -20,8 +20,23 @@ export default function Home() {
 			/>
 
 			<FeaturedCards />
-			<WordList />
+
+			<WordList
+				sectionHeader={
+					eyebrow: "tech stack",
+					header: "What I build with",
+					description: "Filter the full project archive by any of these — most projects use several together.",
+					sectionLink: [
+						text: 'More on my background and stack',
+						url: '#fixlink',
+					]
+				}
+
+				words={['WordPress', 'Next.js', 'TypeScript', 'Tailwind CSS', 'ACF', 'Shopify', 'Supabase', 'Neon', 'HubSpot', 'Gravity Forms', 'WooCommerce', 'React', 'Node.js']}
+			/>
+
 			<Content5050Grid />
+
 			<CtaBanner />
     </>
   );

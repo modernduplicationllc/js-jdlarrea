@@ -5,53 +5,84 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-	/* COLORS: main */
+	/* COLORS: main
+	 * Shade rule: 100–300 = light pigment, 700–900 = dark pigment.
+	 * Dark site → most text uses body/hdr 100–300; surfaces use bg-dark 700–900.
+	 */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-	--color-body-500: #3a3530;
-	--color-body-700: #3a3530;
-	--color-body-300: #3a3530;
+	--color-body-100: #eaf0fb;
+	--color-body-300: #c3cee2;
+	--color-body-500: #aab4c6;
+	--color-body-700: #98a2b8;
+	--color-body-900: #060b14;
 
-	--color-hdr-main-500: #3a3530;
-	--color-hdr-main-700: #3a3530;
-	--color-hdr-main-300: #3a3530;
+	--color-hdr-main-100: #eaf0fb;
+	--color-hdr-main-300: #eaf0fb;
+	--color-hdr-main-500: #eaf0fb;
+	--color-hdr-main-700: #c3cee2;
+	--color-hdr-main-900: #060b14;
 
-	--color-hdr-alt-500: #3a3530;
-	--color-hdr-alt-700: #3a3530;
-	--color-hdr-alt-300: #3a3530;
+	--color-hdr-alt-100: #8fb6ff;
+	--color-hdr-alt-300: #8fb6ff;
+	--color-hdr-alt-500: #5c93ff;
+	--color-hdr-alt-700: #3568d6;
+	--color-hdr-alt-900: #2a56c4;
 
-	--color-accent-500: #3a3530;
-	--color-accent-700: #3a3530;
-	--color-accent-300: #3a3530;
+	--color-accent-100: #8fb6ff;
+	--color-accent-300: #8fb6ff;
+	--color-accent-500: #3568d6;
+	--color-accent-700: #2a56c4;
+	--color-accent-900: #1e3f9a;
 
-	--color-bg-dark-500: #3a3530;
-	--color-bg-dark-700: #3a3530;
-	--color-bg-dark-300: #3a3530;
+	--color-accent-alt-100: #8fb6ff;
+	--color-accent-alt-300: #8fb6ff;
+	--color-accent-alt-500: #5c93ff;
+	--color-accent-alt-700: #3568d6;
+	--color-accent-alt-900: #2a56c4;
 
-	--color-bg-mid-500: #3a3530;
-	--color-bg-mid-700: #3a3530;
-	--color-bg-mid-300: #3a3530;
+	--color-bg-dark-100: #16223a;
+	--color-bg-dark-300: #111d33;
+	--color-bg-dark-500: #0d1626;
+	--color-bg-dark-700: #0d1626;
+	--color-bg-dark-900: #060b14;
 
-	--color-bg-light-500: #3a3530;
-	--color-bg-light-700: #3a3530;
-	--color-bg-light-300: #3a3530;
+	--color-bg-mid-100: #c3cee2;
+	--color-bg-mid-300: #98a2b8;
+	--color-bg-mid-500: #1e2c47;
+	--color-bg-mid-700: #16223a;
+	--color-bg-mid-900: #111d33;
 
-	--color-bdr-500: #3a3530;
-	--color-bdr-700: #3a3530;
-	--color-bdr-300: #3a3530;
+	--color-bg-light-100: #ffffff;
+	--color-bg-light-300: #eaf0fb;
+	--color-bg-light-500: #eaf0fb;
+	--color-bg-light-700: #c3cee2;
+	--color-bg-light-900: #aab4c6;
 
-	--color-btn-primary-500: #3a3530;
-	--color-btn-primary-700: #3a3530;
-	--color-btn-primary-300: #3a3530;
+	--color-bdr-100: #152036;
+	--color-bdr-300: #152036;
+	--color-bdr-500: #1e2c47;
+	--color-bdr-700: #1e2c47;
+	--color-bdr-900: #0d1626;
 
-	--color-btn-secondary-500: #3a3530;
-	--color-btn-secondary-700: #3a3530;
-	--color-btn-secondary-300: #3a3530;
+	--color-btn-primary-100: #8fb6ff;
+	--color-btn-primary-300: #8fb6ff;
+	--color-btn-primary-500: #3568d6;
+	--color-btn-primary-700: #2a56c4;
+	--color-btn-primary-900: #1e3f9a;
 
-	--color-btn-tertiary-500: #3a3530;
-	--color-btn-tertiary-700: #3a3530;
-	--color-btn-tertiary-300: #3a3530;
+	--color-btn-secondary-100: #eaf0fb;
+	--color-btn-secondary-300: #c3cee2;
+	--color-btn-secondary-500: #c3cee2;
+	--color-btn-secondary-700: #98a2b8;
+	--color-btn-secondary-900: #060b14;
+
+	--color-btn-tertiary-100: #ffffff;
+	--color-btn-tertiary-300: #eaf0fb;
+	--color-btn-tertiary-500: #eaf0fb;
+	--color-btn-tertiary-700: #c3cee2;
+	--color-btn-tertiary-900: #060b14;
 
 	/* FONTS: main */
   --font-sans: var(--font-inter);
@@ -186,10 +217,129 @@
   * {
     @apply border-border outline-ring/50;
 	}
-  body {
-    @apply bg-background text-foreground;
+
+	html {
+    @apply font-sans scroll-smooth;
 	}
-  html {
-    @apply font-sans;
+
+  body {
+    @apply bg-bg-dark-900
+		mt-header-height-mobile
+		brm10:mt-header-height-desktop
+		text-body-500
+		font-sans leading-[1.7]
+		antialiased;
+	}
+
+	.component {
+		@apply py-20
+		border-b border-bdr-500;
+	}
+
+	.wrapper {
+		@apply w-full max-w-300
+		mx-auto
+		px-wrapper-gutter-mobile
+		brm76:px-wrapper-gutter-desktop;
+
+		&.thin {
+			@apply max-w-250;
+		}
+
+		&.thinner {
+			@apply max-w-200;
+		}
+
+		&.thinnest {
+			@apply max-w-150;
+		}
+	}
+
+	h1, h2, h3, h4, h5, h6,
+	.h1, .h2, .h3, .h4, .h5, .h6 {
+		@apply mt-10 mb-6 first:mt-0 last:mb-0
+		font-sans-alt font-bold
+		leading-[1.2];
+
+		span {
+			@apply text-accent-alt-500 italic;
+		}
+	}
+
+	h1, .h1 {
+		@apply text-4xl brm10:text-5xl;
+	}
+	h2, .h2 {
+		@apply text-3xl brm10:text-4xl;
+	}
+	h3, .h3 {
+		@apply text-2xl brm10:text-3xl;
+	}
+	h4, .h4 {
+		@apply text-xl brm10:text-2xl;
+	}
+	h5, .h5 {
+		@apply text-lg brm10:text-xl
+		mt-4 mb-2
+		font-sans font-medium
+		tracking-normal;
+	}
+	h6, .h6 {
+		@apply text-xs
+		font-sans font-semibold
+		tracking-widest uppercase;
+	}
+
+	.super-header {
+		@apply mb-5
+		text-[12px] text-accent-alt-500
+		font-medium tracking-widest uppercase;
+
+		&.with-dash {
+			@apply flex gap-x-2 items-center;
+
+			&:before {
+				@apply content-['/'];
+			}
+		}
+
+		+ h1, + h2, + h3, + h4, + h5, + h6,
+		+ .h1, + .h2, + .h3, + .h4, + .h5, + .h6 {
+			@apply mt-0;
+		}
+	}
+
+	blockquote {
+		@apply my-8 px-5 py-6
+		border-l-[3px] border-l-accent-alt-100
+		bg-bg-dark-100
+		text-white;
+
+		strong {
+			@apply font-semibold;
+		}
+
+		a:not(.button) {
+			@apply text-white hover:text-accent-alt-100;
+		}
+	}
+
+	hr {
+		@apply my-15 border-bdr-700;
+	}
+
+	/*
+	 * BUTTONS
+	 */
+	.button-group {
+		@apply flex flex-wrap items-center gap-x-6 gap-y-3;
+
+		&.button-group-center {
+			@apply justify-center;
+		}
+
+		&.testing {
+			@apply p-3 bg-gray-200;
+		}
 	}
 }

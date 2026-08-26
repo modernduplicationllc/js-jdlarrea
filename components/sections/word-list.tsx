@@ -1,4 +1,12 @@
-export default function WordList() {
+import { SectionHeader } from '@/lib/definitions';
+
+export default function WordList({
+	sectionHeader,
+	words,
+}: {
+	sectionHeader: SectionHeader,
+	words: string[]
+}) {
 	return (
 		<div className="word-list">
 			<div className="section-header">
