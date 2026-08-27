@@ -42,7 +42,7 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 |---|---|---|---|
 | `/` (home) | `homepage2.html` | ✅ Done (unstyled structure pass) | All sections converted: hero-home, stats-ribbon, featured-cards, word-list, content-5050-grid, cta-banner |
 | `/work` | `work2.html` | ✅ Done (fully styled + working filters) | `page-hero` (reusable), `project-filter-grid` (client component, industry single-select + tech-stack multi-select), `project-card`. Data-driven from `content/projects/*.mdx` via `lib/projects.ts` |
-| `/work/[slug]` | `case-study2.html` | ⏳ Priority 2 | Single case study template: crumb nav, case-hero, meta block, result-strip stats, code-panel, gallery, prevnext nav. (`case-study.html` was deleted by user — `case-study2.html` is the source of truth.) |
+| `/work/[slug]` | `case-study2.html` | ✅ Done (fully styled + working) | Dynamic route in `app/work/[slug]/page.tsx`. Breadcrumb + hero + meta sidebar are components; the write-up itself is the project's MDX body, with `<ResultStrip>`, `<CodePanel>`, `<Gallery>` (in `components/mdx/`) embedded inline for the stats/code/screenshots blocks. Prev/next nav is computed from project `order`. All 3 placeholder projects have real case-study content (Harlow matches the reference 1:1; Pivot/Summit are lightly stubbed). |
 | `/about` | `about2.html` | ⏳ Priority 3 | intro (photo + text), timeline-section (tl-item entries), toolbox (tool-cols) |
 | `/apps` | `demo-apps2.html` | ⏳ Priority 4 (landing only) | page-hero + demo-grid of demo-card. This is just the landing/index page — the actual demo apps (`/apps/food-tracker`, `/apps/film-blog`, etc.) are separate future work, not part of this pass |
 | `/resume` | none yet | ❓ Unscoped | Linked from header nav (`components/globals/header-main.tsx`) but no reference file or decision yet on whether it's a page, a PDF link, or something else — ask before building |
@@ -100,8 +100,12 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 
 ## Next step
 
-`/work` is done — real project content still needs to replace the 3 placeholder `.mdx` files
-in `content/projects/` (see Content architecture above for the field shape). After that:
-convert `.reference/case-study2.html` → `/work/[slug]` dynamic route, reusing
-`getProjectBySlug()` from `lib/projects.ts` (already built, untested — reads the MDX body via
-the `Content` component it returns).
+`/work` and `/work/[slug]` are both done — real project content still needs to replace the 3
+placeholder `.mdx` files in `content/projects/` (see Content architecture above for the field
+shape; each file now also has a full case-study body to use as a template). After that:
+convert `.reference/about2.html` → `/about` (priority 3): intro w/ photo, timeline section,
+toolbox section.
+
+Known simplification to revisit later: `components/mdx/code-panel.tsx` renders code as plain
+monospace text — no syntax highlighting (the reference HTML had it hardcoded manually). Fine
+for now; would need a library like `rehype-pretty-code` to do properly.

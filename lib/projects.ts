@@ -40,3 +40,16 @@ export async function getProjectBySlug(slug: string): Promise<{
 
 	return { metadata: mod.metadata, Content: mod.default };
 }
+
+export async function getAdjacentProjects(slug: string): Promise<{
+	previous: ProjectMetadata | null;
+	next: ProjectMetadata | null;
+}> {
+	const projects = await getAllProjects();
+	const index = projects.findIndex((project) => project.slug === slug);
+
+	return {
+		previous: index > 0 ? projects[index - 1] : null,
+		next: index >= 0 && index < projects.length - 1 ? projects[index + 1] : null,
+	};
+}

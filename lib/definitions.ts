@@ -25,12 +25,6 @@ export const INDUSTRIES = [
 
 export type Industry = (typeof INDUSTRIES)[number];
 
-export type ProjectStat = {
-	num: string;
-	label: string;
-	reported?: boolean;
-};
-
 export type ProjectMetadata = {
 	title: string;
 	slug: string;
@@ -40,12 +34,10 @@ export type ProjectMetadata = {
 	summary: string;
 	thumbnail: string;
 
-	// Reserved for the /work/[slug] case-study page (priority 2) — optional for now.
+	// Case-study page (/work/[slug]) sidebar + hero fields.
 	role?: string;
 	client?: string;
-	timeline?: string;
+	timeframe?: string;
 	liveUrl?: string;
 	githubUrl?: string;
-	stats?: ProjectStat[];
-	gallery?: string[];
 };

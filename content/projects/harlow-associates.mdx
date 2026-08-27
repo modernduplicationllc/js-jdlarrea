@@ -1,12 +1,79 @@
+import { ResultStrip } from "@/components/mdx/result-strip";
+import { CodePanel } from "@/components/mdx/code-panel";
+import { Gallery } from "@/components/mdx/gallery";
+
 export const metadata = {
   title: "Harlow & Associates",
   slug: "harlow-associates",
   order: 1,
   industry: "Law Firms",
-  stack: ["WordPress", "ACF"],
+  stack: ["WordPress", "ACF", "Gravity Forms", "Tailwind"],
   summary:
-    "Custom WordPress rebuild — lead intake forms, attorney bios, case-results archive.",
-  thumbnail: "https://picsum.photos/seed/lawfirm/800/540",
+    "A custom WordPress rebuild for a mid-size law firm, replacing a template-based site with a fast, lead-focused platform built to convert case inquiries.",
+  thumbnail: "https://picsum.photos/seed/lawfirmhero/1400/620",
+  role: "Lead Developer",
+  client: "Harlow & Associates, PLLC",
+  timeframe: "6 weeks · 2025",
+  liveUrl: "#",
+  githubUrl: "#",
 }
 
-Placeholder case study body — real write-up goes here.
+## Overview
+
+Harlow & Associates came to me with a five-year-old template site that no longer reflected the firm's growth — slow load times, an intake form that routed to a shared inbox nobody checked promptly, and no way to showcase case results without editing raw HTML.
+
+## The challenge
+
+The firm needed three things that didn't naturally coexist in their old setup: a site fast enough to not lose mobile leads on 4G, an intake system their non-technical office manager could actually manage, and an attorney bio system that could scale as the firm added associates without a developer touching code each time.
+
+## Approach
+
+- **Custom ACF field groups** for attorney bios, practice areas, and case results — fully editable from the WordPress admin, no code required for updates.
+- **Gravity Forms + conditional routing** so intake inquiries route by practice area directly to the right attorney, with autoresponders confirming receipt.
+- **Performance pass** — image optimization, caching, and a lighter theme footprint cut load time from 4.2s to under 1.1s on mobile.
+- **Case-results archive** with filtering by practice area, so prospective clients can self-serve relevant outcomes before ever calling.
+
+## Result
+
+<ResultStrip
+  results={[
+    { num: "73%", label: "faster mobile load time" },
+    { num: "0", label: "dev hours/mo needed for updates" },
+    { num: "More inquiries", label: "client-reported, post-launch", reported: true },
+  ]}
+/>
+
+*Load time is a before/after measurement I ran directly. The increase in inquiries is what the client reported to me after launch — I didn't have analytics access to independently verify it.*
+
+The office manager now publishes new case results and updates attorney bios without ever contacting me — which was the actual measure of success for this project.
+
+## Featured code
+
+A piece of this build worth calling out on its own — the conditional routing logic that sends each intake submission to the right attorney based on selected practice area.
+
+<CodePanel
+  filename="functions.php — gravity-forms-routing.php"
+  repoUrl="#"
+  code={`// Route intake submissions by selected practice area
+add_filter('gform_notification', function( $notification, $form, $entry ) {
+    $practice_area = rgar( $entry, '6' );
+    $routing = get_field( 'practice_area_routing', 'option' );
+
+    if ( isset( $routing[ $practice_area ] ) ) {
+        $notification['to'] = $routing[ $practice_area ];
+    }
+
+    return $notification;
+}, 10, 3 );`}
+/>
+
+This pattern — mapping a select-field value to a stored routing table via ACF options — is one I've reused across several intake-heavy client sites since. The full repo has the rest of the implementation, including the ACF field registration.
+
+## Screens
+
+<Gallery
+  images={[
+    "https://picsum.photos/seed/lawgal1/600/450",
+    "https://picsum.photos/seed/lawgal2/600/450",
+  ]}
+/>
