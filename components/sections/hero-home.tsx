@@ -31,11 +31,12 @@ export default function HeroHome() {
 						View my work
 					</Link>
 					<a
-						href="/resume-jdlarrea.pdf"
-						download
+						href="/resume-jonathan-larrea.pdf"
+						target="_blank"
+						rel="noopener noreferrer"
 						className="inline-flex items-center gap-2 rounded-md border border-bdr-500 px-6 py-3.5 text-[14.5px] font-medium text-body-300 transition-colors hover:border-accent-500 hover:text-hdr-main-100"
 					>
-						Download résumé
+						View résumé
 					</a>
 				</div>
 			</div>

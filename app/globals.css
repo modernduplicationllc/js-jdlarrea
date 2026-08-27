@@ -219,7 +219,7 @@
 	}
 
 	html {
-    @apply font-sans scroll-smooth;
+    @apply font-sans;
 	}
 
 	/* Sections need their own stacking context so they paint above .grid-bg
@@ -231,8 +231,6 @@
 
   body {
     @apply bg-bg-dark-900
-		mt-header-height-mobile
-		brm10:mt-header-height-desktop
 		text-body-500
 		font-sans leading-[1.7]
 		antialiased;

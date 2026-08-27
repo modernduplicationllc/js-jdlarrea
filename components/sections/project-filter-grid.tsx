@@ -39,7 +39,7 @@ export default function ProjectFilterGrid({
 
 	return (
 		<>
-			<div className="sticky top-header-height-mobile z-40 border-b border-bdr-500 bg-bg-dark-900/95 py-5 backdrop-blur brm10:top-header-height-desktop">
+			<section className="border-b border-bdr-500 py-5">
 				<div className="wrapper flex flex-wrap items-start justify-between gap-8">
 					<div className="flex flex-col gap-2.5">
 						<span className="font-mono text-[11px] tracking-widest text-body-500 uppercase">
@@ -94,7 +94,7 @@ export default function ProjectFilterGrid({
 						{`// showing ${filtered.length} of ${projects.length}`}
 					</div>
 				</div>
-			</div>
+			</section>
 
 			<section className="component grid-section">
 				<div className="wrapper">

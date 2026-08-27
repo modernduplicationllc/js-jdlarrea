@@ -32,17 +32,24 @@ export default function CtaBanner({
 					{actions.map((action) => {
 						const Icon = action.icon ? ICONS[action.icon] : null;
 						const isPrimary = action.variant !== "ghost";
+						const isExternal = action.href.startsWith("http");
+						const className = isPrimary
+							? "inline-flex items-center gap-2.5 rounded-md bg-btn-primary-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-btn-primary-700"
+							: "inline-flex items-center gap-2.5 rounded-md border border-bdr-500 px-6 py-3.5 text-sm font-medium text-body-300 transition-colors hover:border-accent-500 hover:text-hdr-main-100";
 
-						return (
-							<Link
+						return isExternal ? (
+							<a
 								key={action.label}
 								href={action.href}
-								className={
-									isPrimary
-										? "inline-flex items-center gap-2.5 rounded-md bg-btn-primary-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-btn-primary-700"
-										: "inline-flex items-center gap-2.5 rounded-md border border-bdr-500 px-6 py-3.5 text-sm font-medium text-body-300 transition-colors hover:border-accent-500 hover:text-hdr-main-100"
-								}
+								target="_blank"
+								rel="noopener noreferrer"
+								className={className}
 							>
+								{Icon && <Icon size={16} />}
+								{action.label}
+							</a>
+						) : (
+							<Link key={action.label} href={action.href} className={className}>
 								{Icon && <Icon size={16} />}
 								{action.label}
 							</Link>

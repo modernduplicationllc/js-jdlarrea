@@ -50,6 +50,32 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 | `components/globals/header-main.tsx` | — | 🔲 Stub | Placeholder logo/nav, not styled |
 | `components/globals/footer-main.tsx` | — | 🔲 Stub | Placeholder only |
 
+## Polish pass (post priority-order pages)
+
+- **Header-flush bug fixed**: `body` had `mt-header-height-mobile`/`brm10:mt-header-height-desktop`
+  margin — leftover from a fixed-header assumption. The header is `position: sticky`, which
+  already reserves its own space in normal flow, so that margin was pushing the sticky header
+  down from the top of the viewport. Removed.
+- **Removed `scroll-smooth` from `html`**: combined with the margin bug above and Next.js's
+  focus-management on route change, this was likely causing the "lands scrolled to the eyebrow
+  text" symptom reported. No hash anchors exist anywhere in the app currently, so this class
+  had no upside — if in-page anchor nav is ever added later, revisit on a case-by-case basis
+  with explicit `scroll-mt-*` on the target elements, not a blanket `scroll-smooth`.
+- **`PageHero`** (`components/sections/page-hero.tsx`) was using `wrapper thin` (max-w-250)
+  while the sections below it on `/work` and `/apps` use plain `wrapper` (max-w-300) — two
+  different centered max-widths meant their left edges didn't line up, reading as "off-center."
+  Fixed to plain `wrapper` so hero and body content share one left edge on every page that uses it.
+- **`/work` filter bar is no longer sticky** — removed `sticky` positioning per request; revisit
+  once real project content is in and the page has been used for a while.
+- **External links** (GitHub, LinkedIn, résumé) now open in a new tab
+  (`target="_blank" rel="noopener noreferrer"`) across header, footer, homepage hero, and
+  `cta-banner`. Résumé links no longer force a `download` — they open the PDF directly so the
+  visitor can use the browser's native save/print UI instead.
+- **Résumé filename**: user renamed the file to `resume-jonathan-larrea.pdf` in `/public` — all
+  4 reference points (header, footer, homepage hero, in `RESUME_HREF`) updated to match.
+- **Header GitHub/LinkedIn buttons** are now equal height (`h-9`, explicit rather than
+  padding-derived) and paired tightly together (`gap-1.5` wrapper) per user's design call.
+
 ## Visual effects
 
 - **Grid backdrop**: `.grid-bg` (in `app/globals.css`, rendered once in `app/layout.tsx`) is a
@@ -66,6 +92,13 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
   Both `.grid-bg` and `.grid-glow` sit at `z-index: 0`; a global `section { position: relative;
   z-index: 1; }` rule (in `globals.css`) is what makes actual page content paint above them —
   any future section-level component should stay a `<section>` tag to inherit this for free.
+  **Known gotcha (hit once already)**: anything that's a top-level page block but NOT a
+  `<section>` tag — a plain `<div>`, or `<header>`/`<footer>` — does not get this treatment
+  automatically and will show grid lines bleeding through it. `project-filter-grid.tsx`'s
+  filter bar hit this when its `sticky` positioning (which incidentally also created a
+  stacking context) was removed; fixed by making it a `<section>`. `footer-main.tsx` had the
+  same latent bug (never a `<section>`) — fixed with explicit `relative z-[1]`. If a new
+  top-level block ever shows a grid line through it, this is the first thing to check.
 
 ## Decisions made so far
 

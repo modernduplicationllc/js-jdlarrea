@@ -10,8 +10,8 @@ const NAV_LINKS = [
 	{ href: "/about", label: "About" },
 ];
 
-// Not a route — links directly to the PDF in /public once it's added.
-const RESUME_HREF = "/resume-jdlarrea.pdf";
+// Not a route — links directly to the PDF in /public.
+const RESUME_HREF = "/resume-jonathan-larrea.pdf";
 
 export default function HeaderMain() {
 	const pathname = usePathname();
@@ -45,7 +45,8 @@ export default function HeaderMain() {
 
 					<a
 						href={RESUME_HREF}
-						download
+						target="_blank"
+						rel="noopener noreferrer"
 						className="text-sm font-medium text-body-300 transition-colors hover:text-accent-alt-300"
 					>
 						Resume
@@ -54,15 +55,19 @@ export default function HeaderMain() {
 					<div className="flex items-center gap-1.5">
 						<a
 							href="https://github.com/jdlarrea"
+							target="_blank"
+							rel="noopener noreferrer"
 							aria-label="GitHub"
-							className="inline-flex size-8.5 items-center justify-center rounded-md bg-hdr-main-100 text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
+							className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-hdr-main-100 text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
 						>
 							<GithubIcon size={16} />
 						</a>
 
 						<a
 							href="https://www.linkedin.com/in/jdlarrea/"
-							className="inline-flex items-center gap-2 rounded-md bg-hdr-main-100 px-4.5 py-2 text-[13.5px] font-semibold text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-flex h-9 items-center gap-2 rounded-md bg-hdr-main-100 px-4.5 text-[13.5px] font-semibold text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
 						>
 							<LinkedinIcon size={15} />
 							LinkedIn

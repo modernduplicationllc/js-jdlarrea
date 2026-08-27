@@ -11,7 +11,7 @@ export default function PageHero({
 }) {
 	return (
 		<section className="component page-hero">
-			<div className="wrapper thin">
+			<div className="wrapper">
 				<div className="super-header with-dash">{eyebrow}</div>
 				<h1>{header}</h1>
 				{description && (
