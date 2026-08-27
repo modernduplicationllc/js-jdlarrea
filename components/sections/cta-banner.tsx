@@ -14,8 +14,8 @@ export default function CtaBanner({
 	header = "Have a project in mind, or hiring for a senior role?",
 	description = "// currently open to full-time and contract work",
 	actions = [
-		{ href: "https://linkedin.com", label: "Connect on LinkedIn", variant: "primary", icon: "linkedin" },
-		{ href: "https://github.com", label: "View GitHub", variant: "ghost", icon: "github" },
+		{ href: "https://www.linkedin.com/in/jdlarrea/", label: "Connect on LinkedIn", variant: "primary", icon: "linkedin" },
+		{ href: "https://github.com/jdlarrea", label: "View GitHub", variant: "ghost", icon: "github" },
 	],
 }: {
 	header?: string;

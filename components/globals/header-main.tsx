@@ -11,7 +11,7 @@ const NAV_LINKS = [
 ];
 
 // Not a route — links directly to the PDF in /public once it's added.
-const RESUME_HREF = "/resume.pdf";
+const RESUME_HREF = "/resume-jdlarrea.pdf";
 
 export default function HeaderMain() {
 	const pathname = usePathname();
@@ -51,21 +51,23 @@ export default function HeaderMain() {
 						Resume
 					</a>
 
-					<a
-						href="https://github.com"
-						aria-label="GitHub"
-						className="inline-flex size-8.5 items-center justify-center rounded-md text-body-500 transition-colors hover:bg-bg-dark-100 hover:text-hdr-main-100"
-					>
-						<GithubIcon size={18} />
-					</a>
+					<div className="flex items-center gap-1.5">
+						<a
+							href="https://github.com/jdlarrea"
+							aria-label="GitHub"
+							className="inline-flex size-8.5 items-center justify-center rounded-md bg-hdr-main-100 text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
+						>
+							<GithubIcon size={16} />
+						</a>
 
-					<a
-						href="https://linkedin.com"
-						className="inline-flex items-center gap-2 rounded-md bg-hdr-main-100 px-4.5 py-2 text-[13.5px] font-semibold text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
-					>
-						<LinkedinIcon size={15} />
-						LinkedIn
-					</a>
+						<a
+							href="https://www.linkedin.com/in/jdlarrea/"
+							className="inline-flex items-center gap-2 rounded-md bg-hdr-main-100 px-4.5 py-2 text-[13.5px] font-semibold text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
+						>
+							<LinkedinIcon size={15} />
+							LinkedIn
+						</a>
+					</div>
 				</nav>
 			</div>
 		</header>

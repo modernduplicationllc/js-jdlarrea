@@ -31,7 +31,7 @@ export default function HeroHome() {
 						View my work
 					</Link>
 					<a
-						href="/resume.pdf"
+						href="/resume-jdlarrea.pdf"
 						download
 						className="inline-flex items-center gap-2 rounded-md border border-bdr-500 px-6 py-3.5 text-[14.5px] font-medium text-body-300 transition-colors hover:border-accent-500 hover:text-hdr-main-100"
 					>

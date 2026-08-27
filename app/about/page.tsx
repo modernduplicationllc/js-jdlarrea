@@ -22,7 +22,7 @@ export default function AboutPage() {
 				description="// 30+ projects, filterable by stack and industry"
 				actions={[
 					{ href: "/work", label: "Browse projects", variant: "primary" },
-					{ href: "https://linkedin.com", label: "Connect on LinkedIn", variant: "ghost", icon: "linkedin" },
+					{ href: "https://www.linkedin.com/in/jdlarrea/", label: "Connect on LinkedIn", variant: "ghost", icon: "linkedin" },
 				]}
 			/>
 		</>
