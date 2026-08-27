@@ -75,6 +75,48 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
   4 reference points (header, footer, homepage hero, in `RESUME_HREF`) updated to match.
 - **Header GitHub/LinkedIn buttons** are now equal height (`h-9`, explicit rather than
   padding-derived) and paired tightly together (`gap-1.5` wrapper) per user's design call.
+- **`/work` filter-bar grid-bleed bug**: it was a plain `<div>`, not a `<section>`, so it fell
+  below `.grid-bg`/`.grid-glow` in the stacking order once `sticky` (which incidentally also
+  created a stacking context) was removed. Fixed by making it a `<section>`. Found the same
+  latent bug in `footer-main.tsx` (a `<footer>`, never covered by the `section` rule) — fixed
+  with explicit `relative z-[1]`.
+
+## Accessibility audit (2026-08-27)
+
+User asked for a pass on color contrast + keyboard nav (targeting WCAG AA). Findings and fixes:
+
+1. **Root cause of the filter-pill hover bug**: this app is dark-themed entirely through its
+   own custom color tokens, but never activated Tailwind/shadcn's `.dark` class — so the
+   *generic* shadcn tokens used internally by the `Toggle`/`Badge` primitives (`--muted`,
+   `--foreground`, etc., not this project's own `body-*`/`accent-*` tokens) were still
+   resolving to their **light-mode** values (`--muted` ≈ near-white). That's what flashed
+   filter pills and project-card tags white on hover. **Fix**: added `dark` class to `<html>`
+   in `app/layout.tsx`. Verified via `grep` first that generic shadcn tokens (`bg-muted`,
+   `text-foreground`, etc.) are used *only* inside `components/ui/{button,toggle,badge}.tsx` —
+   nothing else in the app references them, so this was a fully contained fix.
+2. **Site-wide focus ring failed AA contrast**: the global `outline-ring/50` (in `globals.css`,
+   applied to every element via `*`) measured ~2.6–2.7:1 against the dark backgrounds — under
+   the 3:1 minimum WCAG AA requires for UI component states (SC 1.4.11). Root cause: shadcn's
+   default `--ring` is a mid-gray, additionally halved by the `/50` opacity modifier at each
+   call site. **Fix**: overrode `--ring` to the site's own `accent-alt-300` (`#8fb6ff`,
+   measured 9.67:1 / 7.78:1 against the two backgrounds it appears against) in both `:root` and
+   `.dark`, and removed the `/50` opacity modifier everywhere it was used (`globals.css`'s base
+   rule, plus `focus-visible:ring-ring/50` in the three `components/ui/*.tsx` primitives).
+3. **Non-semantic headings**: `featured-cards.tsx` and `word-list.tsx` rendered their section
+   titles as `<div className="h2">` — styled like a heading, not actually one, so screen-reader
+   users navigating by heading outline would skip them entirely. Fixed to real `<h2>`.
+4. **Missing `aria-pressed`**: the hand-built "All" filter pill (a plain `<button>`, not the
+   `Toggle` primitive) only had a styling-only `data-pressed` attribute, no ARIA state — so
+   assistive tech couldn't tell whether it was selected. Added `aria-pressed`.
+
+Contrast pass on the base color system (everything already in use — body text, links, active
+pill/button text, header CTA text) came back clean, 5.1:1 to 17.2:1 across the board — no
+issues found there.
+
+**Open item, flagged not fixed**: `header-main.tsx`'s entire nav is `hidden` below the
+`brm10` (1024px) breakpoint with no mobile menu — below that width there's no way to reach
+`/work`, `/apps`, `/about`, résumé, or either social link except the homepage. Real scoped
+work (a mobile nav component), not a quick fix — discuss approach with user before building.
 
 ## Visual effects
 

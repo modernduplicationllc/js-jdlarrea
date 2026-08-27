@@ -50,6 +50,7 @@ export default function ProjectFilterGrid({
 								type="button"
 								onClick={() => setIndustryFilter([])}
 								data-pressed={industryFilter.length === 0 ? "" : undefined}
+								aria-pressed={industryFilter.length === 0}
 								className={PILL_CLASS}
 							>
 								All

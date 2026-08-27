@@ -162,7 +162,8 @@
 	--destructive: oklch(0.577 0.245 27.325);
 	--border: oklch(0.922 0 0);
 	--input: oklch(0.922 0 0);
-	--ring: oklch(0.708 0 0);
+	/* Overridden (not the shadcn default) — see .dark below for why. */
+	--ring: #8fb6ff;
 	--chart-1: oklch(0.87 0 0);
 	--chart-2: oklch(0.556 0 0);
 	--chart-3: oklch(0.439 0 0);
@@ -197,7 +198,13 @@
 	--destructive: oklch(0.704 0.191 22.216);
 	--border: oklch(1 0 0 / 10%);
 	--input: oklch(1 0 0 / 15%);
-	--ring: oklch(0.556 0 0);
+	/* shadcn's default dark --ring (oklch(0.556 0 0), a mid-gray) only hits ~1.9:1
+	 * contrast against this site's near-black backgrounds once the /50 opacity
+	 * modifier used at each ring/outline call site is applied — well under the
+	 * WCAG AA 3:1 minimum for UI component states (SC 1.4.11). Using the site's
+	 * own accent-alt-300 blue instead clears 9.67:1 / 7.78:1 against the two
+	 * backgrounds it actually appears against. See docs/PROGRESS.md. */
+	--ring: #8fb6ff;
 	--chart-1: oklch(0.87 0 0);
 	--chart-2: oklch(0.556 0 0);
 	--chart-3: oklch(0.439 0 0);
@@ -215,7 +222,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
 	}
 
 	html {

@@ -12,7 +12,7 @@ export default async function FeaturedCards() {
 				<div className="mb-11 flex flex-wrap items-end justify-between gap-6">
 					<div>
 						<div className="super-header with-dash">featured work</div>
-						<div className="!mt-0 h2">Selected case studies</div>
+						<h2 className="!mt-0">Selected case studies</h2>
 					</div>
 
 					<Link

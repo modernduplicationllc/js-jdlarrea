@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${spaceSans.variable} ${interSans.variable} ${jetMono.variable} h-full antialiased`}
+      className={`dark ${spaceSans.variable} ${interSans.variable} ${jetMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
 				<div className="grid-bg" aria-hidden="true" />

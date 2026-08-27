@@ -21,7 +21,7 @@ export default function WordList({
 							)}
 
 							{ header && (
-								<div className="!mt-0 h2">{header}</div>
+								<h2 className="!mt-0">{header}</h2>
 							)}
 						</div>
 
