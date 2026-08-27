@@ -222,6 +222,13 @@
     @apply font-sans scroll-smooth;
 	}
 
+	/* Sections need their own stacking context so they paint above .grid-bg
+	 * (which is position:fixed) instead of being painted underneath it. */
+	section {
+		position: relative;
+		z-index: 1;
+	}
+
   body {
     @apply bg-bg-dark-900
 		mt-header-height-mobile
@@ -341,5 +348,49 @@
 		&.testing {
 			@apply p-3 bg-gray-200;
 		}
+	}
+}
+
+/*
+ * Faint blueprint grid backdrop — fixed behind all page content, faded out
+ * toward the edges via a radial mask. Purely decorative (aria-hidden), so it
+ * carries no accessibility requirements on its own.
+ */
+.grid-bg {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background-image:
+		linear-gradient(var(--color-bdr-100) 1px, transparent 1px),
+		linear-gradient(90deg, var(--color-bdr-100) 1px, transparent 1px);
+	background-size: 64px 64px;
+	mask-image: radial-gradient(ellipse 70% 50% at 50% 0%, #000 30%, transparent 75%);
+	opacity: 0.5;
+}
+
+/*
+ * Traveling glow band, same grid pattern as .grid-bg but in the accent color,
+ * revealed only inside a soft radial mask whose vertical center
+ * (--glow-y, set by components/effects/grid-glow.tsx) tracks scroll position.
+ * Purely additive/decorative — aria-hidden, and the driving JS no-ops under
+ * prefers-reduced-motion (belt-and-suspenders `display: none` below too).
+ */
+.grid-glow {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background-image:
+		linear-gradient(var(--color-accent-alt-500) 1px, transparent 1px),
+		linear-gradient(90deg, var(--color-accent-alt-500) 1px, transparent 1px);
+	background-size: 64px 64px;
+	mask-image: radial-gradient(480px 220px at 68% var(--glow-y, 20%), #000 0%, transparent 72%);
+	opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.grid-glow {
+		display: none;
 	}
 }

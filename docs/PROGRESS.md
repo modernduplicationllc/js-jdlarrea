@@ -50,6 +50,23 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 | `components/globals/header-main.tsx` | — | 🔲 Stub | Placeholder logo/nav, not styled |
 | `components/globals/footer-main.tsx` | — | 🔲 Stub | Placeholder only |
 
+## Visual effects
+
+- **Grid backdrop**: `.grid-bg` (in `app/globals.css`, rendered once in `app/layout.tsx`) is a
+  fixed, faint blueprint-style grid line pattern behind all content, faded via a radial mask.
+  Purely decorative, `aria-hidden`.
+- **Scroll glow**: `components/effects/grid-glow.tsx` + `.grid-glow` in `globals.css`. A soft
+  accent-colored band travels down the grid lines as the user scrolls, looping every
+  viewport-height. It's driven entirely by a scroll listener setting a `--glow-y` CSS custom
+  property (rAF-throttled) — never animates on its own. Two things make this accessible: (1)
+  because it's 100% scroll-driven rather than auto-playing, it falls outside WCAG 2.2.2
+  (Pause/Stop/Hide), which only applies to auto-starting motion lasting >5s; (2) the component
+  no-ops entirely under `prefers-reduced-motion: reduce` (checked in JS, plus a CSS
+  `display: none` fallback) — no motion happens at all for users with that OS preference set.
+  Both `.grid-bg` and `.grid-glow` sit at `z-index: 0`; a global `section { position: relative;
+  z-index: 1; }` rule (in `globals.css`) is what makes actual page content paint above them —
+  any future section-level component should stay a `<section>` tag to inherit this for free.
+
 ## Decisions made so far
 
 - Progress/orientation file lives at `docs/PROGRESS.md` (this file), auto-loaded every

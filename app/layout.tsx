@@ -4,6 +4,7 @@ import "./globals.css";
 
 import HeaderMain from "@/components/globals/header-main";
 import FooterMain from "@/components/globals/footer-main";
+import GridGlow from "@/components/effects/grid-glow";
 
 const spaceSans = Space_Grotesk({
 	variable: "--font-space-grotesk",
@@ -32,6 +33,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${spaceSans.variable} ${interSans.variable} ${jetMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+				<div className="grid-bg" aria-hidden="true" />
+				<GridGlow />
 				<div id="page">
 					<HeaderMain />
 					{children}
