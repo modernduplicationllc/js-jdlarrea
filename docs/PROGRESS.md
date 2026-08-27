@@ -40,12 +40,12 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 
 | Route | Reference file(s) | Status | Notes |
 |---|---|---|---|
-| `/` (home) | `homepage2.html` | ✅ Done (unstyled structure pass) | All sections converted: hero-home, stats-ribbon, featured-cards, word-list, content-5050-grid, cta-banner |
+| `/` (home) | `homepage2.html` | ✅ Done (fully styled) | hero-home, stats-ribbon, word-list, content-5050-grid, cta-banner all restyled to match `/work`'s approach. `featured-cards` now pulls real data from `getAllProjects()` (top 3) and reuses `ProjectCard` — no more hardcoded placeholder cards, single source of truth with `/work`. Header/footer (`components/globals/`) also styled — was blocking, since an unstyled header above a styled page looked broken. |
 | `/work` | `work2.html` | ✅ Done (fully styled + working filters) | `page-hero` (reusable), `project-filter-grid` (client component, industry single-select + tech-stack multi-select), `project-card`. Data-driven from `content/projects/*.mdx` via `lib/projects.ts` |
 | `/work/[slug]` | `case-study2.html` | ✅ Done (fully styled + working) | Dynamic route in `app/work/[slug]/page.tsx`. Breadcrumb + hero + meta sidebar are components; the write-up itself is the project's MDX body, with `<ResultStrip>`, `<CodePanel>`, `<Gallery>` (in `components/mdx/`) embedded inline for the stats/code/screenshots blocks. Prev/next nav is computed from project `order`. All 3 placeholder projects have real case-study content (Harlow matches the reference 1:1; Pivot/Summit are lightly stubbed). |
-| `/about` | `about2.html` | ⏳ Priority 3 | intro (photo + text), timeline-section (tl-item entries), toolbox (tool-cols) |
-| `/apps` | `demo-apps2.html` | ⏳ Priority 4 (landing only) | page-hero + demo-grid of demo-card. This is just the landing/index page — the actual demo apps (`/apps/food-tracker`, `/apps/film-blog`, etc.) are separate future work, not part of this pass |
-| `/resume` | none yet | ❓ Unscoped | Linked from header nav (`components/globals/header-main.tsx`) but no reference file or decision yet on whether it's a page, a PDF link, or something else — ask before building |
+| `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (photo + bio split), `timeline` (career history, `current` item highlighted), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. Portrait photo is a `picsum.photos` placeholder — swap for a real headshot later. |
+| `/apps` | `demo-apps2.html` | ✅ Started (landing only) | `page-hero` (now accepts a `children` slot for the status line) + `demo-app-grid`. All 4 apps are placeholder/`planned` status — honestly labeled "not started yet" rather than the reference mockup's fictional "2 live, 2 in progress" copy. Real routes (`/apps/food-tracker`, `/apps/film-blog`, etc.) are separate future work once those apps actually get built. |
+| `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route exists or is needed. Header, footer, and homepage hero all link directly to `/resume.pdf` (with a `download` attribute) instead of a Next.js route. **The actual PDF file still needs to be added to `/public/resume.pdf`** — until then these links 404. |
 | 404 | `404.html` | ❓ Unscoped | Not yet prioritized |
 | `components/globals/header-main.tsx` | — | 🔲 Stub | Placeholder logo/nav, not styled |
 | `components/globals/footer-main.tsx` | — | 🔲 Stub | Placeholder only |
@@ -86,9 +86,19 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 - `.claude/launch.json` was created so the dev server can be previewed in-session
   (`pnpm dev`, port 3000).
 
+## TODO (not urgent, revisit later)
+
+- **Add `zod` validation for project content.** `lib/projects.ts` currently trusts each
+  `.mdx` file's `metadata` export as-is — a typo'd field name (e.g. `indsutry`) fails silently
+  instead of erroring at build time. Add a `zod` schema (mirroring `ProjectMetadata` in
+  `lib/definitions.ts`) and `.parse()` each project's metadata when reading it in
+  `getAllProjects()` / `getProjectBySlug()`, so bad content fails loudly with a clear message.
+- **Swap placeholder `picsum.photos` images for real ones**, using static `import` (local file
+  in `/public` or colocated with the project's `.mdx`) instead of remote URLs + manual
+  `fill`/`sizes` — gets automatic width/height + blur placeholder from Next for free.
+
 ## Open questions (ask the user before deciding)
 
-- `/resume`: real page, PDF download link, or external link?
 - 404 page: in scope for this pass or later?
 - Header/footer: styled now, or after the priority pages are done? (Given `/work` is now
   fully styled, probably worth doing header/footer sooner rather than later.)
@@ -100,12 +110,21 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 
 ## Next step
 
-`/work` and `/work/[slug]` are both done — real project content still needs to replace the 3
+Homepage, `/work`, `/work/[slug]`, and `/about` are all done and fully styled — that's every
+page in the original priority order. Real project content still needs to replace the 3
 placeholder `.mdx` files in `content/projects/` (see Content architecture above for the field
-shape; each file now also has a full case-study body to use as a template). After that:
-convert `.reference/about2.html` → `/about` (priority 3): intro w/ photo, timeline section,
-toolbox section.
+shape; each file now also has a full case-study body to use as a template).
 
-Known simplification to revisit later: `components/mdx/code-panel.tsx` renders code as plain
-monospace text — no syntax highlighting (the reference HTML had it hardcoded manually). Fine
-for now; would need a library like `rehype-pretty-code` to do properly.
+What's left, roughly in order of what a job-application deadline would care about:
+- Real content pass: swap placeholder projects, portrait photo, and stock thumbnails for the
+  real thing.
+- `/apps` (Demo Apps landing) — priority 4, not yet started. Reference: `demo-apps2.html`.
+- `/resume`, 404 page — still unscoped (see Open questions).
+
+Known simplifications to revisit later:
+- `components/mdx/code-panel.tsx` renders code as plain monospace text — no syntax
+  highlighting (the reference HTML had it hardcoded manually). Would need a library like
+  `rehype-pretty-code` to do properly.
+- `lucide-react` (installed, v1.32) dropped brand/logo icons in this major version — GitHub
+  and LinkedIn icons are hand-kept as inline SVGs in `components/icons.tsx` instead.
+- See the TODO section above for the `zod` validation and real-image tasks.

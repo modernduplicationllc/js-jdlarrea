@@ -2,10 +2,12 @@ export default function PageHero({
 	eyebrow,
 	header,
 	description,
+	children,
 }: {
 	eyebrow: string;
 	header: string;
 	description?: string;
+	children?: React.ReactNode;
 }) {
 	return (
 		<section className="component page-hero">
@@ -15,6 +17,7 @@ export default function PageHero({
 				{description && (
 					<p className="max-w-150 text-lg text-body-300">{description}</p>
 				)}
+				{children}
 			</div>
 		</section>
 	);

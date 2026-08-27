@@ -1,53 +1,34 @@
-export default function FeaturedCards() {
+import Link from "next/link";
+import ProjectCard from "@/components/sections/project-card";
+import { getAllProjects } from "@/lib/projects";
+
+export default async function FeaturedCards() {
+	const allProjects = await getAllProjects();
+	const projects = allProjects.slice(0, 3);
+
 	return (
-		<div className="featured-cards">
-			<div className="section-header">
-				<div className="eyebrow">featured work</div>
-				<div className="bottom-content">
-					<div className="header-text">Selected case studies</div>
-					<div className="future-button">View all 30+ projects</div>
+		<section className="component">
+			<div className="wrapper">
+				<div className="mb-11 flex flex-wrap items-end justify-between gap-6">
+					<div>
+						<div className="super-header with-dash">featured work</div>
+						<div className="!mt-0 h2">Selected case studies</div>
+					</div>
+
+					<Link
+						href="/work"
+						className="inline-flex items-center gap-1.5 text-sm whitespace-nowrap text-accent-alt-300 hover:text-accent-alt-100"
+					>
+						View all {allProjects.length}+ projects →
+					</Link>
+				</div>
+
+				<div className="grid grid-cols-1 gap-6 brm76:grid-cols-2 brd12:grid-cols-3">
+					{projects.map((project) => (
+						<ProjectCard key={project.slug} project={project} />
+					))}
 				</div>
 			</div>
-
-			<div className="grid-items">
-				<div className="grid-card">
-					<div className="future-image">Image</div>
-					<div className="card-content">
-						<div className="title">Journyx</div>
-						<div className="description">Custom WordPress rebuild for a mid-size law firm — lead intake forms, attorney bios, and a case-results archive.</div>
-
-						<div className="badges">
-							<div className="badge">WordPress</div>
-							<div className="badge">ACF</div>
-							<div className="badge">Law</div>
-						</div>
-					</div>
-				</div>
-				<div className="grid-card">
-					<div className="future-image">Image</div>
-					<div className="card-content">
-						<div className="title">Journyx</div>
-						<div className="description">Custom WordPress rebuild for a mid-size law firm — lead intake forms, attorney bios, and a case-results archive.</div>
-						<div className="badges">
-							<div className="badge">WordPress</div>
-							<div className="badge">ACF</div>
-							<div className="badge">Law</div>
-						</div>
-					</div>
-				</div>
-				<div className="grid-card">
-					<div className="future-image">Image</div>
-					<div className="card-content">
-						<div className="title">Journyx</div>
-						<div className="description">Custom WordPress rebuild for a mid-size law firm — lead intake forms, attorney bios, and a case-results archive.</div>
-						<div className="badges">
-							<div className="badge">WordPress</div>
-							<div className="badge">ACF</div>
-							<div className="badge">Law</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		</section>
 	);
 }
