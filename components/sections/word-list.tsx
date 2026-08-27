@@ -7,35 +7,50 @@ export default function WordList({
 	sectionHeader: SectionHeader,
 	words: string[]
 }) {
+	const { eyebrow, header, description, sectionLink } = sectionHeader;
+
 	return (
-		<div className="word-list">
-			<div className="section-header">
-				<div className="eyebrow">featured work</div>
-				<div className="bottom-content">
-					<div className="header-text">Selected case studies</div>
-					<div className="future-button">View all 30+ projects</div>
+		<section className="component word-list">
+			<div className="wrapper">
+				{ header && (
+					<div className="section-header">
+						{ eyebrow && (
+							<div className="eyebrow">{eyebrow}</div>
+						)}
+
+						<div className="bottom-content">
+							{ header && (
+								<div className="header-text">{header}</div>
+							)}
+
+							{ description && (
+								<div className="description">{description}</div>
+							)}
+						</div>
+					</div>
+				)}
+
+
+				<div className="grid-list">
+					<div className="grid-item">WordPress</div>
+					<div className="grid-item">Next.js</div>
+					<div className="grid-item">TypeScript</div>
+					<div className="grid-item">Tailwind</div>
+					<div className="grid-item">ACF</div>
+					<div className="grid-item">Shopify</div>
+					<div className="grid-item">Neon</div>
+					<div className="grid-item">Supabase</div>
+					<div className="grid-item">HubSpot</div>
+					<div className="grid-item">Gravity Forms</div>
+					<div className="grid-item">WooCommerce</div>
+					<div className="grid-item">React</div>
+					<div className="grid-item">Node.js</div>
+				</div>
+
+				<div className="section-footer">
+					<div className="future-button">More on my background and stack</div>
 				</div>
 			</div>
-
-			<div className="grid-list">
-				<div className="list-item">WordPress</div>
-				<div className="list-item">Next.js</div>
-				<div className="list-item">TypeScript</div>
-				<div className="list-item">Tailwind</div>
-				<div className="list-item">ACF</div>
-				<div className="list-item">Shopify</div>
-				<div className="list-item">Neon</div>
-				<div className="list-item">Supabase</div>
-				<div className="list-item">HubSpot</div>
-				<div className="list-item">Gravity Forms</div>
-				<div className="list-item">WooCommerce</div>
-				<div className="list-item">React</div>
-				<div className="list-item">Node.js</div>
-			</div>
-
-			<div className="section-footer">
-				<div className="future-button">More on my background and stack</div>
-			</div>
-		</div>
+		</section>
 	);
 }

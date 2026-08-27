@@ -3,9 +3,9 @@ export type SectionHeader = {
 	eyebrow?: string;
 	header?: string;
 	description?: string;
-	sectionLink?: [
+	sectionLink?: {
 		text: string,
 		url: string,
-		new_tab: boolean
-	]
+		new_tab?: boolean
+	}
 }
