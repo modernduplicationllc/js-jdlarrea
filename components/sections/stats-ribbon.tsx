@@ -1,8 +1,8 @@
 const STATS = [
-	{ statNum: "10+", description: "years experience" },
-	{ statNum: "30+", description: "projects shipped" },
-	{ statNum: "8+", description: "industries served" },
-	{ statNum: "100%", description: "mobile responsive" },
+	{ statNum: "80+", description: "projects shipped" },
+	{ statNum: "10+", description: "industries served" },
+	{ statNum: "40+", description: "proposals scoped" },
+	{ statNum: "50+", description: "client trainings led" },
 ];
 
 export default function StatsRibbon() {

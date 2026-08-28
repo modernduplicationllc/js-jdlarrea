@@ -6,7 +6,7 @@ export default function HeroHome() {
 		<section className="pt-20 pb-16 brm10:pt-27 brm10:pb-24">
 			<div className="wrapper">
 				<div className="mb-6 inline-flex items-center gap-2.5 font-mono text-[12.5px] text-accent-alt-300 before:h-px before:w-4 before:bg-accent-500">
-					TAMPA BAY, FL · REMOTE
+					TAMPA BAY, FL • AVAILABLE FOR SENIOR ROLES
 				</div>
 
 				<h1 className="mt-0 max-w-190 leading-[1.05]">
@@ -14,11 +14,11 @@ export default function HeroHome() {
 				</h1>
 
 				<p className="mt-6 max-w-180 text-lg text-body-300">
-					I&apos;ve spent 10+ years building custom WordPress sites for marketing and digital agencies. In 2026 I started expanding into full-stack development — React, Next.js, TypeScript, and PostgreSQL — to build complete, modern web applications.
+					I've spent 10+ years building custom WordPress sites for marketing and digital agencies. In 2026 I started expanding into full-stack development — React, Next.js, TypeScript, and PostgreSQL — to build complete, interactive web applications.
 				</p>
 
 				<p className="mt-3.5 font-mono text-[13.5px] text-body-500">
-					{"// from first call to post-launch support"}
+					// from first client call to post-launch support
 				</p>
 
 				<div className="mt-10 flex flex-wrap items-center gap-3.5">
