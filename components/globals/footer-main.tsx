@@ -6,7 +6,7 @@ export default function FooterMain() {
 				<div className="flex gap-6">
 					<a href="https://github.com/jdlarrea" target="_blank" rel="noopener noreferrer" className="hover:text-hdr-main-100">GitHub</a>
 					<a href="https://www.linkedin.com/in/jdlarrea/" target="_blank" rel="noopener noreferrer" className="hover:text-hdr-main-100">LinkedIn</a>
-					<a href="/resume-jonathan-larrea.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-hdr-main-100">Résumé</a>
+					<a href="/resume-jonathan-larrea-public.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-hdr-main-100">Résumé</a>
 				</div>
 			</div>
 		</footer>
