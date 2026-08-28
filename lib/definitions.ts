@@ -1,15 +1,3 @@
-// Custom types
-export type SectionHeader = {
-	eyebrow?: string;
-	header?: string;
-	description?: string;
-	sectionLink?: {
-		text: string,
-		url: string,
-		new_tab?: boolean
-	}
-}
-
 // The fixed industry list — shown as single-select filter pills on /work.
 // Keep this list in sync with the `industry` value used in each project's metadata.
 export const INDUSTRIES = [

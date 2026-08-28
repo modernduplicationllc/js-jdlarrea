@@ -184,6 +184,38 @@ usage):
   same latent bug (never a `<section>`) — fixed with explicit `relative z-[1]`. If a new
   top-level block ever shows a grid line through it, this is the first thing to check.
 
+## Component philosophy: static content, not prop-driven, unless actually reused
+
+Per user's explicit call: most sections on this site are used exactly once. Earlier passes
+(esp. the original homepage scaffold) had gotten into a habit of passing content down as props
+"in case" a component got reused later — `StatsRibbon`, `WordList`, and `DemoAppGrid` all took
+`items`/`words`/`sectionHeader`/`apps` props despite each having exactly one call site. That's
+now cleaned up: content lives as a local const *inside* the component file (matching the
+pattern `HeroHome`, `Timeline`, `Toolbox`, `ValuesGrid`, `Content5050Grid` already followed).
+
+**Kept as props, deliberately** — these are genuinely reused or genuinely per-instance data,
+not just "might be reused someday":
+- `CtaBanner` — 2 real call sites (`/` and `/about`) with different copy/links.
+- `PageHero` — 2 real call sites (`/work` and `/apps`).
+- `ProjectCard`, `CaseStudyHero`/`MetaSidebar`/`PrevNext` — parameterized by *which* project,
+  not configuration; the "one call site" is a dynamic route that renders different data each
+  time, which is a different thing from a single hardcoded static page.
+- `ProjectFilterGrid` — receives real content-collection data from `lib/projects.ts`.
+
+`DEMO_APPS` moved into `demo-app-grid.tsx` itself but stays a named export, since
+`app/apps/page.tsx` needs its `.length` for the "N apps planned" status line — single source
+of truth without re-introducing a content prop for the grid itself.
+
+Also removed `SectionHeader` (in `lib/definitions.ts`) — it was only ever used by the old
+prop-driven `WordList`, now fully dead. And fixed `word-list.tsx`'s dead `#fixlink` placeholder
+href to point to `/about`, since that's where the tech-stack story actually continues.
+
+**Resume/GitHub/LinkedIn URLs now come from `lib/nav.ts`'s `RESUME_HREF`/`GITHUB_URL`/
+`LINKEDIN_URL` everywhere** (header, footer, homepage hero, `cta-banner`, `/about`), not
+hardcoded per-file. This was a real drift bug already happening in practice — the résumé
+filename changed twice during this project, and files not yet wired to the shared constant
+were quietly serving a stale link until caught.
+
 ## Decisions made so far
 
 - Progress/orientation file lives at `docs/PROGRESS.md` (this file), auto-loaded every

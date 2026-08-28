@@ -4,6 +4,7 @@ import Timeline from "@/components/sections/timeline";
 import Toolbox from "@/components/sections/toolbox";
 import ValuesGrid from "@/components/sections/values-grid";
 import CtaBanner from "@/components/sections/cta-banner";
+import { LINKEDIN_URL } from "@/lib/nav";
 
 export const metadata: Metadata = {
 	title: "About | JD Larrea",
@@ -22,7 +23,7 @@ export default function AboutPage() {
 				description="// 30+ projects, filterable by stack and industry"
 				actions={[
 					{ href: "/work", label: "Browse projects", variant: "primary" },
-					{ href: "https://www.linkedin.com/in/jdlarrea/", label: "Connect on LinkedIn", variant: "ghost", icon: "linkedin" },
+					{ href: LINKEDIN_URL, label: "Connect on LinkedIn", variant: "ghost", icon: "linkedin" },
 				]}
 			/>
 		</>

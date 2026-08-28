@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
+import { GITHUB_URL, LINKEDIN_URL } from "@/lib/nav";
 
 type CtaAction = {
 	href: string;
@@ -14,8 +15,8 @@ export default function CtaBanner({
 	header = "Have a project in mind, or hiring for a senior role?",
 	description = "// currently open to full-time and contract work",
 	actions = [
-		{ href: "https://www.linkedin.com/in/jdlarrea/", label: "Connect on LinkedIn", variant: "primary", icon: "linkedin" },
-		{ href: "https://github.com/jdlarrea", label: "View GitHub", variant: "ghost", icon: "github" },
+		{ href: LINKEDIN_URL, label: "Connect on LinkedIn", variant: "primary", icon: "linkedin" },
+		{ href: GITHUB_URL, label: "View GitHub", variant: "ghost", icon: "github" },
 	],
 }: {
 	header?: string;

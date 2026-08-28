@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RESUME_HREF } from "@/lib/nav";
 
 export default function HeroHome() {
 	return (
@@ -13,11 +14,11 @@ export default function HeroHome() {
 				</h1>
 
 				<p className="mt-6 max-w-180 text-lg text-body-300">
-					I've spent 10+ years building custom WordPress sites for marketing and digital agencies. In 2026 I started expanding into full-stack development — React, Next.js, TypeScript, and PostgreSQL — to build complete, modern web applications.
+					I&apos;ve spent 10+ years building custom WordPress sites for marketing and digital agencies. In 2026 I started expanding into full-stack development — React, Next.js, TypeScript, and PostgreSQL — to build complete, modern web applications.
 				</p>
 
 				<p className="mt-3.5 font-mono text-[13.5px] text-body-500">
-					// from first call to post-launch support
+					{"// from first call to post-launch support"}
 				</p>
 
 				<div className="mt-10 flex flex-wrap items-center gap-3.5">
@@ -28,7 +29,7 @@ export default function HeroHome() {
 						View my work
 					</Link>
 					<a
-						href="/resume-jonathan-larrea-public.pdf"
+						href={RESUME_HREF}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex items-center gap-2 rounded-md border border-bdr-500 px-6 py-3.5 text-[14.5px] font-medium text-body-300 transition-colors hover:border-accent-500 hover:text-hdr-main-100"
