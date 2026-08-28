@@ -118,6 +118,48 @@ issues found there.
 `/work`, `/apps`, `/about`, résumé, or either social link except the homepage. Real scoped
 work (a mobile nav component), not a quick fix — discuss approach with user before building.
 
+**Update: fixed.** See "Mobile navigation" below.
+
+## Mobile navigation
+
+Hamburger (logo left, hamburger right, morphs to X) → left-slideout panel, matching the
+pattern in `.reference/wp-theme/.../functions-menus.php` (the old WP nav walker) and
+`nav-toggle.css` — same left-0/`translateX(-100%)`→`translateX(0)` slide, hamburger stays
+in place and morphs rather than being covered.
+
+- **`lib/nav.ts`** — single `NAV_ITEMS` data source (typed `NavItem[]`, `children?: NavItem[]`)
+  shared by the desktop nav (`header-main.tsx`) and the mobile panel (`mobile-nav.tsx`). One
+  menu, two renderings — same idea as the old PHP walker driving one WP menu for both.
+- **`components/globals/mobile-nav.tsx`** — hand-built 3-bar hamburger (CSS transform morph to
+  X, no icon-swap), built on shadcn's `Sheet` (`npx shadcn@latest add sheet`, itself built on
+  `@base-ui/react/dialog`) for the panel mechanics: focus trap, Escape-to-close,
+  backdrop-click-to-close, body scroll lock, slide transition — all handled by the primitive
+  rather than hand-rolled.
+- **Drill-down**: per user's spec, capped at 2 slideout levels. A single
+  `activeItem: NavItem | null` state (not a general nav stack) — `null` shows the top-level
+  list, setting it shows that item's `children` with a back button. A 3rd tier (if a
+  `children`'s `children` is ever populated) renders indented in place under its level-2
+  parent, not as a further drill-in panel.
+- **Resume/GitHub/LinkedIn are pinned** at the bottom of the panel (`mt-auto`), separate from
+  the drillable nav list — matches both the desktop header's existing split and the old WP
+  theme's `.header-cta` being a distinct block from `.menu-header-primary`.
+- Nothing in `NAV_ITEMS` has `children` yet (site is single-level today) — the type/render
+  logic is just ready for whenever a page needs one.
+
+**Two real bugs found and fixed while building this** (both in `components/ui/sheet.tsx`
+itself, so any future use of `Sheet` elsewhere in the app is protected too, not just this one
+usage):
+1. My own width override (`w-4/5`) silently didn't apply — the shadcn default is scoped
+   (`data-[side=left]:w-3/4`), which beats an unscoped override in CSS specificity regardless
+   of source order. Fix: scope the override the same way (`data-[side=left]:w-4/5`).
+2. **More serious**: neither `SheetContent` nor `SheetOverlay` set `pointer-events-none` in
+   their closed (`[data-closed]`) state — confirmed via `elementFromPoint` that after closing,
+   the fully invisible (`opacity:0`) panel and its full-viewport backdrop were still
+   intercepting every click/tap underneath them. A user closing the mobile menu would find the
+   left ~80% of their screen (and, via the backdrop, the *entire* screen) dead until something
+   else caused the DOM node to unmount. Fixed by adding `data-closed:pointer-events-none` to
+   both in `sheet.tsx` directly.
+
 ## Visual effects
 
 - **Grid backdrop**: `.grid-bg` (in `app/globals.css`, rendered once in `app/layout.tsx`) is a

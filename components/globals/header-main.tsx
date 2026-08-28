@@ -3,15 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
-
-const NAV_LINKS = [
-	{ href: "/work", label: "Work" },
-	{ href: "/apps", label: "Demo Apps" },
-	{ href: "/about", label: "About" },
-];
-
-// Not a route — links directly to the PDF in /public.
-const RESUME_HREF = "/resume-jonathan-larrea.pdf";
+import { GITHUB_URL, LINKEDIN_URL, NAV_ITEMS, RESUME_HREF } from "@/lib/nav";
+import MobileNav from "@/components/globals/mobile-nav";
 
 export default function HeaderMain() {
 	const pathname = usePathname();
@@ -28,17 +21,17 @@ export default function HeaderMain() {
 				</Link>
 
 				<nav className="hidden items-center gap-9 brm10:flex">
-					{NAV_LINKS.map((link) => {
-						const isActive = pathname.startsWith(link.href);
+					{NAV_ITEMS.map((item) => {
+						const isActive = item.href ? pathname.startsWith(item.href) : false;
 						return (
 							<Link
-								key={link.href}
-								href={link.href}
+								key={item.label}
+								href={item.href ?? "#"}
 								className={`text-sm font-medium transition-colors hover:text-accent-alt-300 ${
 									isActive ? "text-accent-alt-300" : "text-body-300"
 								}`}
 							>
-								{link.label}
+								{item.label}
 							</Link>
 						);
 					})}
@@ -54,7 +47,7 @@ export default function HeaderMain() {
 
 					<div className="flex items-center gap-1.5">
 						<a
-							href="https://github.com/jdlarrea"
+							href={GITHUB_URL}
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="GitHub"
@@ -64,7 +57,7 @@ export default function HeaderMain() {
 						</a>
 
 						<a
-							href="https://www.linkedin.com/in/jdlarrea/"
+							href={LINKEDIN_URL}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-flex h-9 items-center gap-2 rounded-md bg-hdr-main-100 px-4.5 text-[13.5px] font-semibold text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
@@ -74,6 +67,8 @@ export default function HeaderMain() {
 						</a>
 					</div>
 				</nav>
+
+				<MobileNav />
 			</div>
 		</header>
 	);
