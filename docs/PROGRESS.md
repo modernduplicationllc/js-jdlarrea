@@ -43,7 +43,7 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 | `/` (home) | `homepage2.html` | ✅ Done (fully styled) | hero-home, stats-ribbon, word-list, content-5050-grid, cta-banner all restyled to match `/work`'s approach. `featured-cards` now pulls real data from `getAllProjects()` (top 3) and reuses `ProjectCard` — no more hardcoded placeholder cards, single source of truth with `/work`. Header/footer (`components/globals/`) also styled — was blocking, since an unstyled header above a styled page looked broken. |
 | `/work` | `work2.html` | ✅ Done (fully styled + working filters) | `page-hero` (reusable), `project-filter-grid` (client component, industry single-select + tech-stack multi-select), `project-card`. Data-driven from `content/projects/*.mdx` via `lib/projects.ts` |
 | `/work/[slug]` | `case-study2.html` | ✅ Done (fully styled + working) | Dynamic route in `app/work/[slug]/page.tsx`. Breadcrumb + hero + meta sidebar are components; the write-up itself is the project's MDX body, with `<ResultStrip>`, `<CodePanel>`, `<Gallery>` (in `components/mdx/`) embedded inline for the stats/code/screenshots blocks. Prev/next nav is computed from project `order`. All 3 placeholder projects have real case-study content (Harlow matches the reference 1:1; Pivot/Summit are lightly stubbed). |
-| `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (photo + bio split), `timeline` (career history, `current` item highlighted), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. Portrait photo is a `picsum.photos` placeholder — swap for a real headshot later. |
+| `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (full-width bio, no photo — deliberate, see Decisions), `timeline` (career history, `current` item highlighted), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. |
 | `/apps` | `demo-apps2.html` | ✅ Started (landing only) | `page-hero` (now accepts a `children` slot for the status line) + `demo-app-grid`. All 4 apps are placeholder/`planned` status — honestly labeled "not started yet" rather than the reference mockup's fictional "2 live, 2 in progress" copy. Real routes (`/apps/food-tracker`, `/apps/film-blog`, etc.) are separate future work once those apps actually get built. |
 | `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route exists or is needed. Header, footer, and homepage hero all link directly to `/resume.pdf` (with a `download` attribute) instead of a Next.js route. **The actual PDF file still needs to be added to `/public/resume.pdf`** — until then these links 404. |
 | 404 | `404.html` | ❓ Unscoped | Not yet prioritized |
@@ -183,6 +183,19 @@ usage):
   stacking context) was removed; fixed by making it a `<section>`. `footer-main.tsx` had the
   same latent bug (never a `<section>`) — fixed with explicit `relative z-[1]`. If a new
   top-level block ever shows a grid line through it, this is the first thing to check.
+
+## No headshot on /about (deliberate)
+
+User considered adding a photo (`public/profile-jd.jpg`, added but never wired up — still
+sitting unused in `/public`, left alone rather than deleted in case it gets repurposed for
+LinkedIn etc.) and asked for research on whether it's worth it for a US tech-hiring audience.
+Findings: a controlled resume audit study (Ben-Gurion University, ~5,300 identical CVs) found
+photos help attractive men (19.9% vs 9.2% callback) but *hurt* women (no-photo got 22% more
+callbacks) — bias effect is real and unpredictable in direction. US EEOC explicitly warns
+photos increase discrimination risk once an evaluator can infer gender/race/ethnicity. US/UK/
+Canada/Australia hiring norms are photo-free (unlike Germany/Austria/Japan). Decision: removed
+the photo column from `about-intro.tsx`, widened the bio text to fill the space. If this
+project's audience ever shifts to a country where headshots are the norm, revisit.
 
 ## Component philosophy: static content, not prop-driven, unless actually reused
 

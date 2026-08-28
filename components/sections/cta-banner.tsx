@@ -12,8 +12,8 @@ type CtaAction = {
 const ICONS = { github: GithubIcon, linkedin: LinkedinIcon };
 
 export default function CtaBanner({
-	header = "Have a project in mind, or hiring for a senior role?",
-	description = "// currently open to full-time and contract work",
+	header = "Hiring a web developer?",
+	description = "// open to full-time, benefits-eligible roles",
 	actions = [
 		{ href: LINKEDIN_URL, label: "Connect on LinkedIn", variant: "primary", icon: "linkedin" },
 		{ href: GITHUB_URL, label: "View GitHub", variant: "ghost", icon: "github" },

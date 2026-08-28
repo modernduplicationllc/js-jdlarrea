@@ -1,8 +1,7 @@
 import Link from "next/link";
 
 const WORDS = [
-	"WordPress", "Next.js", "TypeScript", "Tailwind CSS", "ACF", "Shopify",
-	"Supabase", "Neon", "HubSpot", "Gravity Forms", "WooCommerce", "React", "Node.js",
+	"React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "PostgreSQL", "Neon", "Node.js", "NextAuth/Auth.js", "WordPress", "ACF", "Shopify", "HubSpot", "WooCommerce", "Supabase"
 ];
 
 export default function WordList() {
@@ -12,7 +11,7 @@ export default function WordList() {
 				<div className="mb-11 flex flex-wrap items-end justify-between gap-6">
 					<div>
 						<div className="super-header with-dash">tech stack</div>
-						<h2 className="!mt-0">What I build with</h2>
+						<h2 className="mt-0">What I build with</h2>
 					</div>
 
 					<p className="max-w-95 text-sm text-body-500">

@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 const DEMO_APPS = [
-	{ title: "Film Blog", tag: "Next.js · MDX", image: "https://picsum.photos/seed/filmblog/500/320" },
-	{ title: "Movie Tracker", tag: "Next.js · Supabase", image: "https://picsum.photos/seed/moviedb/500/320" },
-	{ title: "Macro Tracker", tag: "Server Actions · RLS", image: "https://picsum.photos/seed/macros/500/320" },
-	{ title: "Component Playground", tag: "React · Tailwind", image: "https://picsum.photos/seed/gridui/500/320" },
+	{ title: "Food Tracker", tag: "Next.js · Neon", image: "https://picsum.photos/seed/macros/500/320" },
+	{ title: "Movie Diary", tag: "Next.js · Neon", image: "https://picsum.photos/seed/moviedb/500/320" },
+	{ title: "Pokémon Playground", tag: "Vite · React · PokéAPI", image: "https://picsum.photos/seed/filmblog/500/320" },
+	{ title: "Component Playground", tag: "React · Tailwind · shadcn/ui", image: "https://picsum.photos/seed/gridui/500/320" },
 ];
 
 export default function Content5050Grid() {
@@ -19,9 +19,7 @@ export default function Content5050Grid() {
 							Small builds. No client brief — just me shipping something new.
 						</div>
 						<p className="mb-6.5 max-w-105 text-sm leading-relaxed text-body-500">
-							A sandbox of experiments outside client work: a place to learn Next.js,
-							Supabase, and React Native by actually building things, not just
-							tutorials.
+							A sandbox of experiments outside client work: a place to learn Next.js, Postgres, and full-stack patterns by actually building things, not just tutorials.
 						</p>
 						<Link
 							href="/apps"
