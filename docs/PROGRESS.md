@@ -41,8 +41,8 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 | Route | Reference file(s) | Status | Notes |
 |---|---|---|---|
 | `/` (home) | `homepage2.html` | ✅ Done (fully styled) | hero-home, stats-ribbon, word-list, content-5050-grid, cta-banner all restyled to match `/work`'s approach. `featured-cards` now pulls real data from `getAllProjects()` (top 3) and reuses `ProjectCard` — no more hardcoded placeholder cards, single source of truth with `/work`. Header/footer (`components/globals/`) also styled — was blocking, since an unstyled header above a styled page looked broken. |
-| `/work` | `work2.html` | ✅ Done (fully styled + working filters) | `page-hero` (reusable), `project-filter-grid` (client component, industry single-select + tech-stack multi-select), `project-card`. Data-driven from `content/projects/*.mdx` via `lib/projects.ts` |
-| `/work/[slug]` | `case-study2.html` | ✅ Done (fully styled + working) | Dynamic route in `app/work/[slug]/page.tsx`. Breadcrumb + hero + meta sidebar are components; the write-up itself is the project's MDX body, with `<ResultStrip>`, `<CodePanel>`, `<Gallery>` (in `components/mdx/`) embedded inline for the stats/code/screenshots blocks. Prev/next nav is computed from project `order`. All 3 placeholder projects have real case-study content (Harlow matches the reference 1:1; Pivot/Summit are lightly stubbed). |
+| `/work` | `work2.html` | ✅ Done (fully styled + working filter) | `page-hero`, `project-filter-grid` (client component, industry single-select only — stack filter removed), `project-card` (2-col expanded cards, no detail page). Data-driven from `content/projects/*.mdx` via `lib/projects.ts`. |
+| `/work/[slug]` | `case-study2.html` | ❌ Removed (2026-08-29) | Deprecated per user's call — see "Card-only /work" below. Route, its components, and the `ResultStrip`/`Gallery` MDX components were deleted, not just unlinked. |
 | `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (full-width bio, no photo — deliberate, see Decisions), `timeline` (career history, `current` item highlighted), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. |
 | `/apps` | `demo-apps2.html` | ✅ Started (landing only) | `page-hero` (now accepts a `children` slot for the status line) + `demo-app-grid`. All 4 apps are placeholder/`planned` status — honestly labeled "not started yet" rather than the reference mockup's fictional "2 live, 2 in progress" copy. Real routes (`/apps/food-tracker`, `/apps/film-blog`, etc.) are separate future work once those apps actually get built. |
 | `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route exists or is needed. Header, footer, and homepage hero all link directly to `/resume.pdf` (with a `download` attribute) instead of a Next.js route. **The actual PDF file still needs to be added to `/public/resume.pdf`** — until then these links 404. |
@@ -197,6 +197,63 @@ Canada/Australia hiring norms are photo-free (unlike Germany/Austria/Japan). Dec
 the photo column from `about-intro.tsx`, widened the bio text to fill the space. If this
 project's audience ever shifts to a country where headshots are the norm, revisit.
 
+## Card-only /work (2026-08-29) — deep case studies dropped
+
+User doesn't have bandwidth to write real Overview/Challenge/Approach/Result content for
+20-30+ projects, and asked for research on portfolio best practices before deciding what to
+cut. Findings: multiple sources converge on **3-6 featured projects, 1-2 with a deep case
+study** — beyond that, reviewers can't tell what matters, and "one well-documented full-stack
+project beats ten todo apps." Bare picture+title cards are called out as under-informative,
+but full prose per card is the other failure mode — the sweet spot is a short description +
+context that signals what's behind a click, without requiring a click. This is what drove the
+decision below, not just user preference.
+
+Also surfaced a real legal consideration during this research: **publicly linking a client
+project's GitHub repo without permission can violate an NDA**, not just etiquette — this is
+why the code feature became an inline snippet (author's own excerpt, shown in a dialog) rather
+than a repo link. Doesn't apply to the user's own demo apps (100% their own IP).
+
+Resulting shape:
+- **`/work/[slug]` deleted entirely**, not just unlinked — route, `case-study-hero`,
+  `case-study-meta-sidebar`, `case-study-prevnext`, and the `ResultStrip`/`Gallery` MDX
+  components. `CodePanel` also removed as a standalone component; its display logic now lives
+  inline in `project-card.tsx` instead (single call site, no reason to keep it separate).
+- **`ProjectCard`** (`components/sections/project-card.tsx`) is no longer a link to anything —
+  it's a self-contained 2-col card: industry badge, title, description, then an action row.
+  "Visit Site" (external-arrow icon) shows whenever `liveUrl` is set. "Featured Code" (only
+  when `codeSnippet` is set) opens a `Dialog` showing that project's actual code — whatever
+  language it really used (PHP/ACF included). Showing real per-project code doesn't undercut
+  the Next.js/Tailwind positioning; it reinforces the "decade in WordPress, now expanding"
+  story `/about` already tells honestly.
+- **Tech-stack tags and the stack filter both removed** — most projects share a stack
+  (WordPress/ACF), so tags weren't a useful differentiator and a filter on hidden data would
+  feel disconnected from what's on the card. `stack: string[]` is kept in `ProjectMetadata` as
+  data (not deleted) in case that changes later, just not rendered or filterable right now.
+  `/work` filters by Industry only now.
+- **`ProjectMetadata`** (`lib/definitions.ts`) dropped `role`/`client`/`timeframe`/`githubUrl`
+  (only ever used by the now-deleted case-study sidebar) and gained `codeSnippet?: { filename,
+  code }`. `lib/projects.ts` lost `getProjectBySlug`/`getAdjacentProjects` — `getAllProjects`
+  is the only thing left, and is now a sequential loop instead of `Promise.all` (see bug note
+  below — not related to the fix, just cleaned up while debugging it).
+- All 3 placeholder `.mdx` files trimmed to metadata-only (no rendered body anymore). Harlow's
+  real `gravity-forms-routing.php` snippet, previously embedded in its case-study body, is now
+  its `codeSnippet` example.
+- **`Dialog`** added (`npx shadcn@latest add dialog`, same Base UI foundation as `Sheet`) for
+  the code-snippet popup. Proactively applied the same `data-closed:pointer-events-none` fix
+  to it that `Sheet` needed (see "Mobile navigation" above) — added it *before* it ever shipped
+  broken, since it's the identical bug class on the identical primitive family.
+
+**Debugging note — not a real bug, but ate significant time**: after this change, `/work`
+briefly rendered only 1 of 3 projects' `liveUrl`/`codeSnippet` correctly, even after edits,
+`touch`, and hard browser reloads. Confirmed via raw `curl` (bypassing the browser entirely)
+that the *server* was returning stale metadata for 2 of 3 `.mdx` files — a Turbopack dev-server
+module-cache staleness issue with the dynamic `import(`@/content/projects/${slug}.mdx`)`
+pattern in `lib/projects.ts`, after a very long-running dev session (same process since early
+in this session). A full dev server restart (not a file edit, not a browser hard-reload) fixed
+it immediately. **If `/work` or similar dynamic-MDX-import data ever looks stale/wrong again
+despite the source file being correct, restart the dev server before assuming it's a code
+bug.**
+
 ## Component philosophy: static content, not prop-driven, unless actually reused
 
 Per user's explicit call: most sections on this site are used exactly once. Earlier passes
@@ -210,9 +267,8 @@ pattern `HeroHome`, `Timeline`, `Toolbox`, `ValuesGrid`, `Content5050Grid` alrea
 not just "might be reused someday":
 - `CtaBanner` — 2 real call sites (`/` and `/about`) with different copy/links.
 - `PageHero` — 2 real call sites (`/work` and `/apps`).
-- `ProjectCard`, `CaseStudyHero`/`MetaSidebar`/`PrevNext` — parameterized by *which* project,
-  not configuration; the "one call site" is a dynamic route that renders different data each
-  time, which is a different thing from a single hardcoded static page.
+- `ProjectCard` — parameterized by *which* project (real data), used on both `/work` and the
+  homepage's featured section.
 - `ProjectFilterGrid` — receives real content-collection data from `lib/projects.ts`.
 
 `DEMO_APPS` moved into `demo-app-grid.tsx` itself but stays a named export, since
@@ -245,20 +301,19 @@ were quietly serving a stale link until caught.
   `content/projects/<slug>.mdx`. Structured fields (title, industry, stack, order, thumbnail,
   etc.) live in `export const metadata = {...}` inside the file — this is Next.js's own
   documented pattern (`@next/mdx` doesn't parse YAML frontmatter by default), not a
-  third-party convention. The MDX body is reserved for long-form case-study prose later.
-  Adding a project = duplicate a file, edit the fields. Ordering is controlled by an explicit
-  `order: number` field, sorted in `lib/projects.ts`.
-- Full `ProjectMetadata` schema (incl. fields reserved for the case-study page) lives in
-  `lib/definitions.ts`. `INDUSTRIES` there is the fixed, confirmed-accurate filter list.
+  third-party convention. Adding a project = duplicate a file, edit the fields. Ordering is
+  controlled by an explicit `order: number` field, sorted in `lib/projects.ts`. The MDX *body*
+  is no longer rendered anywhere (see "Card-only /work" above) — files are metadata-only now.
+- Full `ProjectMetadata` schema lives in `lib/definitions.ts`. `INDUSTRIES` there is the fixed,
+  confirmed-accurate filter list.
 - **shadcn is the primitive layer, going forward.** It's already configured in this repo
   (`components.json`, `@base-ui/react`). Added `Badge` and `Toggle`/`ToggleGroup` via
   `npx shadcn@latest add` for `/work`'s tags and filter pills. Rule of thumb: use shadcn for
   interactive primitives (buttons, toggles, dialogs, etc.), hand-build the page-specific
   composed sections (hero, grids, cards) styled with the custom color tokens in `globals.css`.
-- `/work`'s filter logic (in `components/sections/project-filter-grid.tsx`): industry is
-  single-select (`[]` = "All"); tech stack is multi-select, OR logic (project shown if it has
-  *any* selected tag) — this OR-logic choice was an implementation default, not explicitly
-  confirmed with the user; revisit if it feels wrong once real projects are in.
+- `/work`'s filter logic (in `components/sections/project-filter-grid.tsx`): industry only,
+  single-select (`[]` = "All"). The stack multi-select filter was removed along with the
+  tech-stack tags on cards (see "Card-only /work" above).
 - `next.config.ts` now wraps the config with `@next/mdx`'s `createMDX()` and allowlists
   `picsum.photos` under `images.remotePatterns` — that allowlist should be removed once real
   project thumbnails move to local files in `/public`.
@@ -270,8 +325,8 @@ were quietly serving a stale link until caught.
 - **Add `zod` validation for project content.** `lib/projects.ts` currently trusts each
   `.mdx` file's `metadata` export as-is — a typo'd field name (e.g. `indsutry`) fails silently
   instead of erroring at build time. Add a `zod` schema (mirroring `ProjectMetadata` in
-  `lib/definitions.ts`) and `.parse()` each project's metadata when reading it in
-  `getAllProjects()` / `getProjectBySlug()`, so bad content fails loudly with a clear message.
+  `lib/definitions.ts`) and `.parse()` each project's metadata in `getAllProjects()`, so bad
+  content fails loudly with a clear message.
 - **Swap placeholder `picsum.photos` images for real ones**, using static `import` (local file
   in `/public` or colocated with the project's `.mdx`) instead of remote URLs + manual
   `fill`/`sizes` — gets automatic width/height + blur placeholder from Next for free.
@@ -281,18 +336,12 @@ were quietly serving a stale link until caught.
 - 404 page: in scope for this pass or later?
 - Header/footer: styled now, or after the priority pages are done? (Given `/work` is now
   fully styled, probably worth doing header/footer sooner rather than later.)
-- Case study projects: how many real case studies, and what content/screenshots go in them?
-- Should the homepage (`app/page.tsx` + its section components) be restyled to match `/work`'s
-  fully-styled approach, or left as-is until a dedicated pass?
-- Confirm the tech-stack multi-select filter's OR logic (see Decisions above) feels right once
-  real projects exist — may want AND logic instead.
-
 ## Next step
 
-Homepage, `/work`, `/work/[slug]`, and `/about` are all done and fully styled — that's every
-page in the original priority order. Real project content still needs to replace the 3
-placeholder `.mdx` files in `content/projects/` (see Content architecture above for the field
-shape; each file now also has a full case-study body to use as a template).
+Homepage, `/work`, and `/about` are all done and fully styled. `/work/[slug]` (deep case
+studies) was deliberately removed — see "Card-only /work" above. Real project content still
+needs to replace the 3 placeholder `.mdx` files in `content/projects/` (see Content
+architecture above for the field shape — metadata only now, no body content needed).
 
 What's left, roughly in order of what a job-application deadline would care about:
 - Real content pass: swap placeholder projects, portrait photo, and stock thumbnails for the

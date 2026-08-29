@@ -18,14 +18,19 @@ export type ProjectMetadata = {
 	slug: string;
 	order: number;
 	industry: Industry;
+	// Not currently shown on the card or filterable — most projects share a
+	// stack (WordPress/ACF), so it wasn't a useful differentiator. Kept as
+	// data in case that changes later.
 	stack: string[];
 	summary: string;
 	thumbnail: string;
-
-	// Case-study page (/work/[slug]) sidebar + hero fields.
-	role?: string;
-	client?: string;
-	timeframe?: string;
 	liveUrl?: string;
-	githubUrl?: string;
+
+	// Optional per-project code snippet, shown in a dialog from the card's
+	// "Featured Code" button. Use whatever language/stack the project
+	// actually used — that's the point, not uniformity.
+	codeSnippet?: {
+		filename: string;
+		code: string;
+	};
 };
