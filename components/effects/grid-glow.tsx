@@ -22,6 +22,14 @@ export default function GridGlow() {
 			const period = window.innerHeight || 1;
 			const y = window.scrollY % period;
 			el.style.setProperty("--glow-y", `${y}px`);
+
+			// Fade out near the top/bottom of each cycle so the wraparound
+			// (y snapping from ~period back to 0) happens while invisible,
+			// instead of reading as a sharp jump mid-glow.
+			const fadeZone = Math.min(200, period * 0.25);
+			const distanceFromEdge = Math.min(y, period - y);
+			const fade = Math.min(1, distanceFromEdge / fadeZone);
+			el.style.setProperty("--glow-fade", `${fade}`);
 		};
 
 		const onScroll = () => {

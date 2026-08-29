@@ -160,6 +160,37 @@ usage):
    else caused the DOM node to unmount. Fixed by adding `data-closed:pointer-events-none` to
    both in `sheet.tsx` directly.
 
+## Timeline redesign (2026-08-29)
+
+`components/sections/timeline.tsx` — two changes:
+
+1. **Layout fix**: dot position is now identical at every breakpoint (always the first
+   element of a `flex` row, so its center sits at a constant `left: 5px` matching the
+   connecting line — no more mobile/desktop mismatch). Only the *relationship* between the
+   (dot+year) cluster and the content changes: `flex-col` on mobile (content below), `brm57:
+   flex-row brm57:items-start` at 576px+ (content beside, top-aligned with the dot). Verified
+   both breakpoints via actual DOM geometry (top offsets match exactly at brm57+; visually
+   confirmed on mobile).
+2. **Scroll-driven active dot**: dots start outline-only; whichever item's box currently
+   overlaps the exact vertical center of the viewport gets its dot filled, via
+   `IntersectionObserver` with `rootMargin: "-50% 0px -50% 0px"` (a zero-height trigger line at
+   center) — the observer only acts on `isIntersecting: true`, so the active item naturally
+   stays filled through the gap until the next one crosses center, in either scroll direction,
+   and the last item just stays active once reached. Fill is a separate inset `<span>`
+   crossfading opacity (`transition-opacity duration-500`) over a constant border, not an
+   instant background swap, so it's a real fade in both directions. The old hardcoded
+   `current: true` flag/glow on the last item was removed — superseded by this.
+
+**Verification note**: the in-session browser tool's `IntersectionObserver` only flushes
+callbacks on certain paint ticks (confirmed via isolated test — a bare observer with zero
+config didn't fire on `setTimeout`/`requestAnimationFrame` alone, but did fire once a
+`computer{action:"screenshot"}` forced a paint). Got one clean confirming data point where the
+DOM-geometry ground truth and the rendered dot state matched exactly, which validates the
+logic, but couldn't get fully reliable continuous confirmation through this tool due to that
+flushing quirk — it's a tooling artifact, not expected to affect real browsers (which composite
+continuously during real scroll). **Ask the user to confirm this looks right in their own
+browser** if it hasn't been double-checked yet.
+
 ## Visual effects
 
 - **Grid backdrop**: `.grid-bg` (in `app/globals.css`, rendered once in `app/layout.tsx`) is a
@@ -183,6 +214,12 @@ usage):
   stacking context) was removed; fixed by making it a `<section>`. `footer-main.tsx` had the
   same latent bug (never a `<section>`) — fixed with explicit `relative z-[1]`. If a new
   top-level block ever shows a grid line through it, this is the first thing to check.
+  **Fade at the scroll-cycle boundary (2026-08-29)**: the modulo loop (`scrollY % viewportHeight`)
+  meant `--glow-y` snapped from ~viewport-height back to 0 the instant a cycle wrapped —
+  visible as a sharp jump whenever that happened while the glow was on-screen. Fixed by having
+  the same scroll handler also compute `--glow-fade` (0 near either edge of the cycle, ramping
+  to 1 within a ~200px zone), and `.grid-glow`'s `opacity` is now `calc(0.55 * var(--glow-fade, 1))`
+  instead of a flat `0.55`. The wrap now happens while fully invisible instead of mid-glow.
 
 ## No headshot on /about (deliberate)
 

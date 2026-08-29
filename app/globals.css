@@ -378,6 +378,9 @@
  * Traveling glow band, same grid pattern as .grid-bg but in the accent color,
  * revealed only inside a soft radial mask whose vertical center
  * (--glow-y, set by components/effects/grid-glow.tsx) tracks scroll position.
+ * --glow-fade (also set there) dims it to 0 near the top/bottom of each
+ * scroll cycle, so the y-wraparound happens while invisible instead of
+ * reading as a sharp jump mid-glow.
  * Purely additive/decorative — aria-hidden, and the driving JS no-ops under
  * prefers-reduced-motion (belt-and-suspenders `display: none` below too).
  */
@@ -391,7 +394,7 @@
 		linear-gradient(90deg, var(--color-accent-alt-500) 1px, transparent 1px);
 	background-size: 64px 64px;
 	mask-image: radial-gradient(480px 220px at 68% var(--glow-y, 20%), #000 0%, transparent 72%);
-	opacity: 0.55;
+	opacity: calc(0.55 * var(--glow-fade, 1));
 }
 
 @media (prefers-reduced-motion: reduce) {

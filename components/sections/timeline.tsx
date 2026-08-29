@@ -1,8 +1,11 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
 type TimelineItem = {
 	year: string;
 	title: string;
 	description: string;
-	current?: boolean;
 };
 
 const TIMELINE: TimelineItem[] = [
@@ -41,11 +44,38 @@ const TIMELINE: TimelineItem[] = [
 		title: "Expanding into full-stack",
 		description:
 			"Shifted my primary stack to React, Next.js, TypeScript, and Postgres — building complete applications instead of just the front end.",
-		current: true,
 	},
 ];
 
 export default function Timeline() {
+	// -1 = nothing active yet (all dots start outline-only, per spec)
+	const [activeIndex, setActiveIndex] = useState(-1);
+	const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					const index = itemRefs.current.indexOf(entry.target as HTMLDivElement);
+					if (index !== -1) setActiveIndex(index);
+				}
+			},
+			// A single-pixel-tall trigger zone at the vertical center of the
+			// viewport — an item is only "intersecting" while it overlaps that
+			// line. We only ever act on isIntersecting:true, so the previously
+			// active item naturally stays active through the gap between items
+			// until the next one crosses center, in either scroll direction.
+			{ rootMargin: "-50% 0px -50% 0px", threshold: 0 }
+		);
+
+		for (const el of itemRefs.current) {
+			if (el) observer.observe(el);
+		}
+
+		return () => observer.disconnect();
+	}, []);
+
 	return (
 		<section className="component">
 			<div className="wrapper">
@@ -54,24 +84,29 @@ export default function Timeline() {
 					<h2 className="mt-0">How I got here</h2>
 				</div>
 
-				<div className="relative max-w-190 before:absolute before:top-1.5 before:bottom-1.5 before:left-0 before:w-px before:bg-bdr-500 brm57:before:left-22">
+				<div className="relative max-w-190 before:absolute before:top-1.5 before:bottom-1.5 before:left-[5px] before:w-px before:bg-bdr-500">
 					{TIMELINE.map((item, index) => (
 						<div
 							key={item.year}
-							className={`relative grid grid-cols-1 gap-1.5 brm57:grid-cols-[88px_1fr] brm57:gap-7 ${
+							ref={(el) => {
+								itemRefs.current[index] = el;
+							}}
+							className={`flex flex-col gap-2 brm57:flex-row brm57:items-start brm57:gap-6 ${
 								index === TIMELINE.length - 1 ? "" : "pb-11"
 							}`}
 						>
-							<div className="font-mono text-[13px] text-body-500 brm57:pt-0.5 brm57:text-right">
-								{item.year}
+							<div className="flex items-center gap-3">
+								<span className="relative flex size-2.5 shrink-0 items-center justify-center rounded-full border-2 border-accent-500 bg-bg-dark-900">
+									<span
+										className={`absolute inset-0 rounded-full bg-accent-500 transition-opacity duration-500 ${
+											index === activeIndex ? "opacity-100" : "opacity-0"
+										}`}
+									/>
+								</span>
+								<span className="font-mono text-[13px] text-body-500">{item.year}</span>
 							</div>
-							<div
-								className={`relative pl-5 before:absolute before:top-1.5 before:left-[-5px] before:size-2.5 before:rounded-full before:border-2 before:border-accent-500 ${
-									item.current
-										? "before:bg-accent-500 before:shadow-[0_0_0_4px_rgba(53,104,214,0.2)]"
-										: "before:bg-bg-dark-900"
-								}`}
-							>
+
+							<div className="pl-[23px] brm57:pl-0">
 								<div className="mb-2 font-sans-alt text-lg font-semibold text-hdr-main-100">
 									{item.title}
 								</div>
