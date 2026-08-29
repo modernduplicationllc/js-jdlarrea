@@ -20,7 +20,7 @@ export default function AboutPage() {
 			<ValuesGrid />
 			<CtaBanner
 				header="Want to see the work behind the story?"
-				description="// 30+ projects, filterable by stack and industry"
+				description="// past projects, filterable by stack and industry"
 				actions={[
 					{ href: "/work", label: "Browse projects", variant: "primary" },
 					{ href: LINKEDIN_URL, label: "Connect on LinkedIn", variant: "ghost", icon: "linkedin" },

@@ -1,19 +1,19 @@
 const TOOL_COLUMNS = [
 	{
-		label: "Platforms",
-		items: ["WordPress & ACF", "Shopify", "HubSpot CMS", "WooCommerce", "Gravity Forms"],
+		label: "Current stack",
+		items: ["React & Next.js", "TypeScript", "Tailwind CSS & shadcn/ui", "Neon Postgres", "NextAuth / Auth.js", "Vercel"],
+	},
+	{
+		label: "Workflow",
+		items: ["Claude Code & VS Code", "Git & GitHub Actions", "Notion", "LocalWP"],
+	},
+	{
+		label: "Other Platforms",
+		items: ["WordPress & ACF", "Shopify", "HubSpot CMS", "WooCommerce"],
 	},
 	{
 		label: "Design",
 		items: ["Figma (primary)", "Photoshop", "Adobe XD"],
-	},
-	{
-		label: "Current stack",
-		items: ["Next.js & TypeScript", "Tailwind CSS", "Neon Postgres", "NextAuth / Auth.js", "Vercel"],
-	},
-	{
-		label: "Workflow",
-		items: ["Cursor AI & VS Code", "GitHub Actions", "Notion", "LocalWP"],
 	},
 ];
 
@@ -23,7 +23,8 @@ export default function Toolbox() {
 			<div className="wrapper">
 				<div className="mb-13">
 					<div className="super-header with-dash">toolbox</div>
-					<h2 className="!mt-0">What I reach for</h2>
+					<h2 className="mt-0">What I reach for</h2>
+					<p>Still fluent in what got me here, building daily with what's next.</p>
 				</div>
 
 				<div className="grid grid-cols-1 gap-8 brm57:grid-cols-2 brm10:grid-cols-4">

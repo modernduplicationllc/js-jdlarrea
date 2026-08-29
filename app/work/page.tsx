@@ -5,7 +5,7 @@ import { getAllProjects } from "@/lib/projects";
 
 export const metadata: Metadata = {
 	title: "Work | JD Larrea",
-	description: "Ten years of client work, filtered your way.",
+	description: "A curated look at the web work I've done.",
 };
 
 export default async function WorkPage() {
@@ -15,8 +15,8 @@ export default async function WorkPage() {
 		<>
 			<PageHero
 				eyebrow="work"
-				header="Ten years of client work, filtered your way."
-				description="Agency projects, freelance builds, and independent work spanning eight industries. Filter by industry or tech stack to find what's most relevant to you."
+				header="A curated look at the web work I've done."
+				description="Agency projects, freelance builds, and a few independent ones along the way — across various industries."
 			/>
 
 			<ProjectFilterGrid projects={projects} />

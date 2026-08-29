@@ -9,7 +9,7 @@ const VALUES = [
 		num: "02",
 		title: "Accessible by default",
 		description:
-			"WCAG AA contrast, semantic markup, and keyboard navigation aren't an afterthought — they're part of how I build from the start.",
+			"WCAG AA contrast, semantic markup, and keyboard navigation get checked before a design ships — not patched in after.",
 	},
 	{
 		num: "03",
