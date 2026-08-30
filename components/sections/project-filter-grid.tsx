@@ -65,6 +65,11 @@ export default function ProjectFilterGrid({
 
 			<section className="component grid-section">
 				<div className="wrapper">
+					<p className="mb-8 max-w-160 text-sm text-body-500">
+						* Live links reflect each site as it exists today — clients update and redesign
+						independently, so a site may look different from when I worked on it.
+					</p>
+
 					{filtered.length === 0 ? (
 						<p className="text-body-300">No projects match those filters yet.</p>
 					) : (
