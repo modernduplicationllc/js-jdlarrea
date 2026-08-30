@@ -26,7 +26,7 @@ export default function CtaBanner({
 	return (
 		<section className="component border-b-0 py-20 text-center brm10:py-28">
 			<div className="wrapper thinnest">
-				<h2 className="!mt-0">{header}</h2>
+				<h2>{header}</h2>
 				<p className="mb-8.5 font-mono text-[15px] text-body-500">{description}</p>
 
 				<div className="flex flex-wrap justify-center gap-3.5">

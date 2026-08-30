@@ -25,7 +25,7 @@ export default function ValuesGrid() {
 			<div className="wrapper">
 				<div className="mb-13">
 					<div className="super-header with-dash">how I work</div>
-					<h2 className="!mt-0">Principles I don&apos;t compromise on</h2>
+					<h2>Principles I don&apos;t compromise on</h2>
 				</div>
 
 				<div className="grid grid-cols-1 gap-6 brm76:grid-cols-3">
