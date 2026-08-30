@@ -1,13 +1,6 @@
 import Image from "next/image";
-import { ArrowUpRight, Code2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
 import type { ProjectMetadata } from "@/lib/definitions";
 
 const ACTION_CLASS =
@@ -40,8 +33,8 @@ export default function ProjectCard({ project }: { project: ProjectMetadata }) {
 
 				<p className="text-sm leading-relaxed text-body-300">{project.summary}</p>
 
-				<div className="mt-auto flex flex-wrap gap-2.5 pt-4">
-					{project.liveUrl && (
+				{project.liveUrl && (
+					<div className="mt-auto flex flex-wrap gap-2.5 pt-4">
 						<a
 							href={project.liveUrl}
 							target="_blank"
@@ -51,28 +44,8 @@ export default function ProjectCard({ project }: { project: ProjectMetadata }) {
 							Visit Site
 							<ArrowUpRight size={15} />
 						</a>
-					)}
-
-					{project.codeSnippet && (
-						<Dialog>
-							<DialogTrigger className={ACTION_CLASS}>
-								Featured Code
-								<Code2 size={15} />
-							</DialogTrigger>
-
-							<DialogContent className="max-w-2xl bg-bg-dark-100 ring-bdr-500">
-								<DialogHeader>
-									<DialogTitle className="font-mono text-sm text-body-300">
-										{project.codeSnippet.filename}
-									</DialogTitle>
-								</DialogHeader>
-								<pre className="max-h-[70vh] overflow-auto rounded-md border border-bdr-500 bg-bg-dark-900 p-5 font-mono text-[12.5px] leading-relaxed text-body-300">
-									<code>{project.codeSnippet.code}</code>
-								</pre>
-							</DialogContent>
-						</Dialog>
-					)}
-				</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);
