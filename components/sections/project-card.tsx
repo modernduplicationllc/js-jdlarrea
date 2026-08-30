@@ -45,7 +45,7 @@ export default function ProjectCard({ project }: { project: ProjectMetadata }) {
 						<a
 							href={project.liveUrl}
 							target="_blank"
-							rel="noopener noreferrer"
+							rel="nofollow noopener noreferrer"
 							className={ACTION_CLASS}
 						>
 							Visit Site

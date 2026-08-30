@@ -16,7 +16,10 @@ export type Industry = (typeof INDUSTRIES)[number];
 export type ProjectMetadata = {
 	title: string;
 	slug: string;
-	order: number;
+	// Sort key only, format YYYYMMDD — never rendered client-side. Higher
+	// (more recent) sorts first. A date rather than a plain index so new
+	// projects can be inserted anywhere without renumbering everything else.
+	dateAdded: number;
 	industry: Industry;
 	// Not currently shown on the card or filterable — most projects share a
 	// stack (WordPress/ACF), so it wasn't a useful differentiator. Kept as

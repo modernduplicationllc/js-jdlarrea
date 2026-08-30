@@ -18,5 +18,5 @@ export async function getAllProjects(): Promise<ProjectMetadata[]> {
 		projects.push(mod.metadata);
 	}
 
-	return projects.sort((a, b) => a.order - b.order);
+	return projects.sort((a, b) => b.dateAdded - a.dateAdded);
 }

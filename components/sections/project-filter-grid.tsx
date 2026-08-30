@@ -68,7 +68,7 @@ export default function ProjectFilterGrid({
 					{filtered.length === 0 ? (
 						<p className="text-body-300">No projects match those filters yet.</p>
 					) : (
-						<div className="grid grid-cols-1 gap-6 brm76:grid-cols-2">
+						<div className="grid grid-cols-1 gap-5 brm76:grid-cols-2 brd12:grid-cols-3">
 							{filtered.map((project) => (
 								<ProjectCard key={project.slug} project={project} />
 							))}

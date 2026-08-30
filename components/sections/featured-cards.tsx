@@ -2,9 +2,13 @@ import Link from "next/link";
 import ProjectCard from "@/components/sections/project-card";
 import { getAllProjects } from "@/lib/projects";
 
+const FEATURED_SLUGS = ["journyx", "traditional-medicinals", "enerfab"];
+
 export default async function FeaturedCards() {
 	const allProjects = await getAllProjects();
-	const projects = allProjects.slice(0, 3);
+	const projects = FEATURED_SLUGS.map((slug) =>
+		allProjects.find((project) => project.slug === slug)
+	).filter((project) => project !== undefined);
 
 	return (
 		<section className="component">
@@ -19,7 +23,7 @@ export default async function FeaturedCards() {
 						href="/work"
 						className="inline-flex items-center gap-1.5 text-sm whitespace-nowrap text-accent-alt-300 hover:text-accent-alt-100"
 					>
-						View all {allProjects.length}+ projects →
+						View all {allProjects.length} projects →
 					</Link>
 				</div>
 
