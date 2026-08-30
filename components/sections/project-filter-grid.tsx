@@ -29,6 +29,7 @@ export default function ProjectFilterGrid({
 						<span className="font-mono text-[11px] tracking-widest text-body-500 uppercase">
 							Industry
 						</span>
+
 						<div className="flex max-w-160 flex-wrap gap-2">
 							<button
 								type="button"

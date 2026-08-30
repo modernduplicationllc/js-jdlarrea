@@ -5,9 +5,12 @@ import { usePathname } from "next/navigation";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { GITHUB_URL, LINKEDIN_URL, NAV_ITEMS, RESUME_HREF } from "@/lib/nav";
 import MobileNav from "@/components/globals/mobile-nav";
+import { cn } from "@/lib/utils";
 
 export default function HeaderMain() {
 	const pathname = usePathname();
+
+	const NAV_CLASSES = 'text-sm font-medium transition-colors hover:text-accent-alt-300';
 
 	return (
 		<header className="sticky top-0 z-50 border-b border-bdr-500 bg-bg-dark-900/85 backdrop-blur-md">
@@ -16,20 +19,22 @@ export default function HeaderMain() {
 					href="/"
 					className="flex items-center gap-2.5 font-sans-alt text-[17px] font-semibold text-hdr-main-100"
 				>
-					<span className="size-1.5 rounded-[2px] bg-accent-500 shadow-[0_0_12px_1px_var(--color-accent-500)]" />
-					jd.larrea
+					<span className="size-1.5 rounded-xs bg-accent-500" />
+					J.D. Larrea
 				</Link>
 
 				<nav className="hidden items-center gap-9 brm10:flex">
 					{NAV_ITEMS.map((item) => {
 						const isActive = item.href ? pathname.startsWith(item.href) : false;
+
 						return (
 							<Link
 								key={item.label}
 								href={item.href ?? "#"}
-								className={`text-sm font-medium transition-colors hover:text-accent-alt-300 ${
+								className={cn(
+									NAV_CLASSES,
 									isActive ? "text-accent-alt-300" : "text-body-300"
-								}`}
+								)}
 							>
 								{item.label}
 							</Link>
@@ -40,7 +45,7 @@ export default function HeaderMain() {
 						href={RESUME_HREF}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-sm font-medium text-body-300 transition-colors hover:text-accent-alt-300"
+						className={NAV_CLASSES}
 					>
 						Resume
 					</a>
@@ -51,7 +56,7 @@ export default function HeaderMain() {
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="GitHub"
-							className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-hdr-main-100 text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
+							className="inline-flex size-9 items-center justify-center rounded-md bg-hdr-main-100 text-bg-dark-900 transition-colors hover:bg-accent-alt-100"
 						>
 							<GithubIcon size={16} />
 						</a>

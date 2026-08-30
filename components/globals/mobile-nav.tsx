@@ -7,24 +7,32 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { GITHUB_URL, LINKEDIN_URL, NAV_ITEMS, RESUME_HREF, type NavItem } from "@/lib/nav";
+import { cn } from "@/lib/utils";
 
 function HamburgerIcon({ open }: { open: boolean }) {
+	const HAMBURGER_BAR_CLASSES = 'h-0.5 w-full bg-current'
 	return (
 		<span className="flex w-5 flex-col gap-1.5" aria-hidden="true">
 			<span
-				className={`h-0.5 w-full origin-center bg-current transition-transform ${
-					open ? "translate-y-2 rotate-45" : ""
-				}`}
+				className={cn(
+					HAMBURGER_BAR_CLASSES,
+					'origin-cener transition-transform',
+					open ? 'translate-y-2 rotate-45' : ''
+				)}
 			/>
 			<span
-				className={`h-0.5 w-full bg-current transition-all ${
-					open ? "scale-x-0 opacity-0" : ""
-				}`}
+				className={cn(
+					HAMBURGER_BAR_CLASSES,
+					'transition-all',
+					open ? 'scale-x-0 opacity-0' : ''
+				)}
 			/>
 			<span
-				className={`h-0.5 w-full origin-center bg-current transition-transform ${
-					open ? "-translate-y-2 -rotate-45" : ""
-				}`}
+				className={cn(
+					HAMBURGER_BAR_CLASSES,
+					'origin-cener transition-transform',
+					open ? '-translate-y-2 -rotate-45' : ''
+				)}
 			/>
 		</span>
 	);
@@ -45,7 +53,7 @@ export default function MobileNav() {
 				aria-controls="mobile-nav-panel"
 				aria-label={isOpen ? "Close menu" : "Open menu"}
 				onClick={() => setIsOpen((open) => !open)}
-				className="flex h-9 w-9 items-center justify-center rounded-md text-hdr-main-100 brm10:hidden"
+				className="flex size-9 items-center justify-center rounded-md text-hdr-main-100 brm10:hidden"
 			>
 				<HamburgerIcon open={isOpen} />
 			</button>
@@ -128,9 +136,10 @@ export default function MobileNav() {
 												<Link
 													href={item.href ?? "#"}
 													onClick={close}
-													className={`block py-4 text-base font-medium ${
-														isActive ? "text-accent-alt-300" : "text-body-100"
-													}`}
+													className={cn(
+														'block py-4 text-base font-medium',
+														isActive ? 'text-accent-alt-300' : 'text-body-100'
+													)}
 												>
 													{item.label}
 												</Link>
@@ -158,7 +167,7 @@ export default function MobileNav() {
 										rel="noopener noreferrer"
 										aria-label="GitHub"
 										onClick={close}
-										className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-hdr-main-100 text-bg-dark-900"
+										className="inline-flex size-9 items-center justify-center rounded-md bg-hdr-main-100 text-bg-dark-900"
 									>
 										<GithubIcon size={16} />
 									</a>
