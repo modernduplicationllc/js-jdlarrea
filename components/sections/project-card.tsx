@@ -9,7 +9,7 @@ const ACTION_CLASS =
 export default function ProjectCard({ project }: { project: ProjectMetadata }) {
 	return (
 		<div className="flex flex-col overflow-hidden rounded-lg border border-bdr-500 bg-bg-dark-100">
-			<div className="relative aspect-[16/8] w-full overflow-hidden border-b border-bdr-500">
+			<div className="relative aspect-16/8 w-full overflow-hidden border-b border-bdr-500">
 				<Image
 					src={project.thumbnail}
 					alt=""

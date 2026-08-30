@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { GITHUB_URL, LINKEDIN_URL } from "@/lib/nav";
+import { cn } from "@/lib/utils";
 
 type CtaAction = {
 	href: string;
@@ -34,9 +35,11 @@ export default function CtaBanner({
 						const Icon = action.icon ? ICONS[action.icon] : null;
 						const isPrimary = action.variant !== "ghost";
 						const isExternal = action.href.startsWith("http");
-						const className = isPrimary
-							? "inline-flex items-center gap-2.5 rounded-md bg-btn-primary-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-btn-primary-700"
-							: "inline-flex items-center gap-2.5 rounded-md border border-bdr-500 px-6 py-3.5 text-sm font-medium text-body-300 transition-colors hover:border-accent-500 hover:text-hdr-main-100";
+						const className = cn(
+							'inline-flex items-center gap-2.5 rounded-md px-6 py-3.5 text-sm transition-colors',
+							isPrimary ? 'bg-btn-primary-500 font-semibold text-white  hover:bg-btn-primary-700' :
+							'border border-bdr-500 font-medium text-body-300 hover:border-accent-500 hover:text-hdr-main-100'
+						)
 
 						return isExternal ? (
 							<a

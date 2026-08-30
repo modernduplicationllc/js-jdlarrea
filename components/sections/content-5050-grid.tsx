@@ -21,6 +21,7 @@ export default function Content5050Grid() {
 						<p className="mb-6.5 max-w-105 text-sm leading-relaxed text-body-500">
 							A sandbox of experiments outside client work: a place to learn Next.js, Postgres, and full-stack patterns by actually building things, not just tutorials.
 						</p>
+
 						<Link
 							href="/apps"
 							className="inline-flex w-fit items-center gap-1.5 text-sm text-accent-alt-300 hover:text-accent-alt-100"

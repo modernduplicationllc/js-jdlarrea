@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProjectCard from "@/components/sections/project-card";
 import { getAllProjects } from "@/lib/projects";
+import { MoveRight } from "lucide-react";
 
 const FEATURED_SLUGS = ["journyx", "traditional-medicinals", "enerfab"];
 
@@ -23,7 +24,7 @@ export default async function FeaturedCards() {
 						href="/work"
 						className="inline-flex items-center gap-1.5 text-sm whitespace-nowrap text-accent-alt-300 hover:text-accent-alt-100"
 					>
-						View all {allProjects.length} projects →
+						View all {allProjects.length} projects <MoveRight size={12} />
 					</Link>
 				</div>
 
