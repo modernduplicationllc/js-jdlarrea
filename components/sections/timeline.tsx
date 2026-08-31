@@ -48,7 +48,7 @@ const TIMELINE: TimelineItem[] = [
 ];
 
 export default function Timeline() {
-	// -1 = nothing active yet (all dots start outline-only, per spec)
+	// -1 = nothing active yet (all dots start outline-only)
 	const [activeIndex, setActiveIndex] = useState(-1);
 	const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -84,7 +84,7 @@ export default function Timeline() {
 					<h2 className="mt-0">How I got here</h2>
 				</div>
 
-				<div className="relative max-w-190 before:absolute before:top-1.5 before:bottom-1.5 before:left-[5px] before:w-px before:bg-bdr-500">
+				<div className="relative max-w-190 before:absolute before:top-1.5 before:bottom-1.5 before:left-1.25 before:w-px before:bg-bdr-500">
 					{TIMELINE.map((item, index) => (
 						<div
 							key={item.year}
@@ -106,7 +106,7 @@ export default function Timeline() {
 								<span className="font-mono text-[13px] text-body-500">{item.year}</span>
 							</div>
 
-							<div className="pl-[23px] brm57:pl-0">
+							<div className="pl-5.75 brm57:pl-0">
 								<div className="mb-2 font-sans-alt text-lg font-semibold text-hdr-main-100">
 									{item.title}
 								</div>

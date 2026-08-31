@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MoveRight } from "lucide-react";
 
 const WORDS = [
 	"React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "PostgreSQL", "Neon", "Node.js", "NextAuth/Auth.js", "WordPress", "ACF", "Shopify", "HubSpot", "WooCommerce", "Supabase"
@@ -34,7 +35,7 @@ export default function WordList() {
 					href="/about"
 					className="inline-flex items-center gap-1.5 text-sm text-accent-alt-300 hover:text-accent-alt-100"
 				>
-					More on my background and stack →
+					More on my background and stack <MoveRight size={12} />
 				</Link>
 			</div>
 		</section>
