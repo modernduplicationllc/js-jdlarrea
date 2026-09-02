@@ -5,7 +5,7 @@ const DEMO_APPS = [
 	{ title: "Food Tracker", tag: "Next.js · Neon", image: "https://picsum.photos/seed/macros/500/320" },
 	{ title: "Movie Diary", tag: "Next.js · Neon", image: "https://picsum.photos/seed/moviedb/500/320" },
 	{ title: "Pokémon Playground", tag: "Vite · React · PokéAPI", image: "https://picsum.photos/seed/filmblog/500/320" },
-	{ title: "Component Playground", tag: "React · Tailwind · shadcn/ui", image: "https://picsum.photos/seed/gridui/500/320" },
+	{ title: "Component Sandbox", tag: "React · Tailwind · shadcn/ui", image: "https://picsum.photos/seed/gridui/500/320" },
 ];
 
 export default function Content5050Grid() {

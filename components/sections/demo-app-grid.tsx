@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { GithubIcon } from "@/components/icons";
+import { MoveRight } from "lucide-react";
+import Link from "next/link";
 
 type DemoApp = {
 	title: string;
@@ -30,12 +32,23 @@ const STATUS_DOT: Record<DemoApp["status"], string> = {
 export const DEMO_APPS: DemoApp[] = [
 	{
 		title: "Food Tracker",
-		status: "planned",
+		status: "live",
 		why: "Postgres schema design, server-side data modeling",
 		description:
 			"Multi-user food logging app backed by Neon Postgres — daily macro targets, meal logging, and a searchable food database.",
 		tags: ["Next.js", "Neon", "Server Actions"],
 		thumbnail: "https://picsum.photos/seed/macros2/700/400",
+		liveUrl: "/food-tracker",
+	},
+	{
+		title: "Pokémon Playground",
+		status: "live",
+		why: "Framework-independent React fundamentals, working with a public API",
+		description:
+			"A lightweight Vite + React sandbox for browsing and filtering Pokémon via the PokéAPI — no backend, deliberately no Next.js.",
+		tags: ["Vite", "React", "PokéAPI"],
+		thumbnail: "https://picsum.photos/seed/pokeplay2/700/400",
+		liveUrl: "/pokemon-playground",
 	},
 	{
 		title: "Movie Diary",
@@ -45,24 +58,17 @@ export const DEMO_APPS: DemoApp[] = [
 			"A personal movie-watching log — auth, ratings, and notes per film, backed by a relational schema in Neon Postgres.",
 		tags: ["Next.js", "Neon", "NextAuth"],
 		thumbnail: "https://picsum.photos/seed/moviedb2/700/400",
+		liveUrl: "/movie-diary",
 	},
 	{
-		title: "Pokémon Playground",
-		status: "planned",
-		why: "Framework-independent React fundamentals, working with a public API",
-		description:
-			"A lightweight Vite + React sandbox for browsing and filtering Pokémon via the PokéAPI — no backend, deliberately no Next.js.",
-		tags: ["Vite", "React", "PokéAPI"],
-		thumbnail: "https://picsum.photos/seed/pokeplay2/700/400",
-	},
-	{
-		title: "Component Playground",
+		title: "Component Sanbox",
 		status: "planned",
 		why: "A sandbox for testing UI patterns before using them live",
 		description:
 			"A running library of reusable React components — filter bars, cards, form patterns — built and tested here before landing in client or personal projects.",
 		tags: ["React", "Tailwind", "shadcn/ui"],
 		thumbnail: "https://picsum.photos/seed/gridui2/700/400",
+		liveUrl: "/component-sandbox",
 	},
 ];
 
@@ -70,13 +76,13 @@ export default function DemoAppGrid() {
 	return (
 		<section className="component">
 			<div className="wrapper">
-				<div className="grid grid-cols-1 gap-6 brm76:grid-cols-2">
+				<div className="grid gap-6 brm57:grid-cols-2 brm10:grid-cols-3">
 					{DEMO_APPS.map((app) => (
 						<div
 							key={app.title}
 							className="flex flex-col overflow-hidden rounded-lg border border-bdr-500 bg-bg-dark-100"
 						>
-							<div className="relative aspect-7/4 w-full overflow-hidden border-b border-bdr-500">
+							<div className="relative aspect-4/3 w-full overflow-hidden border-b border-bdr-500">
 								<Image
 									src={app.thumbnail}
 									alt=""
@@ -115,12 +121,12 @@ export default function DemoAppGrid() {
 
 								<div className="mt-auto flex gap-5 pt-4">
 									{app.liveUrl && (
-										<a
-											href={app.liveUrl}
-											className="text-sm text-accent-alt-300 hover:text-accent-alt-100"
+										<Link
+											href={`/apps/${app.liveUrl}`}
+											className="flex items-center gap-x-2 border px-4 py-1 border-accent-300 rounded-full text-white text-sm font-mono transition-colors hover:bg-accent-300 hover:text-bg-dark-500"
 										>
-											Visit site →
-										</a>
+											Visit site <MoveRight size={13} />
+										</Link>
 									)}
 									{app.githubUrl && (
 										<a
