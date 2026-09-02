@@ -29,39 +29,39 @@ const STATUS_DOT: Record<DemoApp["status"], string> = {
 // Update `status` / `liveUrl` / `githubUrl` as each one actually ships.
 export const DEMO_APPS: DemoApp[] = [
 	{
-		title: "Film Blog",
+		title: "Food Tracker",
 		status: "planned",
-		why: "first real Next.js project, MDX content pipeline",
+		why: "Postgres schema design, server-side data modeling",
 		description:
-			"A film blog for my creative side project — statically generated posts, MDX for rich content, custom typography for long-form reading.",
-		tags: ["Next.js", "MDX", "Tailwind"],
-		thumbnail: "https://picsum.photos/seed/filmblog2/700/400",
-	},
-	{
-		title: "Food & Macro Tracker",
-		status: "planned",
-		why: "Row Level Security, Server Actions at scale",
-		description:
-			"Multi-user food logging app with per-user data isolation via Supabase RLS, daily macro targets, and a food database with search.",
-		tags: ["Next.js", "Supabase", "Server Actions"],
+			"Multi-user food logging app backed by Neon Postgres — daily macro targets, meal logging, and a searchable food database.",
+		tags: ["Next.js", "Neon", "Server Actions"],
 		thumbnail: "https://picsum.photos/seed/macros2/700/400",
 	},
 	{
-		title: "Letterboxd-style Movie Tracker",
+		title: "Movie Diary",
 		status: "planned",
-		why: "auth, real data modeling, moderation logic",
+		why: "Auth flows, relational data modeling with Neon",
 		description:
-			"A watchlist and review app with the TMDB API — user auth, star ratings, moderated reviews, and filtering by genre, year, and rating.",
-		tags: ["Next.js", "Supabase", "TMDB API"],
+			"A personal movie-watching log — auth, ratings, and notes per film, backed by a relational schema in Neon Postgres.",
+		tags: ["Next.js", "Neon", "NextAuth"],
 		thumbnail: "https://picsum.photos/seed/moviedb2/700/400",
+	},
+	{
+		title: "Pokémon Playground",
+		status: "planned",
+		why: "Framework-independent React fundamentals, working with a public API",
+		description:
+			"A lightweight Vite + React sandbox for browsing and filtering Pokémon via the PokéAPI — no backend, deliberately no Next.js.",
+		tags: ["Vite", "React", "PokéAPI"],
+		thumbnail: "https://picsum.photos/seed/pokeplay2/700/400",
 	},
 	{
 		title: "Component Playground",
 		status: "planned",
-		why: "a sandbox for testing UI patterns before using them live",
+		why: "A sandbox for testing UI patterns before using them live",
 		description:
 			"A running library of reusable React components — filter bars, cards, form patterns — built and tested here before landing in client or personal projects.",
-		tags: ["React", "Tailwind", "TypeScript"],
+		tags: ["React", "Tailwind", "shadcn/ui"],
 		thumbnail: "https://picsum.photos/seed/gridui2/700/400",
 	},
 ];
@@ -76,7 +76,7 @@ export default function DemoAppGrid() {
 							key={app.title}
 							className="flex flex-col overflow-hidden rounded-lg border border-bdr-500 bg-bg-dark-100"
 						>
-							<div className="relative aspect-[7/4] w-full overflow-hidden border-b border-bdr-500">
+							<div className="relative aspect-7/4 w-full overflow-hidden border-b border-bdr-500">
 								<Image
 									src={app.thumbnail}
 									alt=""

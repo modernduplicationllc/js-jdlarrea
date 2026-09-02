@@ -57,15 +57,12 @@ export default function Timeline() {
 			(entries) => {
 				for (const entry of entries) {
 					if (!entry.isIntersecting) continue;
+
 					const index = itemRefs.current.indexOf(entry.target as HTMLDivElement);
+
 					if (index !== -1) setActiveIndex(index);
 				}
 			},
-			// A single-pixel-tall trigger zone at the vertical center of the
-			// viewport — an item is only "intersecting" while it overlaps that
-			// line. We only ever act on isIntersecting:true, so the previously
-			// active item naturally stays active through the gap between items
-			// until the next one crosses center, in either scroll direction.
 			{ rootMargin: "-50% 0px -50% 0px", threshold: 0 }
 		);
 
