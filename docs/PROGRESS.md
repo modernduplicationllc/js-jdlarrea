@@ -40,15 +40,15 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 
 | Route | Reference file(s) | Status | Notes |
 |---|---|---|---|
-| `/` (home) | `homepage2.html` | ✅ Done (fully styled) | hero-home, stats-ribbon, word-list, content-5050-grid, cta-banner all restyled to match `/work`'s approach. `featured-cards` now pulls real data from `getAllProjects()` (top 3) and reuses `ProjectCard` — no more hardcoded placeholder cards, single source of truth with `/work`. Header/footer (`components/globals/`) also styled — was blocking, since an unstyled header above a styled page looked broken. |
-| `/work` | `work2.html` | ✅ Done (fully styled + working filter) | `page-hero`, `project-filter-grid` (client component, industry single-select only — stack filter removed), `project-card` (2-col expanded cards, no detail page). Data-driven from `content/projects/*.mdx` via `lib/projects.ts`. |
+| `/` (home) | `homepage2.html` | ✅ Done (fully styled) | hero-home, stats-ribbon, word-list, content-5050-grid, cta-banner all restyled to match `/work`'s approach. `featured-cards` pulls a **curated** set from `getAllProjects()` — 3 specific hardcoded slugs in a specific order (Journyx, Traditional Medicinals, Enerfab), not just "top 3" — and reuses `ProjectCard`, single source of truth with `/work`. Header/footer also styled. |
+| `/work` | `work2.html` | ✅ Done (fully styled + working filter, real data) | `page-hero`, `project-filter-grid` (client component, industry single-select only), `project-card` (3-col grid, no detail page). Data-driven from `content/projects/*.mdx` (42 real projects) via `lib/projects.ts`. See "Real project content — 42 projects live" below. |
 | `/work/[slug]` | `case-study2.html` | ❌ Removed (2026-08-29) | Deprecated per user's call — see "Card-only /work" below. Route, its components, and the `ResultStrip`/`Gallery` MDX components were deleted, not just unlinked. |
-| `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (full-width bio, no photo — deliberate, see Decisions), `timeline` (career history, `current` item highlighted), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. |
+| `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (full-width bio, no photo — deliberate, see Decisions), `timeline` (career history, scroll-driven active dot — see "Timeline redesign" below, no more static `current` flag), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. |
 | `/apps` | `demo-apps2.html` | ✅ Started (landing only) | `page-hero` (now accepts a `children` slot for the status line) + `demo-app-grid`. All 4 apps are placeholder/`planned` status — honestly labeled "not started yet" rather than the reference mockup's fictional "2 live, 2 in progress" copy. Real routes (`/apps/food-tracker`, `/apps/film-blog`, etc.) are separate future work once those apps actually get built. |
-| `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route exists or is needed. Header, footer, and homepage hero all link directly to `/resume.pdf` (with a `download` attribute) instead of a Next.js route. **The actual PDF file still needs to be added to `/public/resume.pdf`** — until then these links 404. |
+| `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route. Header, footer, homepage hero all link to `RESUME_HREF` (`lib/nav.ts`), currently `/resume-jonathan-larrea-public.pdf` in `/public` — file exists, links are live (no longer 404). Opens in a new tab, no forced `download`. |
 | 404 | `404.html` | ❓ Unscoped | Not yet prioritized |
-| `components/globals/header-main.tsx` | — | 🔲 Stub | Placeholder logo/nav, not styled |
-| `components/globals/footer-main.tsx` | — | 🔲 Stub | Placeholder only |
+| `components/globals/header-main.tsx` | — | ✅ Done (fully styled) | Desktop nav + mobile hamburger trigger. See "Mobile navigation" below. |
+| `components/globals/footer-main.tsx` | — | ✅ Done (fully styled) | |
 
 ## Polish pass (post priority-order pages)
 
@@ -191,6 +191,122 @@ flushing quirk — it's a tooling artifact, not expected to affect real browsers
 continuously during real scroll). **Ask the user to confirm this looks right in their own
 browser** if it hasn't been double-checked yet.
 
+## Real project content — 42 projects live (2026-09-02)
+
+The 3 placeholder `.mdx` files are gone. `content/projects/` now holds **42 real projects**,
+user-supplied (title, live URL, industry, a short internal note per project). This is the
+actual, final project set for `/work` and the homepage's featured section — not a placeholder
+pass.
+
+- **Cover images**: user pre-supplied compressed JPGs in `public/projects/covers/`
+  (`cvr-<name>.jpg`), one per project, already exactly matching all 42 by name — no orphans, no
+  gaps. `thumbnail` in each `.mdx` points at its local file (`/projects/covers/cvr-*.jpg`), not
+  a remote URL — see "Sort key" note below re: `next.config.ts`'s `picsum.photos` allowlist,
+  which is now **only** needed for `/apps`'s demo-app placeholders, not `/work`.
+- **Sort key changed from `order: number` to `dateAdded: number`** (`lib/definitions.ts`,
+  `lib/projects.ts`). Format `YYYYMMDD`, sort key only, **never rendered client-side** —
+  `getAllProjects()` sorts descending (`b.dateAdded - a.dateAdded`), most recent first. Chosen
+  over a plain index specifically so a new project can be inserted anywhere later without
+  renumbering the other 41. User gave an exact display order (42 companies) plus the two
+  endpoint dates (`20251231` for the newest, `20190101` for the oldest); the 40 in between were
+  spread evenly across that range by a one-off script, preserving the exact requested order.
+- **Summaries**: every project's `summary` field is filled in with real, user-authored copy
+  (2–3 sentences, ~20–30 words, no line-clamp — length is manually kept consistent rather than
+  CSS-truncated). Two things caught and fixed during this pass, worth remembering as a pattern
+  for any future copy batches:
+  1. User's first draft had each summary starting with `"ProjectName: ..."` — redundant, since
+     `project.title` already renders as its own heading directly above `project.summary` on the
+     card. Stripped the leading name from every summary.
+  2. One summary (West Shore Home) named a real client as difficult to work with, and another
+     (Arry's Roofing) made a factually wrong claim ("before GSAP existed" — GSAP has existed
+     since 2008). Both fixed per user's explicit "keep everything professional, no negativity
+     toward any client" instruction — worth applying that filter to any future project copy too.
+- **Two pre-existing title typos fixed** while cross-referencing the new data:
+  `huitt-zollars.mdx` was `"Huitt Zolars"` → `"Huitt-Zollars"`; `aztech-international.mdx` was
+  `"Aztech International"` → `"AzTech International"`.
+- **Legal/NDA disclaimer added** above the `/work` grid (`project-filter-grid.tsx`): *"Live
+  links reflect each site as it exists today — clients update and redesign independently, so a
+  site may look different from when I worked on it."* Exists because these are live links to
+  real client sites the user doesn't control.
+- **`rel="nofollow"` added** to the "Visit Site" link (`project-card.tsx`, on top of the
+  existing `noopener noreferrer`) — user wants no SEO/association linkage between the portfolio
+  and these old client sites; `nofollow` is the correct link-level signal for that (`noindex`
+  would be the page-level equivalent but doesn't apply here, since these aren't pages the user
+  hosts).
+- **Grid is 3-column** (`project-filter-grid.tsx`: `grid-cols-1 brm76:grid-cols-2
+  brd12:grid-cols-3`, `gap-5`), changed from the original 2-column expanded-card layout now
+  that real (shorter, consistent-length) summaries are in — card `aspect-[16/8]` image ratio
+  unchanged.
+- **Homepage featured section is curated, not auto-top-3**: `featured-cards.tsx`'s
+  `FEATURED_SLUGS` is a hardcoded, ordered array (`["journyx", "traditional-medicinals",
+  "enerfab"]`) that `.find()`s each slug out of `getAllProjects()`'s full result, then
+  `.filter()`s out any `undefined` (defensive — protects against a future typo'd/renamed slug
+  crashing the render, at the cost of that one card silently disappearing instead). The "View
+  all N projects" link text also dropped its `+` — the count is exact now (42 real projects,
+  not "42 or more").
+
+## `codeSnippet` / `Dialog` feature removed (2026-09-02)
+
+The "Featured Code" button + modal (described in "Card-only /work" above as the NDA-safe
+alternative to linking real client repos) is now **fully removed**, not just unused:
+`codeSnippet` deleted from `ProjectMetadata`, the `Dialog` import/markup deleted from
+`project-card.tsx`, and `components/ui/dialog.tsx` itself deleted (nothing else referenced it —
+regenerate via `npx shadcn@latest add dialog` if a future feature needs it).
+
+**Why the reversal**: none of the 42 real projects ever had `codeSnippet` populated, so it was
+dead code. User's actual plan going forward: keep pointing at their real GitHub profile
+(already linked site-wide via `GITHUB_URL`), and put **generalized, non-client-specific**
+code showcases there directly (e.g. "megamenu," "on-scroll text" as standalone examples) —
+sidesteps the NDA issue entirely rather than solving it per-project. The original NDA reasoning
+for *why* client code shouldn't be linked directly still stands and applies to this new
+approach too (still no per-project client repo links) — only the *mechanism* changed. The
+`/apps` demo-app "View Code in Repo" button (planned, not yet built) is unaffected — that's
+100% the user's own IP, always was fine to link directly.
+
+## Header nav bug fixed + `cn()` established as the conditional-class pattern (2026-09-02)
+
+User was manually auditing files (see "Component philosophy" origin — same kind of pass) and
+hand-edited `header-main.tsx`'s active-nav-link class logic to
+`NAV_CLASSES + \`${isActive ? "..." : "..."}\`` — plain string concatenation with **no space**
+between the two pieces. Real bug, confirmed via live DOM inspection: every nav link's class
+attribute became one broken glued token
+(`hover:text-accent-alt-300text-body-300`), so **no nav link ever got its
+active/inactive color** — silently broken until caught. Fixed using `cn()` (`lib/utils.ts`,
+clsx + tailwind-merge, already present from shadcn's init but under-used elsewhere in the app)
+instead of manual concatenation: `cn(NAV_CLASSES, isActive ? "..." : "...")`. **This is now the
+established pattern for any future conditional className logic in this codebase** — reach for
+`cn()`, not `+`/template-literal concatenation, specifically because `cn()` can't produce this
+class of bug (it always space-joins, plus resolves real Tailwind conflicts via tailwind-merge).
+
+## Housekeeping (2026-09-02)
+
+- Removed 3 unused `create-next-app` scaffold defaults from `/public`: `file.svg`, `globe.svg`,
+  `window.svg` — confirmed zero references anywhere in the codebase before deleting.
+- Removed 3 redundant `!mt-0` overrides (`featured-cards.tsx`, `cta-banner.tsx`,
+  `values-grid.tsx`) and one redundant `mt-0` (`about-intro.tsx`'s h1) — all already handled by
+  existing base rules in `globals.css` (`.super-header + h2` adjacency rule, and the heading
+  base rule's `first:mt-0`), so removing them changed nothing visually. If a heading ever again
+  seems to need a manual `mt-0`/`!mt-0` override, check whether it's actually already covered
+  by one of those two rules before assuming it needs a fix.
+- Consolidated `about-intro.tsx`'s 4 repeated `<p className="mb-8 max-w-200 text-base
+  leading-relaxed text-body-300">` into a local `PARAGRAPH_CLASS` constant — matches the
+  existing `ACTION_CLASS`/`PILL_CLASS` pattern already used elsewhere in the codebase. Decided
+  against a global base `p { }` CSS rule (the user's own suggested approach) because most other
+  `<p>` tags site-wide intentionally have zero margin by design (project cards, timeline items,
+  values-grid) — a global rule would've required `mb-0` overrides scattered everywhere to
+  counteract it, net negative.
+- Favicon: user added `app/favicon.png` expecting it to work alongside `app/favicon.ico`, but
+  Next.js's file-convention only recognizes PNG favicons under the name **`icon.png`**, not
+  `favicon.png` — `favicon.png` wasn't being picked up at all. Told the user to rename it
+  (not done via this session's tools — user handles renames themselves per their "don't edit
+  code" ask on that thread); flagging here in case it's still pending.
+- User asked about `prettier-plugin-tailwindcss` for auto-sorting Tailwind classes (wants the
+  *sort order* only, explicitly not full-file Prettier reformatting). Recommended: install
+  Prettier + the plugin, but run it manually/scoped (`npm run format` script or per-file, not
+  format-on-save), with `.prettierrc.json`'s `tailwindStylesheet` pointed at `app/globals.css`
+  (required for v4 to understand custom `--breakpoint-*` tokens like `brm76`/`brd12` when
+  sorting). **Not yet installed** — this was guidance only, nothing added to the repo.
+
 ## Visual effects
 
 - **Grid backdrop**: `.grid-bg` (in `app/globals.css`, rendered once in `app/layout.tsx`) is a
@@ -256,12 +372,11 @@ Resulting shape:
   components. `CodePanel` also removed as a standalone component; its display logic now lives
   inline in `project-card.tsx` instead (single call site, no reason to keep it separate).
 - **`ProjectCard`** (`components/sections/project-card.tsx`) is no longer a link to anything —
-  it's a self-contained 2-col card: industry badge, title, description, then an action row.
-  "Visit Site" (external-arrow icon) shows whenever `liveUrl` is set. "Featured Code" (only
-  when `codeSnippet` is set) opens a `Dialog` showing that project's actual code — whatever
-  language it really used (PHP/ACF included). Showing real per-project code doesn't undercut
-  the Next.js/Tailwind positioning; it reinforces the "decade in WordPress, now expanding"
-  story `/about` already tells honestly.
+  it's a self-contained card: industry badge, title, description, then "Visit Site" (external-
+  arrow icon, shows whenever `liveUrl` is set). **Update (2026-09-02): the "Featured Code"
+  dialog described below was fully removed** — see "codeSnippet/Dialog removed" further down.
+  This bullet's original code-snippet rationale is kept for history but no longer reflects the
+  current build.
 - **Tech-stack tags and the stack filter both removed** — most projects share a stack
   (WordPress/ACF), so tags weren't a useful differentiator and a filter on hidden data would
   feel disconnected from what's on the card. `stack: string[]` is kept in `ProjectMetadata` as
@@ -335,12 +450,14 @@ were quietly serving a stale link until caught.
   follow this same approach (ask if unsure) rather than the unstyled placeholder pattern used
   on the homepage — that earlier pattern may get revisited/styled to match.
 - **Content architecture: MDX, not JSON/a headless CMS.** One file per project at
-  `content/projects/<slug>.mdx`. Structured fields (title, industry, stack, order, thumbnail,
-  etc.) live in `export const metadata = {...}` inside the file — this is Next.js's own
-  documented pattern (`@next/mdx` doesn't parse YAML frontmatter by default), not a
+  `content/projects/<slug>.mdx`. Structured fields (title, industry, stack, dateAdded,
+  thumbnail, etc.) live in `export const metadata = {...}` inside the file — this is Next.js's
+  own documented pattern (`@next/mdx` doesn't parse YAML frontmatter by default), not a
   third-party convention. Adding a project = duplicate a file, edit the fields. Ordering is
-  controlled by an explicit `order: number` field, sorted in `lib/projects.ts`. The MDX *body*
-  is no longer rendered anywhere (see "Card-only /work" above) — files are metadata-only now.
+  controlled by `dateAdded: number` (`YYYYMMDD`, descending — see "Real project content" above,
+  this superseded the original `order: number` field). The MDX *body* is no longer rendered
+  anywhere (see "Card-only /work" above) — files are metadata-only now. **42 real projects are
+  live now, not placeholders** — see "Real project content — 42 projects live" above.
 - Full `ProjectMetadata` schema lives in `lib/definitions.ts`. `INDUSTRIES` there is the fixed,
   confirmed-accurate filter list.
 - **shadcn is the primitive layer, going forward.** It's already configured in this repo
@@ -351,9 +468,11 @@ were quietly serving a stale link until caught.
 - `/work`'s filter logic (in `components/sections/project-filter-grid.tsx`): industry only,
   single-select (`[]` = "All"). The stack multi-select filter was removed along with the
   tech-stack tags on cards (see "Card-only /work" above).
-- `next.config.ts` now wraps the config with `@next/mdx`'s `createMDX()` and allowlists
-  `picsum.photos` under `images.remotePatterns` — that allowlist should be removed once real
-  project thumbnails move to local files in `/public`.
+- `next.config.ts` wraps the config with `@next/mdx`'s `createMDX()`. The `picsum.photos`
+  allowlist under `images.remotePatterns` is **still needed** — not for `/work` anymore (all 42
+  real projects use local `/projects/covers/*.jpg` thumbnails now), but `/apps`'s demo-app
+  placeholder thumbnails (`demo-app-grid.tsx`, `content-5050-grid.tsx`) still use
+  `picsum.photos`. Remove the allowlist once those get real screenshots too.
 - `.claude/launch.json` was created so the dev server can be previewed in-session
   (`pnpm dev`, port 3000).
 
@@ -361,12 +480,22 @@ were quietly serving a stale link until caught.
 
 - **Add `zod` validation for project content.** `lib/projects.ts` currently trusts each
   `.mdx` file's `metadata` export as-is — a typo'd field name (e.g. `indsutry`) fails silently
-  instead of erroring at build time. Add a `zod` schema (mirroring `ProjectMetadata` in
+  instead of erroring at build time. Now more relevant than before since there are 42 real
+  files to typo across, not 3. Add a `zod` schema (mirroring `ProjectMetadata` in
   `lib/definitions.ts`) and `.parse()` each project's metadata in `getAllProjects()`, so bad
   content fails loudly with a clear message.
-- **Swap placeholder `picsum.photos` images for real ones**, using static `import` (local file
-  in `/public` or colocated with the project's `.mdx`) instead of remote URLs + manual
-  `fill`/`sizes` — gets automatic width/height + blur placeholder from Next for free.
+- **Swap `/apps`'s remaining `picsum.photos` placeholder images for real ones** (`/work`'s 42
+  projects already use real local thumbnails — this TODO now only applies to the demo-app
+  placeholders in `demo-app-grid.tsx` and `content-5050-grid.tsx`), using static `import`
+  (local file in `/public`) instead of remote URLs + manual `fill`/`sizes` — gets automatic
+  width/height + blur placeholder from Next for free. Blocked on the demo apps actually being
+  built first.
+- **Favicon**: user has both `app/favicon.ico` and `app/favicon.png` — the `.png` one needs to
+  be renamed to `app/icon.png` to actually be picked up by Next's file-convention (`favicon.png`
+  isn't a recognized name). Unconfirmed whether user has done this yet.
+- **Optional**: install `prettier` + `prettier-plugin-tailwindcss` for class-order auto-sorting
+  if the user decides they want it — guidance already given (see "Housekeeping" above), not
+  installed yet, entirely the user's call on timing.
 
 ## Open questions (ask the user before deciding)
 
@@ -375,21 +504,42 @@ were quietly serving a stale link until caught.
   fully styled, probably worth doing header/footer sooner rather than later.)
 ## Next step
 
-Homepage, `/work`, and `/about` are all done and fully styled. `/work/[slug]` (deep case
-studies) was deliberately removed — see "Card-only /work" above. Real project content still
-needs to replace the 3 placeholder `.mdx` files in `content/projects/` (see Content
-architecture above for the field shape — metadata only now, no body content needed).
+Homepage, `/work`, `/about`, header, and footer are all done, fully styled, and — as of
+2026-09-02 — `/work` is running on its **real, final 42-project data set** (not placeholders):
+real summaries, real cover images, real `liveUrl`s, user-curated homepage-featured order. See
+"Real project content — 42 projects live" above for full detail. `/work/[slug]` (deep case
+studies) remains deliberately removed — see "Card-only /work" above. The `codeSnippet`/`Dialog`
+"Featured Code" feature that section originally described has since been fully removed too —
+see "`codeSnippet` / `Dialog` feature removed" above.
+
+Also as of this session: the user has been doing their own manual audit pass through the
+codebase (their own WordPress-to-Next.js learning exercise, largely Q&A-driven — hooks,
+`next/image`'s `sizes` prop, `cn()`/clsx/tailwind-merge, Base UI's `render` prop, Tailwind class
+formatting/sort order, favicon file conventions, etc.) alongside small real fixes that came out
+of it (the header nav `cn()` bug, scaffold SVG cleanup, redundant `!mt-0` removal). Expect more
+of this pattern in future sessions — the user is deliberately reading through files section by
+section to build understanding before making further changes, not just requesting features.
 
 What's left, roughly in order of what a job-application deadline would care about:
-- Real content pass: swap placeholder projects, portrait photo, and stock thumbnails for the
-  real thing.
-- `/apps` (Demo Apps landing) — priority 4, not yet started. Reference: `demo-apps2.html`.
-- `/resume`, 404 page — still unscoped (see Open questions).
+- `/apps` (Demo Apps landing) — priority, not yet started beyond the landing page. Reference:
+  `demo-apps2.html`. Still uses `picsum.photos` placeholders for all 4 apps.
+- Favicon: confirm `app/favicon.png` → `app/icon.png` rename happened (see TODO above).
+- `/resume`, 404 page — still unscoped (see Open questions below — these predate this session
+  and remain unanswered).
 
 Known simplifications to revisit later:
-- `components/mdx/code-panel.tsx` renders code as plain monospace text — no syntax
-  highlighting (the reference HTML had it hardcoded manually). Would need a library like
-  `rehype-pretty-code` to do properly.
+- ~~`components/mdx/code-panel.tsx` renders code as plain monospace text, no syntax
+  highlighting~~ — **no longer applicable, file doesn't exist** (confirmed via grep,
+  2026-09-02). It was already removed along with the rest of the case-study machinery (see
+  "Card-only /work" above); this stale note is left struck through rather than silently
+  deleted, in case it resurfaces as a real file again later.
 - `lucide-react` (installed, v1.32) dropped brand/logo icons in this major version — GitHub
   and LinkedIn icons are hand-kept as inline SVGs in `components/icons.tsx` instead.
-- See the TODO section above for the `zod` validation and real-image tasks.
+- shadcn's `Button` component (`components/ui/button.tsx`) is currently only used internally by
+  `Sheet`'s close button — not used anywhere for the app's own link-styled buttons
+  (`cta-banner.tsx`, `header-main.tsx`, `project-card.tsx`, `footer-main.tsx` all hand-roll
+  their own `<a>`/`<Link>` className strings instead). It could replace those via Base UI's
+  `render` prop (`<Button render={<a href="..." />}>`) for a single source of truth on button
+  styling — user said "disregard for now, will use this later," so this is a known deferred
+  idea, not a bug.
+- See the TODO section above for the `zod` validation, remaining real-image, and Prettier tasks.
