@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "@/app/globals.css";
 
-import HeaderMain from "@/components/globals/header-main";
+import HeaderApps from "@/components/globals/header-apps";
 
 const spaceSans = Space_Grotesk({
 	variable: "--font-space-grotesk",
@@ -32,6 +32,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
 				<div id="page">
+					<HeaderApps />
+
 					{children}
 				</div>
 			</body>
