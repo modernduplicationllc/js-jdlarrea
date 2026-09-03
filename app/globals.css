@@ -237,10 +237,17 @@
 	}
 
   body {
-    @apply bg-bg-dark-900
-		text-body-500
-		font-sans leading-[1.7]
+    @apply font-sans leading-[1.7]
 		antialiased;
+	}
+
+	#page {
+		@apply bg-bg-dark-900
+		text-body-500;
+	}
+
+	#web-app {
+		@apply bg-bg-light-700;
 	}
 
 	.component {

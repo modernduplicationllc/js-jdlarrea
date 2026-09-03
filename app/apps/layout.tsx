@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AppsLayout({ children }: LayoutProps<"/">) {
   return (
-		<div id="page">
+		<div id="web-app">
 			<HeaderApps />
 
 			{children}
