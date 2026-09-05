@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { GITHUB_URL, LINKEDIN_URL } from "@/lib/nav";
-import { cn } from "@/lib/utils";
+import { cn } from "cn"
 
 type CtaAction = {
 	href: string;

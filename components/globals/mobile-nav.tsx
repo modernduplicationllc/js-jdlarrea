@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { GITHUB_URL, LINKEDIN_URL, NAV_ITEMS, RESUME_HREF, type NavItem } from "@/lib/nav";
-import { cn } from "@/lib/utils";
+import { cn } from "cn"
 
 function HamburgerIcon({ open }: { open: boolean }) {
 	const HAMBURGER_BAR_CLASSES = 'h-0.5 w-full bg-current'

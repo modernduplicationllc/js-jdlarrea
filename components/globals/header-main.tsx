@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { GITHUB_URL, LINKEDIN_URL, NAV_ITEMS, RESUME_HREF } from "@/lib/nav";
 import MobileNav from "@/components/globals/mobile-nav";
-import { cn } from "@/lib/utils";
+import { cn } from "cn"
 
 export default function HeaderMain() {
 	const pathname = usePathname();
