@@ -84,6 +84,11 @@
 	--color-btn-tertiary-700: #c3cee2;
 	--color-btn-tertiary-900: #060b14;
 
+	/* WEBAPP: Pokemon Playground */
+	--color-wa-pp-grass: #83c669;
+
+
+
 	/* FONTS: main */
   --font-sans: var(--font-inter);
   --font-sans-alt: var(--font-space-grotesk);
@@ -244,10 +249,6 @@
 	#page {
 		@apply bg-bg-dark-900
 		text-body-500;
-	}
-
-	#web-app {
-		@apply bg-bg-light-700;
 	}
 
 	.component {

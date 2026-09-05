@@ -1,10 +1,10 @@
 export default function Page() {
 	return (
-		<section className="component">
-			<div className="wrapper">
-				<h1>Pokemon Playground</h1>
-				<p>This app is still in progress. Check back again soon!</p>
-			</div>
+		<section className="canvas-container
+		flex justify-center
+		mt-10 p-wrapper-gutter-mobile brm76:p-wrapper-gutter-desktop
+		border-t">
+			<div className="canvas-main w-full max-w-150 h-auto aspect-square bg-wa-pp-grass"></div>
 		</section>
 	)
 }
