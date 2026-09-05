@@ -17,30 +17,35 @@ export default function Page() {
 				<Image
 					src={shrub}
 					alt=""
-					style={`width: ${spriteSize(16)}%;`}
+					style={{width: `${spriteSize(28)}%`}}
 					className="h-auto
 					absolute top-[10%] left-[10%]
 					-translate-x-1/2
 					-translate-y-1/2
 					pointer-events-none"
+					unoptimized
 				/>
 				<Image
 					src={shrub}
 					alt=""
-					className="w-[5%] h-auto
+					style={{width: `${spriteSize(28)}%`}}
+					className="h-auto
 					absolute top-[15%] left-[10%]
 					-translate-x-1/2
 					-translate-y-1/2
 					pointer-events-none"
+					unoptimized
 				/>
 				<Image
 					src={shrub}
 					alt=""
-					className="w-[5%] h-auto
+					style={{width: `${spriteSize(28)}%`}}
+					className="h-auto
 					absolute top-[10%] left-[15%]
 					-translate-x-1/2
 					-translate-y-1/2
 					pointer-events-none"
+					unoptimized
 				/>
 			</div>
 		</section>

@@ -1,3 +1,3 @@
 export function spriteSize( px: number ) {
-	return ((px / 640) * 100).toString();
+	return (px / 640) * 100;
 }
