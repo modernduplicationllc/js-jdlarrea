@@ -18,6 +18,13 @@ will be built later while the user waits to hear back from employers.
 prioritized accordingly (see Page Status below). User wants to move deliberately — ask before
 assuming, don't guess on ambiguous decisions.
 
+**Per-app progress docs:** each demo app under `/apps` gets its own `progress-<app-name>.md`
+file colocated in its route folder (e.g. `app/apps/pokemon-playground/progress-pokemon.md`),
+tracking that app's own architecture/mechanics/build order — this file stays focused on the
+portfolio site as a whole. Each one is auto-loaded via its own `@` import line in root
+`CLAUDE.md`, alongside this file — when a new demo app gets its own progress doc, add its
+import line there too.
+
 ## Workflow / conversion process
 
 Static HTML mockups live in `.reference/*.html` (already designed/approved). The task is
