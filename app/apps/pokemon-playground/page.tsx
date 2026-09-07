@@ -1,12 +1,8 @@
-import Image from "next/image";
-import shrub from "./_assets/terrain/shrub.png";
 import { spriteSize } from "./_lib/utils";
-import { cn } from "cn"
+import TerrainObjects from "./components/terrain-objects";
+import AreaLake from "./components/area-lake";
 
 export default function Page() {
-	const cls_shrub = 'h-auto absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none';
-	const cls_guides = 'border border-1 border-black/15';
-
 	return (
 		<section className="canvas-container
 		flex justify-center
@@ -27,39 +23,8 @@ export default function Page() {
 					}}
 				/>
 
-				<Image
-					src={shrub}
-					alt=""
-					style={{width: `${spriteSize(28)}%`}}
-					className={cn(
-						cls_guides,
-						cls_shrub,
-						'top-[10%] left-[10%]',
-					)}
-					unoptimized
-				/>
-				<Image
-					src={shrub}
-					alt=""
-					style={{width: `${spriteSize(28)}%`}}
-					className={cn(
-						cls_guides,
-						cls_shrub,
-						'top-[15%] left-[10%]',
-					)}
-					unoptimized
-				/>
-				<Image
-					src={shrub}
-					alt=""
-					style={{width: `${spriteSize(28)}%`}}
-					className={cn(
-						cls_guides,
-						cls_shrub,
-						'top-[10%] left-[15%]',
-					)}
-					unoptimized
-				/>
+				<TerrainObjects />
+				<AreaLake />
 			</div>
 		</section>
 	)
