@@ -1,6 +1,6 @@
 import { spriteSize } from "./_lib/utils";
-import TerrainObjects from "./components/terrain-objects";
-import AreaLake from "./components/area-lake";
+import TerrainObjects from "./_components/terrain-objects";
+import AreaLake from "./_components/area-lake";
 
 export default function Page() {
 	return (

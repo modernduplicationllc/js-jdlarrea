@@ -1,3 +1,5 @@
+const SIZE_CANVAS = 640;
+
 export function spriteSize( px: number ) {
-	return (px / 640) * 100;
+	return (px / SIZE_CANVAS) * 100;
 }

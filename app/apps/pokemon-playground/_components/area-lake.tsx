@@ -18,52 +18,40 @@ export default function AreaLake() {
 
 	const start_x = 10;
 	const start_y = 70;
+	const tileSize = spriteSize(32);
+	const stepSize = spriteSize(32);
 
 	const lake_parts = [
-		[
-			{ img: 'tl', x: 10, y: 70 },
-			{ img: 'tc', x: 15, y: 70 },
-			{ img: 'tc', x: 20, y: 70 },
-			{ img: 'tr', x: 25, y: 70 },
-		],
-		[
-			{ img: 'cl', x: 10, y: 75 },
-			{ img: 'cc', x: 15, y: 75 },
-			{ img: 'cc', x: 20, y: 75 },
-			{ img: 'cr', x: 25, y: 75 },
-		],
-		[
-			{ img: 'cl', x: 10, y: 80 },
-			{ img: 'cc', x: 15, y: 80 },
-			{ img: 'cc', x: 20, y: 80 },
-			{ img: 'cr', x: 25, y: 80 },
-		],
-		[
-			{ img: 'bl', x: 10, y: 85 },
-			{ img: 'bc', x: 15, y: 85 },
-			{ img: 'bc', x: 20, y: 85 },
-			{ img: 'br', x: 25, y: 85 },
-		],
+		[ lake_tl, lake_tc, lake_tc, lake_tr ],
+		[ lake_cl, lake_cc, lake_cc, lake_cr ],
+		[ lake_cl, lake_cc, lake_cc, lake_cr ],
+		[ lake_bl, lake_bc, lake_bc, lake_br ],
 	];
 
 	return (
 		<>
 			{
-				lake_parts.map( (lake_row) => (
-					lake_row.map( (part) => (
-						<Image
-							key={part.img + part.x.toString()}
-							src={`../_assets/terrain/lake-${part.img}.png`}
+				lake_parts.map( (lake_row, row_index) => (
+					lake_row.map( (tile_img, col_index) => {
+						const x_coord = start_x + col_index * stepSize;
+						const y_coord = start_y + row_index * stepSize;
+
+						return <Image
+							key={`${row_index}-${col_index}`}
+							src={tile_img}
 							alt=""
-							style={{width: `${spriteSize(32)}%`}}
+							style={{
+								width: `${tileSize}%`,
+								top: `${y_coord}%`,
+								left: `${x_coord}%`,
+							}}
 							className={cn(
 								cls_guides,
 								cls_sprite,
-								`top-[${part.y}%] left-[${part.y}%]`,
 							)}
 							unoptimized
 						/>
-					))
+					})
 				))
 			}
 		</>
