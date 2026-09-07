@@ -5,71 +5,43 @@ import { cn } from "cn"
 import shrub from "../_assets/terrain/shrub.png";
 import tree from "../_assets/terrain/tree.png";
 
-export default function TerrainObjects() {
-	const cls_sprite = 'h-auto absolute pointer-events-none';
-	const cls_guides = 'border border-1 border-black/15';
+const spriteClass = 'h-auto absolute z-1 pointer-events-none';
+const guideClass = 'border border-1 border-black/15';
 
+const shrubSize = spriteSize(32);
+const treeSize = spriteSize(32);
+
+const TERRAIN_PARTS = [
+	{ src: shrub, size: shrubSize, x: 7.5, y: 7.5 },
+	{ src: shrub, size: shrubSize, x: 15, y: 15 },
+	{ src: shrub, size: shrubSize, x: 30, y: 30 },
+	{ src: tree, size: treeSize, x: 10, y: 50 },
+	{ src: tree, size: treeSize, x: 50, y: 15 },
+	{ src: tree, size: treeSize, x: 70, y: 60 },
+];
+
+export default function TerrainObjects() {
 	return (
 		<>
-			<Image
-				src={shrub}
-				alt=""
-				style={{width: `${spriteSize(32)}%`}}
-				className={cn(
-					cls_guides,
-					cls_sprite,
-					'top-[7.5%] left-[7.5%]',
-				)}
-				unoptimized
-			/>
-
-			<Image
-				src={shrub}
-				alt=""
-				style={{width: `${spriteSize(32)}%`}}
-				className={cn(
-					cls_guides,
-					cls_sprite,
-					'top-[15%] left-[10%]',
-				)}
-				unoptimized
-			/>
-
-			<Image
-				src={shrub}
-				alt=""
-				style={{width: `${spriteSize(32)}%`}}
-				className={cn(
-					cls_guides,
-					cls_sprite,
-					'top-[10%] left-[15%]',
-				)}
-				unoptimized
-			/>
-
-			<Image
-				src={tree}
-				alt=""
-				style={{width: `${spriteSize(32)}%`}}
-				className={cn(
-					cls_guides,
-					cls_sprite,
-					'top-[40%] left-[50%]',
-				)}
-				unoptimized
-			/>
-
-			<Image
-				src={tree}
-				alt=""
-				style={{width: `${spriteSize(32)}%`}}
-				className={cn(
-					cls_guides,
-					cls_sprite,
-					'top-[50%] left-[50%]',
-				)}
-				unoptimized
-			/>
+			{
+				TERRAIN_PARTS.map( (terrainPart) => (
+					<Image
+						key={`${terrainPart.x}-${terrainPart.y}`}
+						src={terrainPart.src}
+						alt=""
+						style={{
+							width: `${terrainPart.size}%`,
+							top: `${terrainPart.y}%`,
+							left: `${terrainPart.x}%`,
+						}}
+						className={cn(
+							guideClass,
+							spriteClass,
+						)}
+						unoptimized
+					/>
+				))
+			}
 		</>
 	)
 }

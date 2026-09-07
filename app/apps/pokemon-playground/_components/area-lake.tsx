@@ -2,52 +2,52 @@ import Image from "next/image";
 import { spriteSize } from "../_lib/utils";
 import { cn } from "cn"
 
-import lake_tl from "../_assets/terrain/lake-tl.png";
-import lake_tc from "../_assets/terrain/lake-tc.png";
-import lake_tr from "../_assets/terrain/lake-tr.png";
-import lake_cl from "../_assets/terrain/lake-cl.png";
-import lake_cc from "../_assets/terrain/lake-cc.png";
-import lake_cr from "../_assets/terrain/lake-cr.png";
-import lake_bl from "../_assets/terrain/lake-bl.png";
-import lake_bc from "../_assets/terrain/lake-bc.png";
-import lake_br from "../_assets/terrain/lake-br.png";
+import lakeTl from "../_assets/terrain/lake-tl.png";
+import lakeTc from "../_assets/terrain/lake-tc.png";
+import lakeTr from "../_assets/terrain/lake-tr.png";
+import lakeCl from "../_assets/terrain/lake-cl.png";
+import lakeCc from "../_assets/terrain/lake-cc.png";
+import lakeCr from "../_assets/terrain/lake-cr.png";
+import lakeBl from "../_assets/terrain/lake-bl.png";
+import lakeBc from "../_assets/terrain/lake-bc.png";
+import lakeBr from "../_assets/terrain/lake-br.png";
+
+const spriteClass = 'h-auto absolute z-1 pointer-events-none';
+const guideClass = 'border border-1 border-black/15';
+
+const startX = 5;
+const startY = 70;
+const tileSize = spriteSize(32);
+
+const LAKE_PARTS = [
+	[ lakeTl, lakeTc, lakeTc, lakeTc, lakeTc, lakeTr ],
+	[ lakeCl, lakeCc, lakeCc, lakeCc, lakeCc, lakeCr ],
+	[ lakeCl, lakeCc, lakeCc, lakeCc, lakeCc, lakeCr ],
+	[ lakeCl, lakeCc, lakeCc, lakeCc, lakeCc, lakeCr ],
+	[ lakeBl, lakeBc, lakeBc, lakeBc, lakeBc, lakeBr ],
+];
 
 export default function AreaLake() {
-	const cls_sprite = 'h-auto absolute pointer-events-none';
-	const cls_guides = 'border border-1 border-black/15';
-
-	const start_x = 10;
-	const start_y = 70;
-	const tileSize = spriteSize(32);
-	const stepSize = spriteSize(32);
-
-	const lake_parts = [
-		[ lake_tl, lake_tc, lake_tc, lake_tr ],
-		[ lake_cl, lake_cc, lake_cc, lake_cr ],
-		[ lake_cl, lake_cc, lake_cc, lake_cr ],
-		[ lake_bl, lake_bc, lake_bc, lake_br ],
-	];
-
 	return (
 		<>
 			{
-				lake_parts.map( (lake_row, row_index) => (
-					lake_row.map( (tile_img, col_index) => {
-						const x_coord = start_x + col_index * stepSize;
-						const y_coord = start_y + row_index * stepSize;
+				LAKE_PARTS.map( (lakeRow, rowIndex) => (
+					lakeRow.map( (tileImg, colIndex) => {
+						const xCoord = startX + colIndex * tileSize;
+						const yCoord = startY + rowIndex * tileSize;
 
 						return <Image
-							key={`${row_index}-${col_index}`}
-							src={tile_img}
+							key={`${rowIndex}-${colIndex}`}
+							src={tileImg}
 							alt=""
 							style={{
 								width: `${tileSize}%`,
-								top: `${y_coord}%`,
-								left: `${x_coord}%`,
+								top: `${yCoord}%`,
+								left: `${xCoord}%`,
 							}}
 							className={cn(
-								cls_guides,
-								cls_sprite,
+								// guideClass,
+								spriteClass,
 							)}
 							unoptimized
 						/>
