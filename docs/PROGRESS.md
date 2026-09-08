@@ -51,7 +51,7 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 | `/work` | `work2.html` | ✅ Done (fully styled + working filter, real data) | `page-hero`, `project-filter-grid` (client component, industry single-select only), `project-card` (3-col grid, no detail page). Data-driven from `content/projects/*.mdx` (42 real projects) via `lib/projects.ts`. See "Real project content — 42 projects live" below. |
 | `/work/[slug]` | `case-study2.html` | ❌ Removed (2026-08-29) | Deprecated per user's call — see "Card-only /work" below. Route, its components, and the `ResultStrip`/`Gallery` MDX components were deleted, not just unlinked. |
 | `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (full-width bio, no photo — deliberate, see Decisions), `timeline` (career history, scroll-driven active dot — see "Timeline redesign" below, no more static `current` flag), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. |
-| `/apps` | `demo-apps2.html` | ✅ Started (landing only) | `page-hero` (now accepts a `children` slot for the status line) + `demo-app-grid`. All 4 apps are placeholder/`planned` status — honestly labeled "not started yet" rather than the reference mockup's fictional "2 live, 2 in progress" copy. Real routes (`/apps/food-tracker`, `/apps/film-blog`, etc.) are separate future work once those apps actually get built. |
+| `/apps` | `demo-apps2.html` | ✅ Landing done; 1 of 4 demo apps under active build | `page-hero` (now accepts a `children` slot for the status line) + `demo-app-grid`. `/apps/pokemon-playground` is now a real, substantially-built route (movement, character sprite/animation, static scene) — see its own `app/apps/pokemon-playground/progress-pokemon.md` for detail, not duplicated here. The other 3 demo-app cards are still placeholder/`planned`. See "Apps routing restructure" below for how `/apps/*` routes get their own light-themed shell, separate from the rest of this dark-themed site. |
 | `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route. Header, footer, homepage hero all link to `RESUME_HREF` (`lib/nav.ts`), currently `/resume-jonathan-larrea-public.pdf` in `/public` — file exists, links are live (no longer 404). Opens in a new tab, no forced `download`. |
 | 404 | `404.html` | ❓ Unscoped | Not yet prioritized |
 | `components/globals/header-main.tsx` | — | ✅ Done (fully styled) | Desktop nav + mobile hamburger trigger. See "Mobile navigation" below. |
@@ -97,10 +97,15 @@ User asked for a pass on color contrast + keyboard nav (targeting WCAG AA). Find
    *generic* shadcn tokens used internally by the `Toggle`/`Badge` primitives (`--muted`,
    `--foreground`, etc., not this project's own `body-*`/`accent-*` tokens) were still
    resolving to their **light-mode** values (`--muted` ≈ near-white). That's what flashed
-   filter pills and project-card tags white on hover. **Fix**: added `dark` class to `<html>`
-   in `app/layout.tsx`. Verified via `grep` first that generic shadcn tokens (`bg-muted`,
-   `text-foreground`, etc.) are used *only* inside `components/ui/{button,toggle,badge}.tsx` —
-   nothing else in the app references them, so this was a fully contained fix.
+   filter pills and project-card tags white on hover. **Fix (at the time)**: added `dark` class
+   to `<html>` in `app/layout.tsx`. Verified via `grep` first that generic shadcn tokens
+   (`bg-muted`, `text-foreground`, etc.) are used *only* inside
+   `components/ui/{button,toggle,badge}.tsx` — nothing else in the app references them, so this
+   was a fully contained fix. **Superseded 2026-09-04** — see "Apps routing restructure" below:
+   `dark` no longer lives on `<html>` at all, since `/apps` routes need to be light-themed. It's
+   now scoped to a `#page` wrapper inside `(main-site)/layout.tsx` only. The underlying reasoning
+   in this bullet (why the class is needed at all, for shadcn's generic tokens) still holds —
+   only *where* it's applied changed.
 2. **Site-wide focus ring failed AA contrast**: the global `outline-ring/50` (in `globals.css`,
    applied to every element via `*`) measured ~2.6–2.7:1 against the dark backgrounds — under
    the 3:1 minimum WCAG AA requires for UI component states (SC 1.4.11). Root cause: shadcn's
@@ -284,6 +289,59 @@ instead of manual concatenation: `cn(NAV_CLASSES, isActive ? "..." : "...")`. **
 established pattern for any future conditional className logic in this codebase** — reach for
 `cn()`, not `+`/template-literal concatenation, specifically because `cn()` can't produce this
 class of bug (it always space-joins, plus resolves real Tailwind conflicts via tailwind-merge).
+
+## Apps routing restructure + dark-theme scoping (2026-09-04)
+
+Driven by starting real work on `/apps/pokemon-playground` (and future demo apps): they need to
+feel like separate, self-contained "real webapps," not pages of this marketing site — a
+different (minimal) header, and critically, a **light theme**, not this site's permanent dark
+one. That doesn't work with a single root layout applying one header/theme to everything, so
+the `app/` tree was restructured into **multiple root layouts** (a real, documented Next.js
+pattern — not a workaround):
+
+- **`app/layout.tsx`** is now the one true shared root: `<html>`/`<body>`, the three fonts,
+  `antialiased`. Nothing else. No `dark` class, no header/footer, no visual effects — those
+  differ per section below, so they don't belong here.
+- **`app/(main-site)/layout.tsx`** — a route group (doesn't affect URLs) holding `/`, `/work`,
+  `/about`, and the `/apps` landing page. Adds `HeaderMain`, `FooterMain`, `.grid-bg`/`GridGlow`,
+  and — this is the important part — the `dark` class, now scoped to a `<div id="page"
+  className="dark">` wrapper *inside* this layout, not on `<html>` anymore. CSS custom
+  properties cascade fine from a wrapper div; it doesn't need to be on the root element.
+- **`app/apps/layout.tsx`** — NOT inside the route group, so it applies to actual demo-app
+  routes (`/apps/pokemon-playground`, future ones) without affecting the `/apps` landing page
+  itself (which lives in the group above and keeps the main-site chrome). Adds only
+  `HeaderApps` (`components/globals/header-apps.tsx` — logo + floating "back to main site"
+  button, `fixed top-5 left-5`) and deliberately **no** `dark` class — so shadcn's default
+  *light* tokens apply automatically to anything built here. `/apps`'s own page.tsx does not
+  live under this folder, so there's no literal `app/apps/page.tsx` file — that's what lets both
+  layouts coexist without a routing conflict.
+
+**Consequence for anyone building inside `/apps/*` going forward**: this site's own dark
+custom color tokens (`bg-dark-*`, `body-*`, `hdr-main-*`, `accent-*`, etc.) are hardcoded dark
+values in `:root`, not theme-reactive — they will NOT flip light just because `/apps` omits the
+`dark` class. Demo apps should use the generic shadcn semantic classes (`bg-background`,
+`text-foreground`, `border-border`, etc., which *do* respond to `dark`'s presence/absence) or
+plain Tailwind, never this site's own tokens.
+
+## `cn` package migration (2026-09-07)
+
+Adding `dialog`/`alert-dialog` via `npx shadcn add` (for Pokémon Playground) pulled in a new
+real dependency: `cn` (`shadcn-ui/cn`, a small standalone package — "drop-in replacement for
+clsx + tailwind-merge"). Turns out the shadcn CLI itself changed convention between when this
+project's earlier components were added (which generated `import { cn } from "@/lib/utils"`,
+the hand-rolled clsx+tailwind-merge wrapper from this project's original shadcn init) and now
+(which generates `import { cn } from "cn"` directly, and even silently re-touched the existing
+`button.tsx` to match while adding the new components).
+
+Rather than fight the CLI's own convention on every future `shadcn add` (it will keep doing
+this), **all 8 files that imported `cn` from `@/lib/utils`** were switched to import directly
+from the `cn` package instead, and `lib/utils.ts` was deleted outright (it contained nothing but
+that one now-unused wrapper function). `clsx` and `tailwind-merge` were also removed from
+`package.json` — nothing imports them directly anymore (`cva`/other packages may still pull them
+in transitively, which is fine and unrelated). Verified via `tsc --noEmit` (clean) after the
+change. **If a future `shadcn add` run adds a new component, expect it to import `cn` from the
+package directly** — that's now correctly the one convention across the whole app, not a bug to
+fix.
 
 ## Housekeeping (2026-09-02)
 
@@ -527,9 +585,18 @@ of it (the header nav `cn()` bug, scaffold SVG cleanup, redundant `!mt-0` remova
 of this pattern in future sessions — the user is deliberately reading through files section by
 section to build understanding before making further changes, not just requesting features.
 
+**Update (2026-09-08):** the user has moved into actually building the first demo app,
+`/apps/pokemon-playground` — a learning exercise, mostly hand-typed by the user with review/
+direction from Claude Code rather than Claude writing most of the code. Static scene, full
+movement system (keyboard + buttons, continuous, single-direction resolution), and an animated
+character sprite are all working. See `app/apps/pokemon-playground/progress-pokemon.md` for the
+full detail on that app specifically — this file only tracks the portfolio-wide pieces this work
+touched (the routing restructure and `cn` migration above). Collision/zones, house/encounter
+mechanics, and the other 3 demo apps are all still ahead.
+
 What's left, roughly in order of what a job-application deadline would care about:
-- `/apps` (Demo Apps landing) — priority, not yet started beyond the landing page. Reference:
-  `demo-apps2.html`. Still uses `picsum.photos` placeholders for all 4 apps.
+- Continue `/apps/pokemon-playground` (see its own progress doc), then the other 3 demo-app
+  cards — still placeholder/`planned`, still using `picsum.photos` on the landing grid.
 - Favicon: confirm `app/favicon.png` → `app/icon.png` rename happened (see TODO above).
 - `/resume`, 404 page — still unscoped (see Open questions below — these predate this session
   and remain unanswered).
