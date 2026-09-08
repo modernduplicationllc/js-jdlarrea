@@ -15,6 +15,7 @@ type SpriteFrames = {
 }
 
 const MOVE_SPEED = 0.1;
+const FRAME_SIZE = 32;
 const STILL_FRAME_COUNT = 3;
 const MOTION_FRAME_COUNT = 6;
 const WALK_FRAME_INTERVAL = 8;
@@ -33,11 +34,11 @@ const KEY_DIRECTIONS: Record<string, Direction> = {
 	ArrowRight: "right",
 }
 
-const DIRECTION_SPRITES = {
+const DIRECTION_SPRITES: Record<Direction, SpriteFrames> = {
 	up: { still: 1, walk: [2, 3] },
 	down: { still: 0, walk: [0, 1] },
-	left: { still: 2, walk: [4, 5] },
-	right: { still: 2, walk: [4, 5], flip: true },
+	left: { still: 2, walk: [4, 5], flip: true },
+	right: { still: 2, walk: [4, 5] },
 }
 
 export default function Character() {
@@ -102,9 +103,9 @@ export default function Character() {
 					walkFrameCounter.current = 0;
 					setWalkFrameIndex((frame) => (frame === 0 ? 1 : 0));
 				}
-				else {
-					walkFrameCounter.current = 0;
-				}
+			}
+			else {
+				walkFrameCounter.current = 0;
 			}
 
 			animationFrameId.current = requestAnimationFrame(tick);
@@ -127,13 +128,15 @@ export default function Character() {
 	return (
 		<>
 			<div
-				className="size-8 character absolute z-10"
+				className="character absolute z-10"
 				style={{
 					top: `${coordY}%`,
 					left: `${coordX}%`,
+					width: FRAME_SIZE,
+					height: FRAME_SIZE,
 					backgroundImage: `url(${sheet.src})`,
-					backgroundSize: `${frameCount * 32}px ${32}px`,
-					backgroundPosition: `-${frameIndex * 32}px 0`,
+					backgroundSize: `${frameCount * FRAME_SIZE}px ${FRAME_SIZE}px`,
+					backgroundPosition: `-${frameIndex * FRAME_SIZE}px 0`,
 					transform: sprite.flip ? "scaleX(-1)" : undefined,
 					imageRendering: "pixelated",
 				}}
