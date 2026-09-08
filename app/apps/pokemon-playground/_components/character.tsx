@@ -4,9 +4,20 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
 
+import charStill from '../_assets/character/char-still.png';
+import charMotion from '../_assets/character/char-motion.png';
+
 type Direction = "up" | "down" | "left" | "right";
+type SpriteFrames = {
+	still: number;
+	walk: [number, number];
+	flip?: boolean;
+}
 
 const MOVE_SPEED = 0.1;
+const STILL_FRAME_COUNT = 3;
+const MOTION_FRAME_COUNT = 6;
+const WALK_FRAME_INTERVAL = 8;
 
 const DIRECTION_DELTAS: Record<Direction, {dx: number; dy: number;}> = {
 	up: { dx: 0, dy: -1 },
@@ -22,14 +33,24 @@ const KEY_DIRECTIONS: Record<string, Direction> = {
 	ArrowRight: "right",
 }
 
+const DIRECTION_SPRITES = {
+	up: { still: 1, walk: [2, 3] },
+	down: { still: 0, walk: [0, 1] },
+	left: { still: 2, walk: [4, 5] },
+	right: { still: 2, walk: [4, 5], flip: true },
+}
+
 export default function Character() {
 	// STATE
 	const [ coordX, setCoordX ] = useState(50);
 	const [ coordY, setCoordY ] = useState(50);
-	const [ facingDirection, setFacingDirection ] = useState<Direction | null>(null);
+	const [ facingDirection, setFacingDirection ] = useState<Direction>("down");
+	const [ isMoving, setIsMoving ] = useState(false);
+	const [ walkFrameIndex, setWalkFrameIndex ] = useState(0);
 
 	const activeDirections = useRef<Set<Direction>>(new Set());
 	const animationFrameId = useRef<number | null>(null);
+	const walkFrameCounter = useRef(0);
 
 	function startMoving(direction: Direction) {
 		activeDirections.current.add(direction);
@@ -66,12 +87,24 @@ export default function Character() {
 		function tick() {
 			const currentDirection = [...activeDirections.current].at(-1) ?? null;
 
-			setFacingDirection(currentDirection);
+			setIsMoving(currentDirection !== null);
 
 			if (currentDirection) {
+				setFacingDirection(currentDirection);
+
 				const { dx, dy } = DIRECTION_DELTAS[currentDirection];
 				setCoordX((x) => x + dx * MOVE_SPEED);
 				setCoordY((y) => y + dy * MOVE_SPEED);
+
+				walkFrameCounter.current += 1;
+
+				if (walkFrameCounter.current >= WALK_FRAME_INTERVAL) {
+					walkFrameCounter.current = 0;
+					setWalkFrameIndex((frame) => (frame === 0 ? 1 : 0));
+				}
+				else {
+					walkFrameCounter.current = 0;
+				}
 			}
 
 			animationFrameId.current = requestAnimationFrame(tick);
@@ -86,14 +119,23 @@ export default function Character() {
 		}
 	}, []);
 
+	const sprite = DIRECTION_SPRITES[facingDirection];
+	const sheet = isMoving ? charMotion : charStill;
+	const frameIndex = isMoving ? sprite.walk[walkFrameIndex] : sprite.still;
+	const frameCount = isMoving ? MOTION_FRAME_COUNT : STILL_FRAME_COUNT;
+
 	return (
 		<>
 			<div
-				className="character
-				size-4 bg-black absolute z-10"
+				className="size-8 character absolute z-10"
 				style={{
 					top: `${coordY}%`,
 					left: `${coordX}%`,
+					backgroundImage: `url(${sheet.src})`,
+					backgroundSize: `${frameCount * 32}px ${32}px`,
+					backgroundPosition: `-${frameIndex * 32}px 0`,
+					transform: sprite.flip ? "scaleX(-1)" : undefined,
+					imageRendering: "pixelated",
 				}}
 			/>
 
