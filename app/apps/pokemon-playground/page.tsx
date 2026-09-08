@@ -1,5 +1,6 @@
 import { spriteSize } from "./_lib/utils";
 import TerrainObjects from "./_components/terrain-objects";
+import Character from "./_components/character";
 import AreaLake from "./_components/area-lake";
 import AreaGrass from "./_components/area-grass";
 import AreaHouse from "./_components/area-house";
@@ -24,6 +25,8 @@ export default function Page() {
 						backgroundSize: `${spriteSize(16)}% ${spriteSize(16)}%`,
 					}}
 				/>
+
+				<Character />
 
 				<TerrainObjects />
 				<AreaLake />
