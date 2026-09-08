@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
 
 type Direction = "up" | "down" | "left" | "right";
 
-const MOVE_SPEED = 0.5;
+const MOVE_SPEED = 0.1;
 
 const DIRECTION_DELTAS: Record<Direction, {dx: number; dy: number;}> = {
 	up: { dx: 0, dy: -1 },
@@ -26,7 +26,7 @@ export default function Character() {
 	// STATE
 	const [ coordX, setCoordX ] = useState(50);
 	const [ coordY, setCoordY ] = useState(50);
-	const STEP = 2.5
+	const [ facingDirection, setFacingDirection ] = useState<Direction | null>(null);
 
 	const activeDirections = useRef<Set<Direction>>(new Set());
 	const animationFrameId = useRef<number | null>(null);
@@ -64,15 +64,12 @@ export default function Character() {
 	// GAME LOOP - runs every frame
 	useEffect(() => {
 		function tick() {
-			if (activeDirections.current.size > 0) {
-				let dx = 0;
-				let dy = 0;
+			const currentDirection = [...activeDirections.current].at(-1) ?? null;
 
-				activeDirections.current.forEach((direction) => {
-					dx += DIRECTION_DELTAS[direction].dx;
-					dy += DIRECTION_DELTAS[direction].dy;
-				});
+			setFacingDirection(currentDirection);
 
+			if (currentDirection) {
+				const { dx, dy } = DIRECTION_DELTAS[currentDirection];
 				setCoordX((x) => x + dx * MOVE_SPEED);
 				setCoordY((y) => y + dy * MOVE_SPEED);
 			}
