@@ -90,7 +90,7 @@ export default function Character() {
 		<>
 			<div
 				className="character
-				size-5 bg-black absolute z-10"
+				size-4 bg-black absolute z-10"
 				style={{
 					top: `${coordY}%`,
 					left: `${coordX}%`,
