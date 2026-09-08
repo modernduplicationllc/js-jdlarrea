@@ -2,7 +2,7 @@ import Image from "next/image";
 import { spriteSize } from "../_lib/utils";
 import { cn } from "cn"
 
-import grass from "../_assets/terrain/grass.png";
+import grass from "../_assets/grass.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
 const guideClass = 'border border-1 border-black/15';
@@ -44,7 +44,7 @@ export default function AreaGrass() {
 								left: `${xCoord}%`,
 							}}
 							className={cn(
-								// guideClass,
+								guideClass,
 								spriteClass,
 							)}
 							unoptimized

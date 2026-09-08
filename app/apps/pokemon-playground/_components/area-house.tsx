@@ -2,15 +2,15 @@ import Image from "next/image";
 import { spriteSize } from "../_lib/utils";
 import { cn } from "cn"
 
-import roofTl from "../_assets/terrain/roof-tl.png";
-import roofTc from "../_assets/terrain/roof-tc.png";
-import roofTr from "../_assets/terrain/roof-tr.png";
-import roofBl from "../_assets/terrain/roof-bl.png";
-import roofBc from "../_assets/terrain/roof-bc.png";
-import roofBr from "../_assets/terrain/roof-br.png";
-import houseL from "../_assets/terrain/house-l.png";
-import houseC from "../_assets/terrain/house-c.png";
-import houseR from "../_assets/terrain/house-r.png";
+import roofTl from "../_assets/house/roof-tl.png";
+import roofTc from "../_assets/house/roof-tc.png";
+import roofTr from "../_assets/house/roof-tr.png";
+import roofBl from "../_assets/house/roof-bl.png";
+import roofBc from "../_assets/house/roof-bc.png";
+import roofBr from "../_assets/house/roof-br.png";
+import houseL from "../_assets/house/house-l.png";
+import houseC from "../_assets/house/house-c.png";
+import houseR from "../_assets/house/house-r.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
 const guideClass = 'border border-1 border-black/15';

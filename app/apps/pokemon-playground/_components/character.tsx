@@ -142,7 +142,7 @@ export default function Character() {
 				}}
 			/>
 
-			<div className="controls absolute z-100 bottom-0 right-0">
+			<div className="controls absolute z-100 -bottom-10 right-0">
 				<Button
 					onPointerDown={() => startMoving("left")}
 					onPointerUp={() => stopMoving("left")}
