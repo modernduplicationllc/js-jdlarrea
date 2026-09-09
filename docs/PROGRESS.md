@@ -51,7 +51,7 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 | `/work` | `work2.html` | ✅ Done (fully styled + working filter, real data) | `page-hero`, `project-filter-grid` (client component, industry single-select only), `project-card` (3-col grid, no detail page). Data-driven from `content/projects/*.mdx` (42 real projects) via `lib/projects.ts`. See "Real project content — 42 projects live" below. |
 | `/work/[slug]` | `case-study2.html` | ❌ Removed (2026-08-29) | Deprecated per user's call — see "Card-only /work" below. Route, its components, and the `ResultStrip`/`Gallery` MDX components were deleted, not just unlinked. |
 | `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (full-width bio, no photo — deliberate, see Decisions), `timeline` (career history, scroll-driven active dot — see "Timeline redesign" below, no more static `current` flag), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. |
-| `/apps` | `demo-apps2.html` | ✅ Landing done; 1 of 4 demo apps under active build | `page-hero` (now accepts a `children` slot for the status line) + `demo-app-grid`. `/apps/pokemon-playground` is now a real, substantially-built route (movement, character sprite/animation, static scene) — see its own `app/apps/pokemon-playground/progress-pokemon.md` for detail, not duplicated here. The other 3 demo-app cards are still placeholder/`planned`. See "Apps routing restructure" below for how `/apps/*` routes get their own light-themed shell, separate from the rest of this dark-themed site. |
+| `/apps` | `demo-apps2.html` | ✅ Landing done; 2 of 4 demo apps "in progress" | `page-hero` + `demo-app-grid`. **Redesigned 2026-09-08 for launch**: thumbnail images removed from all 4 cards (was `picsum.photos`, now text-only), each card gets a `highlights` bullet list, and the CTA is a genuinely-disabled "Launch App" button (real `disabled` attribute, not a dead link) on all 4 — including Pokémon Playground, which has a working route already but isn't feature-complete enough to expose publicly yet. Food Tracker + Pokémon Playground are `in-progress`; Movie Diary + Component Sandbox are `planned`. Pokémon Playground's card copy also corrected — it previously (wrongly) described a Vite/no-backend build; see its own `app/apps/pokemon-playground/progress-pokemon.md` for the real architecture. See "Apps routing restructure" below for the separate light-themed shell `/apps/*` routes get. |
 | `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route. Header, footer, homepage hero all link to `RESUME_HREF` (`lib/nav.ts`), currently `/resume-jonathan-larrea-public.pdf` in `/public` — file exists, links are live (no longer 404). Opens in a new tab, no forced `download`. |
 | 404 | `404.html` | ❓ Unscoped | Not yet prioritized |
 | `components/globals/header-main.tsx` | — | ✅ Done (fully styled) | Desktop nav + mobile hamburger trigger. See "Mobile navigation" below. |
@@ -343,6 +343,50 @@ change. **If a future `shadcn add` run adds a new component, expect it to import
 package directly** — that's now correctly the one convention across the whole app, not a bug to
 fix.
 
+## Launch push + near-miss build failure (2026-09-08)
+
+User pushed to get the site launch-ready tonight, cloning to a public repo for employers
+afterward. Confirmed clean for that: no `.env*` files tracked or present, `.gitignore` already
+excludes them, no secret/credential-named files tracked.
+
+- **`/apps` cards redesigned** — see the Page Status table above for the shape. Also fixed a
+  pre-existing typo, "Component **Sanbox**" → "Sandbox".
+- **Nav order — researched, decided to keep as-is.** User asked whether `About | Work | Demo
+  Apps | Resume` would be better than the current `Work | Demo Apps | About | Resume`. Findings:
+  hiring managers spend ~30s per portfolio and treat Work/Projects as "critical" vs. About as
+  "important" (secondary) — recommendation across sources is to lead with proof of skill, not
+  bio. The serial-position effect (first/last nav items get the most attention) reinforces
+  putting the strongest content first. **Decision: keep current order** — matches what this
+  project already prioritized from the start (see "Priority order" under Decisions below).
+  Also validated in passing: 3 core nav items (Work/Demo Apps/About) + Résumé as a distinct
+  action link, not a 4th equal item, matches "3 items ideal" guidance.
+- **Eyebrow investigation — found a naming bug, not a design inconsistency.** User perceived
+  `—`/`/`/`//` as three different eyebrow styles needing standardization. Traced it: there's
+  only **one** real eyebrow mechanism (`.super-header.with-dash` in `globals.css`, used
+  identically everywhere via every section header + `PageHero`'s `eyebrow` prop) — already
+  100% consistent. The class is just misleadingly named: its `::before` content is literally
+  `'/'`, not a dash. The `//` the user also noticed is a *different*, deliberate element — a
+  monospace "code comment" style caption used under a few specific headlines (hero tagline,
+  CTA banner, stat descriptions, About's hero description) — not competing with the eyebrow,
+  serves a different role, left as-is. No `—`-prefixed eyebrow found anywhere in the built
+  code — likely the user was picturing `.reference/*.html`, not the live components. **Open,
+  not yet actioned**: rename `.with-dash` → something accurate like `.with-slash` (cosmetic
+  code-hygiene fix, zero visual change, not urgent).
+- **Near-miss: a lingering error almost shipped a broken build.** `terrain-objects.tsx`'s
+  `TERRAIN_PARTS` had gone empty (all entries commented out during placement tuning), which
+  made TypeScript unable to infer its element type (`implicitly has type 'any[]'`). This had
+  been showing up in every `tsc --noEmit` check across the session and was repeatedly waved off
+  as "pre-existing, unrelated to the current change" — true, but never actually circled back to
+  fix. Only caught because a full `pnpm build` was run as an explicit pre-launch gate (asked
+  "are we all set to launch?") — `next build` runs the same TypeScript check as `tsc --noEmit`,
+  but nothing had run it as a *deploy-blocking* check until that point. **Lesson: run a real
+  production build before deploying, not just incremental `tsc` checks during a session** — a
+  recurring warning dismissed as background noise mid-session can still be launch-blocking.
+  Fixed with an explicit type annotation while the array was empty; once the user un-commented
+  real entries, TS could infer the type on its own again, so the explicit annotation was
+  removed per their call — either is fine as long as the array is never empty and untyped at
+  the same time.
+
 ## Housekeeping (2026-09-02)
 
 - Removed 3 unused `create-next-app` scaffold defaults from `/public`: `file.svg`, `globe.svg`,
@@ -549,12 +593,13 @@ were quietly serving a stale link until caught.
   files to typo across, not 3. Add a `zod` schema (mirroring `ProjectMetadata` in
   `lib/definitions.ts`) and `.parse()` each project's metadata in `getAllProjects()`, so bad
   content fails loudly with a clear message.
-- **Swap `/apps`'s remaining `picsum.photos` placeholder images for real ones** (`/work`'s 42
-  projects already use real local thumbnails — this TODO now only applies to the demo-app
-  placeholders in `demo-app-grid.tsx` and `content-5050-grid.tsx`), using static `import`
-  (local file in `/public`) instead of remote URLs + manual `fill`/`sizes` — gets automatic
-  width/height + blur placeholder from Next for free. Blocked on the demo apps actually being
-  built first.
+- ~~Swap `/apps`'s remaining `picsum.photos` placeholder images for real ones~~ — **superseded
+  2026-09-08**: images were removed from both `demo-app-grid.tsx` and `content-5050-grid.tsx`
+  entirely (not swapped) ahead of launch, so there's nothing left to swap. `picsum.photos` is
+  now unreferenced anywhere in the codebase — the `next.config.ts` image-domain allowlist for
+  it was removed too. If real screenshots get added back later once a demo app is actually
+  presentable, that's new work (static `import` + `next/image`, not remote URLs), not a
+  continuation of this old TODO.
 - **Favicon**: user has both `app/favicon.ico` and `app/favicon.png` — the `.png` one needs to
   be renamed to `app/icon.png` to actually be picked up by Next's file-convention (`favicon.png`
   isn't a recognized name). Unconfirmed whether user has done this yet.
@@ -594,10 +639,18 @@ full detail on that app specifically — this file only tracks the portfolio-wid
 touched (the routing restructure and `cn` migration above). Collision/zones, house/encounter
 mechanics, and the other 3 demo apps are all still ahead.
 
+**Update (2026-09-08, later same day):** launching tonight, then cloning to a public repo for
+employers to view (per the user's standing plan — see the demo-apps auth-design discussion —
+to keep the *production* repo separate from the *showcase* copy going forward). Confirmed safe
+to do: no secrets/`.env` files tracked, production build (`pnpm build`) passes clean end to
+end. See "Launch push + near-miss build failure" above for what got fixed in this pass
+(`/apps` card redesign, nav-order research, eyebrow investigation, a real build-blocking bug
+caught just before shipping).
+
 What's left, roughly in order of what a job-application deadline would care about:
-- Continue `/apps/pokemon-playground` (see its own progress doc), then the other 3 demo-app
-  cards — still placeholder/`planned`, still using `picsum.photos` on the landing grid.
-- Favicon: confirm `app/favicon.png` → `app/icon.png` rename happened (see TODO above).
+- Continue `/apps/pokemon-playground` (see its own progress doc — collision/zones is next),
+  then the other 3 demo-app cards, all still `planned` or `in-progress`.
+- Favicon: confirmed done — `app/icon.png` renders and appears in the production build output.
 - `/resume`, 404 page — still unscoped (see Open questions below — these predate this session
   and remain unanswered).
 
