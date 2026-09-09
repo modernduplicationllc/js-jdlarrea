@@ -7,22 +7,21 @@ import grass from "../_assets/grass.png";
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
 const guideClass = 'border border-1 border-black/15';
 
-const startX = 65;
-const startY = 5;
+const startX = 60;
+const startY = 64;
 const tileSize = spriteSize(16);
 
 const GRASS_PARTS = [
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
 ];
 
 export default function AreaGrass() {
@@ -34,7 +33,7 @@ export default function AreaGrass() {
 						const xCoord = startX + colIndex * tileSize;
 						const yCoord = startY + rowIndex * tileSize;
 
-						return <Image
+						return tileImg && <Image
 							key={`${rowIndex}-${colIndex}`}
 							src={tileImg}
 							alt=""
@@ -44,7 +43,7 @@ export default function AreaGrass() {
 								left: `${xCoord}%`,
 							}}
 							className={cn(
-								guideClass,
+								// guideClass,
 								spriteClass,
 							)}
 							unoptimized

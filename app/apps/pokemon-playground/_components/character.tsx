@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
+import { cn } from "cn"
 
 import charStill from '../_assets/character/char-still.png';
 import charMotion from '../_assets/character/char-motion.png';
@@ -13,6 +14,8 @@ type SpriteFrames = {
 	walk: [number, number];
 	flip?: boolean;
 }
+
+const guideClass = 'border border-1 border-black/15';
 
 const MOVE_SPEED = 0.1;
 const FRAME_SIZE = 32;
@@ -128,7 +131,6 @@ export default function Character() {
 	return (
 		<>
 			<div
-				className="character absolute z-10"
 				style={{
 					top: `${coordY}%`,
 					left: `${coordX}%`,
@@ -140,6 +142,10 @@ export default function Character() {
 					transform: sprite.flip ? "scaleX(-1)" : undefined,
 					imageRendering: "pixelated",
 				}}
+				className={cn(
+					guideClass,
+					'absolute z-10'
+				)}
 			/>
 
 			<div className="controls absolute z-100 -bottom-10 right-0">
