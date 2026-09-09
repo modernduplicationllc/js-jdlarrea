@@ -12,10 +12,10 @@ const shrubSize = spriteSize(32);
 const treeSize = spriteSize(32);
 
 const TERRAIN_PARTS = [
-	// { src: shrub, size: shrubSize, x: 7.5, y: 7.5 },
+	{ src: shrub, size: shrubSize, x: 10, y: 50 },
 	// { src: shrub, size: shrubSize, x: 15, y: 15 },
 	// { src: shrub, size: shrubSize, x: 30, y: 30 },
-	// { src: tree, size: treeSize, x: 10, y: 50 },
+	{ src: tree, size: treeSize, x: 10, y: 70 },
 	// { src: tree, size: treeSize, x: 50, y: 15 },
 	// { src: tree, size: treeSize, x: 70, y: 60 },
 ];
