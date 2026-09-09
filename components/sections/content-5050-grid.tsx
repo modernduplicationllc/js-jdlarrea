@@ -1,11 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
 
 const DEMO_APPS = [
-	{ title: "Food Tracker", tag: "Next.js · Neon", image: "https://picsum.photos/seed/macros/500/320" },
-	{ title: "Movie Diary", tag: "Next.js · Neon", image: "https://picsum.photos/seed/moviedb/500/320" },
-	{ title: "Pokémon Playground", tag: "Vite · React · PokéAPI", image: "https://picsum.photos/seed/filmblog/500/320" },
-	{ title: "Component Sandbox", tag: "React · Tailwind · shadcn/ui", image: "https://picsum.photos/seed/gridui/500/320" },
+	{ title: "Food Tracker", tag: "Next.js · Neon" },
+	{ title: "Pokémon Playground", tag: "Next.js · PokéAPI · Neon" },
+	{ title: "Movie Diary", tag: "Next.js · Neon" },
+	{ title: "Component Sandbox", tag: "React · Tailwind · shadcn/ui" },
 ];
 
 export default function Content5050Grid() {
@@ -36,15 +35,6 @@ export default function Content5050Grid() {
 								key={app.title}
 								className="rounded-lg border border-bdr-500 bg-bg-dark-900 p-4"
 							>
-								<div className="relative mb-2.5 aspect-video overflow-hidden rounded">
-									<Image
-										src={app.image}
-										alt=""
-										fill
-										sizes="200px"
-										className="object-cover saturate-[.85]"
-									/>
-								</div>
 								<div className="text-[12.5px] font-semibold text-body-100">
 									{app.title}
 								</div>

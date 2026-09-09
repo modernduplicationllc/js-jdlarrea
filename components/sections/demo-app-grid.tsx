@@ -1,16 +1,13 @@
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { GithubIcon } from "@/components/icons";
-import { MoveRight } from "lucide-react";
-import Link from "next/link";
 
 type DemoApp = {
 	title: string;
 	status: "live" | "in-progress" | "planned";
 	why: string;
 	description: string;
+	highlights: string[];
 	tags: string[];
-	thumbnail: string;
 	liveUrl?: string;
 	githubUrl?: string;
 };
@@ -27,27 +24,36 @@ const STATUS_DOT: Record<DemoApp["status"], string> = {
 	planned: "bg-body-700",
 };
 
-// None of these are built yet — placeholders so the page has real structure to grow into.
 // Update `status` / `liveUrl` / `githubUrl` as each one actually ships.
 export const DEMO_APPS: DemoApp[] = [
 	{
 		title: "Food Tracker",
-		status: "live",
+		status: "in-progress",
 		why: "Postgres schema design, server-side data modeling",
 		description:
 			"Multi-user food logging app backed by Neon Postgres — daily macro targets, meal logging, and a searchable food database.",
+		highlights: [
+			"Neon Postgres relational schema",
+			"Server Actions for all data mutations",
+			"Dummy multi-user login — no real accounts, no real risk",
+			"Per-user limits to keep the demo database small",
+		],
 		tags: ["Next.js", "Neon", "Server Actions"],
-		thumbnail: "https://picsum.photos/seed/macros2/700/400",
 		liveUrl: "/food-tracker",
 	},
 	{
 		title: "Pokémon Playground",
-		status: "live",
-		why: "Framework-independent React fundamentals, working with a public API",
+		status: "in-progress",
+		why: "Custom game-loop architecture, collision systems, full-stack persistence",
 		description:
-			"A lightweight Vite + React sandbox for browsing and filtering Pokémon via the PokéAPI — no backend, deliberately no Next.js.",
-		tags: ["Vite", "React", "PokéAPI"],
-		thumbnail: "https://picsum.photos/seed/pokeplay2/700/400",
+			"A top-down exploration game built entirely in Next.js — walk a hand-built map, trigger zone-based events, and catch Pokémon using data sourced from PokéAPI and persisted to a Neon database.",
+		highlights: [
+			"Custom movement + animation engine (no game library)",
+			"Zone-based collision & trigger detection",
+			"PokéAPI-sourced encounter data",
+			"Neon Postgres persistence for caught Pokémon",
+		],
+		tags: ["Next.js", "PokéAPI", "Neon"],
 		liveUrl: "/pokemon-playground",
 	},
 	{
@@ -56,18 +62,26 @@ export const DEMO_APPS: DemoApp[] = [
 		why: "Auth flows, relational data modeling with Neon",
 		description:
 			"A personal movie-watching log — auth, ratings, and notes per film, backed by a relational schema in Neon Postgres.",
+		highlights: [
+			"NextAuth-based authentication",
+			"Relational schema — users, films, ratings",
+			"Per-film notes & star ratings",
+		],
 		tags: ["Next.js", "Neon", "NextAuth"],
-		thumbnail: "https://picsum.photos/seed/moviedb2/700/400",
 		liveUrl: "/movie-diary",
 	},
 	{
-		title: "Component Sanbox",
+		title: "Component Sandbox",
 		status: "planned",
 		why: "A sandbox for testing UI patterns before using them live",
 		description:
 			"A running library of reusable React components — filter bars, cards, form patterns — built and tested here before landing in client or personal projects.",
+		highlights: [
+			"Reusable UI pattern library",
+			"Built with shadcn/ui + Tailwind",
+			"Staging ground before components land in client work",
+		],
 		tags: ["React", "Tailwind", "shadcn/ui"],
-		thumbnail: "https://picsum.photos/seed/gridui2/700/400",
 		liveUrl: "/component-sandbox",
 	},
 ];
@@ -80,69 +94,61 @@ export default function DemoAppGrid() {
 					{DEMO_APPS.map((app) => (
 						<div
 							key={app.title}
-							className="flex flex-col overflow-hidden rounded-lg border border-bdr-500 bg-bg-dark-100"
+							className="flex flex-col gap-2.5 rounded-lg border border-bdr-500 bg-bg-dark-100 p-6"
 						>
-							<div className="relative aspect-4/3 w-full overflow-hidden border-b border-bdr-500">
-								<Image
-									src={app.thumbnail}
-									alt=""
-									fill
-									sizes="(min-width: 768px) 50vw, 100vw"
-									className="object-cover saturate-[.85]"
-								/>
-								<span className="absolute top-3 right-3 flex items-center gap-1.5 rounded-md border border-bdr-500 bg-bg-dark-900/85 px-2.5 py-1 font-mono text-[11px] text-body-300 backdrop-blur-sm">
-									<span className={`size-1.5 rounded-full ${STATUS_DOT[app.status]}`} />
-									{STATUS_LABEL[app.status]}
-								</span>
+							<div className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wide text-body-500">
+								<span className={`size-1.5 rounded-full ${STATUS_DOT[app.status]}`} />
+								{STATUS_LABEL[app.status]}
 							</div>
 
-							<div className="flex flex-1 flex-col gap-2.5 p-6">
-								<div className="font-sans-alt text-lg font-semibold text-hdr-main-100">
-									{app.title}
-								</div>
-								<div className="font-mono text-[12px] text-accent-alt-300">
-									Why: {app.why}
-								</div>
-								<p className="text-sm leading-relaxed text-body-300">
-									{app.description}
-								</p>
+							<div className="font-sans-alt text-lg font-semibold text-hdr-main-100">
+								{app.title}
+							</div>
+							<div className="font-mono text-[12px] text-accent-alt-300">
+								Why: {app.why}
+							</div>
+							<p className="text-sm leading-relaxed text-body-300">
+								{app.description}
+							</p>
 
-								<div className="mt-1 flex flex-wrap gap-2">
-									{app.tags.map((tag) => (
-										<Badge
-											key={tag}
-											variant="outline"
-											className="rounded-md border-accent-alt-700/30 bg-accent-alt-900/20 font-mono text-[11px] font-normal text-accent-alt-300"
-										>
-											{tag}
-										</Badge>
-									))}
-								</div>
+							<ul className="flex flex-col gap-1.5 text-sm text-body-300">
+								{app.highlights.map((point) => (
+									<li key={point} className="flex items-start gap-2">
+										<span className="mt-1.5 size-1 shrink-0 rounded-full bg-accent-alt-500" />
+										{point}
+									</li>
+								))}
+							</ul>
 
-								<div className="mt-auto flex gap-5 pt-4">
-									{app.liveUrl && (
-										<Link
-											href={`/apps/${app.liveUrl}`}
-											className="flex items-center gap-x-2 border px-4 py-1 border-accent-300 rounded-full text-white text-sm font-mono transition-colors hover:bg-accent-300 hover:text-bg-dark-500"
-										>
-											Visit site <MoveRight size={13} />
-										</Link>
-									)}
-									{app.githubUrl && (
-										<a
-											href={app.githubUrl}
-											className="inline-flex items-center gap-1.5 text-sm text-body-300 hover:text-hdr-main-100"
-										>
-											<GithubIcon size={13} />
-											GitHub
-										</a>
-									)}
-									{!app.liveUrl && !app.githubUrl && (
-										<span className="font-mono text-xs text-body-700">
-											not started yet
-										</span>
-									)}
-								</div>
+							<div className="mt-1 flex flex-wrap gap-2">
+								{app.tags.map((tag) => (
+									<Badge
+										key={tag}
+										variant="outline"
+										className="rounded-md border-accent-alt-700/30 bg-accent-alt-900/20 font-mono text-[11px] font-normal text-accent-alt-300"
+									>
+										{tag}
+									</Badge>
+								))}
+							</div>
+
+							<div className="mt-auto flex items-center gap-5 pt-4">
+								<button
+									type="button"
+									disabled
+									className="flex cursor-not-allowed items-center gap-x-2 rounded-full border border-bdr-500 px-4 py-1 font-mono text-sm text-body-700"
+								>
+									Launch App
+								</button>
+								{app.githubUrl && (
+									<a
+										href={app.githubUrl}
+										className="inline-flex items-center gap-1.5 text-sm text-body-300 hover:text-hdr-main-100"
+									>
+										<GithubIcon size={13} />
+										GitHub
+									</a>
+								)}
 							</div>
 						</div>
 					))}
