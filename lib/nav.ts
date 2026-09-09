@@ -15,5 +15,5 @@ export const NAV_ITEMS: NavItem[] = [
 
 // Not a route — links directly to the PDF in /public.
 export const RESUME_HREF = "/resume-jonathan-larrea-public.pdf";
-export const GITHUB_URL = "https://github.com/jdlarrea";
+export const GITHUB_URL = "https://github.com/jdlarrea?tab=repositories";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/jdlarrea/";

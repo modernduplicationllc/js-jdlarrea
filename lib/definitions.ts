@@ -22,9 +22,9 @@ export type ProjectMetadata = {
 	dateAdded: number;
 	industry: Industry;
 	// Not currently shown on the card or filterable — most projects share a
-	// stack (WordPress/ACF), so not a useful differentiator. Kept as
-	// data in case that changes later.
-	stack: string[];
+	// stack (WordPress/ACF), so not a useful differentiator. No longer
+	// populated in any project's .mdx; kept optional in case that changes later.
+	stack?: string[];
 	summary: string;
 	thumbnail: string;
 	liveUrl?: string;
