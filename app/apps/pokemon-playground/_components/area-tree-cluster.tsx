@@ -13,7 +13,7 @@ import clusterBc from "../_assets/tree-cluster/cluster-bc.png";
 import clusterBr from "../_assets/tree-cluster/cluster-br.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
-const guideClass = 'border border-1 border-black/15';
+const guideClass = 'outline outline-black/15';
 
 const tileSize = spriteSize(32);
 

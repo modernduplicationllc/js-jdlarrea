@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "cn"
+import { spriteSize } from "../_lib/utils";
 
 import charStill from '../_assets/character/char-still.png';
 import charMotion from '../_assets/character/char-motion.png';
@@ -15,10 +16,10 @@ type SpriteFrames = {
 	flip?: boolean;
 }
 
-const guideClass = 'border border-1 border-black/15';
+const guideClass = 'outline outline-black/15';
 
 const MOVE_SPEED = 0.1;
-const FRAME_SIZE = 32;
+const CHARACTER_SIZE = spriteSize(32);
 const STILL_FRAME_COUNT = 3;
 const MOTION_FRAME_COUNT = 6;
 const WALK_FRAME_INTERVAL = 8;
@@ -134,11 +135,11 @@ export default function Character() {
 				style={{
 					top: `${coordY}%`,
 					left: `${coordX}%`,
-					width: FRAME_SIZE,
-					height: FRAME_SIZE,
+					width: `${CHARACTER_SIZE}%`,
+					height: `${CHARACTER_SIZE}%`,
 					backgroundImage: `url(${sheet.src})`,
-					backgroundSize: `${frameCount * FRAME_SIZE}px ${FRAME_SIZE}px`,
-					backgroundPosition: `-${frameIndex * FRAME_SIZE}px 0`,
+					backgroundSize: `${frameCount * 100}% 100%`,
+					backgroundPosition: `${(frameIndex / (frameCount - 1) * 100)}% 0%`,
 					transform: sprite.flip ? "scaleX(-1)" : undefined,
 					imageRendering: "pixelated",
 				}}

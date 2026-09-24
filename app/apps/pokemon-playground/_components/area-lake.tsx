@@ -15,7 +15,7 @@ import lakeCrnBl from "../_assets/lake/lake-crn-bl.png";
 import lakeCrnTr from "../_assets/lake/lake-crn-tr.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
-const guideClass = 'border border-1 border-black/15';
+const guideClass = 'outline outline-black/15';
 
 const startX = 55;
 const startY = 5;

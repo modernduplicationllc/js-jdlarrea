@@ -13,7 +13,7 @@ import houseC from "../_assets/house/house-c.png";
 import houseR from "../_assets/house/house-r.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
-const guideClass = 'border border-1 border-black/15';
+const guideClass = 'outline outline-black/15';
 
 const startX = 42;
 const startY = 40;

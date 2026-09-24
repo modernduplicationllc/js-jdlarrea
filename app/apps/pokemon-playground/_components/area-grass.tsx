@@ -5,7 +5,7 @@ import { cn } from "cn"
 import grass from "../_assets/grass.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
-const guideClass = 'border border-1 border-black/15';
+const guideClass = 'outline outline-black/15';
 
 const startX = 60;
 const startY = 64;

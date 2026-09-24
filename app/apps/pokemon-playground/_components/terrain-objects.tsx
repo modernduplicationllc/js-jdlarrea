@@ -6,7 +6,7 @@ import shrub from "../_assets/shrub.png";
 import tree from "../_assets/tree.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
-const guideClass = 'border border-1 border-black/15';
+const guideClass = 'outline outline-black/15';
 
 const shrubSize = spriteSize(32);
 const treeSize = spriteSize(32);
