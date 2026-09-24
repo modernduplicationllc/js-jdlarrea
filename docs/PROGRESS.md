@@ -53,7 +53,7 @@ Pattern to follow (see `app/page.tsx` + `components/sections/*` as the reference
 | `/about` | `about2.html` | ✅ Done (fully styled) | `about-intro` (full-width bio, no photo — deliberate, see Decisions), `timeline` (career history, scroll-driven active dot — see "Timeline redesign" below, no more static `current` flag), `toolbox` (4-column tool lists), `values-grid` (3 principle cards), reuses `cta-banner` with custom copy/links. |
 | `/apps` | `demo-apps2.html` | ✅ Landing done; 2 of 4 demo apps "in progress" | `page-hero` + `demo-app-grid`. **Redesigned 2026-09-08 for launch**: thumbnail images removed from all 4 cards (was `picsum.photos`, now text-only), each card gets a `highlights` bullet list, and the CTA is a genuinely-disabled "Launch App" button (real `disabled` attribute, not a dead link) on all 4 — including Pokémon Playground, which has a working route already but isn't feature-complete enough to expose publicly yet. Food Tracker + Pokémon Playground are `in-progress`; Movie Diary + Component Sandbox are `planned`. Pokémon Playground's card copy also corrected — it previously (wrongly) described a Vite/no-backend build; see its own `app/apps/pokemon-playground/progress-pokemon.md` for the real architecture. See "Apps routing restructure" below for the separate light-themed shell `/apps/*` routes get. |
 | `/resume` | — | ✅ Resolved: PDF, not a page | No `/resume` route. Header, footer, homepage hero all link to `RESUME_HREF` (`lib/nav.ts`), currently `/resume-jonathan-larrea-public.pdf` in `/public` — file exists, links are live (no longer 404). Opens in a new tab, no forced `download`. |
-| 404 | `404.html` | ❓ Unscoped | Not yet prioritized |
+| 404 | `404.html` | ✅ Main-site version done (2026-09-24) | `app/not-found.tsx` — see "404 page" below. `/apps/*` version not built yet. |
 | `components/globals/header-main.tsx` | — | ✅ Done (fully styled) | Desktop nav + mobile hamburger trigger. See "Mobile navigation" below. |
 | `components/globals/footer-main.tsx` | — | ✅ Done (fully styled) | |
 
@@ -387,6 +387,20 @@ excludes them, no secret/credential-named files tracked.
   removed per their call — either is fine as long as the array is never empty and untyped at
   the same time.
 
+## 404 page + small cleanups (2026-09-24)
+
+- **`app/not-found.tsx`** (filename matters — Next has no `404.tsx` convention; a file named
+  `404` is just a route at `/404`). Handles every unmatched URL plus any `notFound()` call.
+  It sits under the root layout only, so it **manually rebuilds the `(main-site)` chrome**
+  (`HeaderMain`, `FooterMain`, `.grid-bg`, `GridGlow`, `dark` wrapper) to match. Copy: "404:
+  Page not found" + a "Back to home" button in the same primary-button style as `cta-banner`
+  (the site has no underlined text links; CTAs are button-styled).
+- **Planned, not built — `/apps/*` 404**: add `app/apps/[...slug]/page.tsx` (just calls
+  `notFound()`) + `app/apps/not-found.tsx`, so unmatched `/apps/xyz` URLs render inside the
+  light-themed apps layout with a link back to `/apps`. Decided against redirecting — a real
+  404 with a link back is better UX/SEO than silently redirecting.
+- `GITHUB_URL` (`lib/nav.ts`) now points to `https://github.com/jdlarrea?tab=repositories`.
+
 ## Housekeeping (2026-09-02)
 
 - Removed 3 unused `create-next-app` scaffold defaults from `/public`: `file.svg`, `globe.svg`,
@@ -488,8 +502,9 @@ Resulting shape:
   current build.
 - **Tech-stack tags and the stack filter both removed** — most projects share a stack
   (WordPress/ACF), so tags weren't a useful differentiator and a filter on hidden data would
-  feel disconnected from what's on the card. `stack: string[]` is kept in `ProjectMetadata` as
-  data (not deleted) in case that changes later, just not rendered or filterable right now.
+  feel disconnected from what's on the card. **Update (2026-09-24):** the empty `stack: []` was
+  removed from all 42 `.mdx` files; `stack?: string[]` stays in `ProjectMetadata` as an
+  *optional* field in case it's ever wanted again, but nothing populates or renders it.
   `/work` filters by Industry only now.
 - **`ProjectMetadata`** (`lib/definitions.ts`) dropped `role`/`client`/`timeframe`/`githubUrl`
   (only ever used by the now-deleted case-study sidebar) and gained `codeSnippet?: { filename,
@@ -559,7 +574,7 @@ were quietly serving a stale link until caught.
   follow this same approach (ask if unsure) rather than the unstyled placeholder pattern used
   on the homepage — that earlier pattern may get revisited/styled to match.
 - **Content architecture: MDX, not JSON/a headless CMS.** One file per project at
-  `content/projects/<slug>.mdx`. Structured fields (title, industry, stack, dateAdded,
+  `content/projects/<slug>.mdx`. Structured fields (title, industry, dateAdded,
   thumbnail, etc.) live in `export const metadata = {...}` inside the file — this is Next.js's
   own documented pattern (`@next/mdx` doesn't parse YAML frontmatter by default), not a
   third-party convention. Adding a project = duplicate a file, edit the fields. Ordering is
@@ -609,7 +624,7 @@ were quietly serving a stale link until caught.
 
 ## Open questions (ask the user before deciding)
 
-- 404 page: in scope for this pass or later?
+- ~~404 page: in scope for this pass or later?~~ Resolved 2026-09-24 — main-site version built.
 - Header/footer: styled now, or after the priority pages are done? (Given `/work` is now
   fully styled, probably worth doing header/footer sooner rather than later.)
 ## Next step
@@ -651,8 +666,8 @@ What's left, roughly in order of what a job-application deadline would care abou
 - Continue `/apps/pokemon-playground` (see its own progress doc — collision/zones is next),
   then the other 3 demo-app cards, all still `planned` or `in-progress`.
 - Favicon: confirmed done — `app/icon.png` renders and appears in the production build output.
-- `/resume`, 404 page — still unscoped (see Open questions below — these predate this session
-  and remain unanswered).
+- 404: main-site version done; still to build is the `/apps/*` version (see "404 page" below).
+- `/resume` is resolved (PDF, not a page).
 
 Known simplifications to revisit later:
 - ~~`components/mdx/code-panel.tsx` renders code as plain monospace text, no syntax

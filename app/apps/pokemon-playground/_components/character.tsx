@@ -46,8 +46,8 @@ const DIRECTION_SPRITES: Record<Direction, SpriteFrames> = {
 
 export default function Character() {
 	// STATE
-	const [ coordX, setCoordX ] = useState(50);
-	const [ coordY, setCoordY ] = useState(50);
+	const [ coordX, setCoordX ] = useState(47);
+	const [ coordY, setCoordY ] = useState(56);
 	const [ facingDirection, setFacingDirection ] = useState<Direction>("down");
 	const [ isMoving, setIsMoving ] = useState(false);
 	const [ walkFrameIndex, setWalkFrameIndex ] = useState(0);
