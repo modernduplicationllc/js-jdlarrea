@@ -1,10 +1,11 @@
 import { spriteSize } from "./_lib/utils";
-import TerrainObjects from "./_components/terrain-objects";
 import Character from "./_components/character";
-import AreaLake from "./_components/area-lake";
-import AreaGrass from "./_components/area-grass";
 import AreaHouse from "./_components/area-house";
 import AreaTreeCluster from "./_components/area-tree-cluster";
+import AreaGrass from "./_components/area-grass";
+import AreaLake from "./_components/area-lake";
+import AreaDirt from "./_components/area-dirt";
+import TerrainObjects from "./_components/terrain-objects";
 
 export default function Page() {
 	return (
@@ -29,11 +30,12 @@ export default function Page() {
 
 				<Character />
 
-				<TerrainObjects />
-				<AreaLake />
-				<AreaGrass />
 				<AreaHouse />
 				<AreaTreeCluster />
+				<AreaGrass />
+				<AreaLake />
+				<AreaDirt />
+				<TerrainObjects />
 				</div>
 			</section>
 	)
