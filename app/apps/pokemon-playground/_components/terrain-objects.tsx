@@ -15,8 +15,17 @@ const sunflowerSize = spriteSize(32);
 
 const TERRAIN_PARTS = [
 	{ src: shrub, size: shrubSize, x: 10, y: 50 },
-	// { src: shrub, size: shrubSize, x: 15, y: 15 },
-	// { src: shrub, size: shrubSize, x: 30, y: 30 },
+	{ src: shrub, size: shrubSize, x: 48, y: 9 },
+	{ src: shrub, size: shrubSize, x: 40, y: 16 },
+	{ src: shrub, size: shrubSize, x: 29, y: 23 },
+	{ src: shrub, size: shrubSize, x: 22, y: 30 },
+	{ src: shrub, size: shrubSize, x: 25, y: 40 },
+	{ src: shrub, size: shrubSize, x: 30, y: 44 },
+	{ src: shrub, size: shrubSize, x: 70, y: 42 },
+	{ src: shrub, size: shrubSize, x: 85, y: 51 },
+	{ src: shrub, size: shrubSize, x: 50, y: 78 },
+	{ src: shrub, size: shrubSize, x: 55, y: 93 },
+	{ src: shrub, size: shrubSize, x: 91, y: 93 },
 	{ src: sunflower, size: sunflowerSize, x: 10, y: 66 },
 	{ src: sunflower, size: sunflowerSize, x: 11, y: 81 },
 	{ src: sunflower, size: sunflowerSize, x: 31, y: 87 },
@@ -40,7 +49,7 @@ export default function TerrainObjects() {
 							left: `${terrainPart.x}%`,
 						}}
 						className={cn(
-							guideClass,
+							// guideClass,
 							spriteClass,
 						)}
 						unoptimized
