@@ -12,16 +12,16 @@ const startY = 64;
 const tileSize = spriteSize(16);
 
 const GRASS_PARTS = [
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
-	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ null, null, null, grass, grass, grass, grass, grass, grass, grass, grass, null, null, null ],
+	[ null, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, null, null ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, null, null ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, null ],
+	[ null, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ null, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, null ],
+	[ grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, null, null ],
+	[ null, null, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, null, null ],
+	[ null, null, null, grass, grass, grass, grass, grass, grass, grass, grass, null, null, null ],
 ];
 
 export default function AreaGrass() {
