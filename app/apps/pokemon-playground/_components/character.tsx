@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "cn"
-import { spriteSize } from "../_lib/utils";
+import { spriteSize, clampToCanvas, type Position } from "../_lib/utils";
 
 import charStill from '../_assets/character/char-still.png';
 import charMotion from '../_assets/character/char-motion.png';
@@ -47,8 +47,7 @@ const DIRECTION_SPRITES: Record<Direction, SpriteFrames> = {
 
 export default function Character() {
 	// STATE
-	const [ coordX, setCoordX ] = useState(47);
-	const [ coordY, setCoordY ] = useState(56);
+	const [ position, setPosition ] = useState<Position>({x: 47, y: 56});
 	const [ facingDirection, setFacingDirection ] = useState<Direction>("down");
 	const [ isMoving, setIsMoving ] = useState(false);
 	const [ walkFrameIndex, setWalkFrameIndex ] = useState(0);
@@ -98,8 +97,15 @@ export default function Character() {
 				setFacingDirection(currentDirection);
 
 				const { dx, dy } = DIRECTION_DELTAS[currentDirection];
-				setCoordX((x) => x + dx * MOVE_SPEED);
-				setCoordY((y) => y + dy * MOVE_SPEED);
+
+				setPosition((pos) => {
+					const nextPosition = {
+						x: pos.x + dx * MOVE_SPEED,
+						y: pos.y + dy * MOVE_SPEED
+					};
+
+					return clampToCanvas(nextPosition, CHARACTER_SIZE)
+				});
 
 				walkFrameCounter.current += 1;
 
@@ -133,8 +139,8 @@ export default function Character() {
 		<>
 			<div
 				style={{
-					top: `${coordY}%`,
-					left: `${coordX}%`,
+					top: `${position.y}%`,
+					left: `${position.x}%`,
 					width: `${CHARACTER_SIZE}%`,
 					height: `${CHARACTER_SIZE}%`,
 					backgroundImage: `url(${sheet.src})`,
