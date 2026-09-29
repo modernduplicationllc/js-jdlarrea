@@ -3,17 +3,17 @@ import { spriteSize } from "../_lib/utils";
 import { cn } from "cn"
 
 import shrub from "../_assets/shrub.png";
-import tree from "../_assets/tree.png";
 import sunflower from "../_assets/sunflower.png";
+import tree from "../_assets/tree.png";
 
 const spriteClass = 'h-auto absolute z-1 pointer-events-none';
 const guideClass = 'outline outline-black/15';
 
 const shrubSize = spriteSize(32);
-const treeSize = spriteSize(32);
 const sunflowerSize = spriteSize(32);
+const treeSize = spriteSize(32);
 
-const TERRAIN_PARTS = [
+const SHRUB_PARTS = [
 	{ src: shrub, size: shrubSize, x: 10, y: 50 },
 	{ src: shrub, size: shrubSize, x: 48, y: 9 },
 	{ src: shrub, size: shrubSize, x: 40, y: 16 },
@@ -26,27 +26,48 @@ const TERRAIN_PARTS = [
 	{ src: shrub, size: shrubSize, x: 50, y: 78 },
 	{ src: shrub, size: shrubSize, x: 55, y: 93 },
 	{ src: shrub, size: shrubSize, x: 91, y: 93 },
-	{ src: sunflower, size: sunflowerSize, x: 10, y: 66 },
-	{ src: sunflower, size: sunflowerSize, x: 11, y: 81 },
-	{ src: sunflower, size: sunflowerSize, x: 31, y: 87 },
-	{ src: sunflower, size: sunflowerSize, x: 41, y: 67 },
-	// { src: tree, size: treeSize, x: 50, y: 15 },
-	// { src: tree, size: treeSize, x: 70, y: 60 },
+];
+
+const SUNFLOWER_PARTS = [
+	{ src: sunflower, size: sunflowerSize, x: 9, y: 65 },
+	{ src: sunflower, size: sunflowerSize, x: 10, y: 85 },
+	{ src: sunflower, size: sunflowerSize, x: 43, y: 67 },
+	{ src: sunflower, size: sunflowerSize, x: 33, y: 87 },
 ];
 
 export default function TerrainObjects() {
 	return (
 		<>
 			{
-				TERRAIN_PARTS.map( (terrainPart) => (
+				SHRUB_PARTS.map( (shrubPart) => (
 					<Image
-						key={`${terrainPart.x}-${terrainPart.y}`}
-						src={terrainPart.src}
+						key={`${shrubPart.x}-${shrubPart.y}`}
+						src={shrubPart.src}
 						alt=""
 						style={{
-							width: `${terrainPart.size}%`,
-							top: `${terrainPart.y}%`,
-							left: `${terrainPart.x}%`,
+							width: `${shrubPart.size}%`,
+							top: `${shrubPart.y}%`,
+							left: `${shrubPart.x}%`,
+						}}
+						className={cn(
+							// guideClass,
+							spriteClass,
+						)}
+						unoptimized
+					/>
+				))
+			}
+
+			{
+				SUNFLOWER_PARTS.map( (sunflowerPart) => (
+					<Image
+						key={`${sunflowerPart.x}-${sunflowerPart.y}`}
+						src={sunflowerPart.src}
+						alt=""
+						style={{
+							width: `${sunflowerPart.size}%`,
+							top: `${sunflowerPart.y}%`,
+							left: `${sunflowerPart.x}%`,
 						}}
 						className={cn(
 							// guideClass,

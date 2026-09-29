@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { spriteSize } from "../_lib/utils";
+import { spriteSize, gridToRects } from "../_lib/utils";
 import { cn } from "cn"
 
 import grass from "../_assets/grass.png";
@@ -23,6 +23,8 @@ const GRASS_PARTS = [
 	[ null, null, grass, grass, grass, grass, grass, grass, grass, grass, grass, grass, null, null ],
 	[ null, null, null, grass, grass, grass, grass, grass, grass, grass, grass, null, null, null ],
 ];
+
+export const GRASS_ZONE_BOXES = gridToRects( GRASS_PARTS, startX, startY, tileSize );
 
 export default function AreaGrass() {
 	return (

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { spriteSize } from "../_lib/utils";
+import { spriteSize, gridToRects } from "../_lib/utils";
 import { cn } from "cn"
 
 import lakeTl from "../_assets/lake/lake-tl.png";
@@ -29,6 +29,8 @@ const LAKE_PARTS = [
 	[ lakeBl, lakeBc, lakeCrnBl, lakeCc, lakeCc, lakeCc, lakeCc, lakeCr ],
 	[ null, null, lakeBl, lakeBc, lakeBc,lakeBc,lakeBc, lakeBr ],
 ];
+
+export const LAKE_ZONE_BOXES = gridToRects( LAKE_PARTS, startX, startY, tileSize );
 
 export default function AreaLake() {
 	return (

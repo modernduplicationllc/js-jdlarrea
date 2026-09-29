@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { spriteSize } from "../_lib/utils";
+import { spriteSize, gridToRects } from "../_lib/utils";
 import { cn } from "cn"
 
 import roofTl from "../_assets/house/roof-tl.png";
@@ -24,6 +24,8 @@ const HOUSE_PARTS = [
 	[ roofBl, roofBc, roofBr ],
 	[ houseL, houseC, houseR ],
 ];
+
+export const HOUSE_ZONE_BOXES = gridToRects( HOUSE_PARTS, startX, startY, tileSize );
 
 export default function AreaHouse() {
 	return (

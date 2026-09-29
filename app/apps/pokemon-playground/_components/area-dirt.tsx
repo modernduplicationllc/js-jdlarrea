@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { spriteSize } from "../_lib/utils";
+import { spriteSize, gridToRects } from "../_lib/utils";
 import { cn } from "cn"
 
 import dirtTl from "../_assets/dirt/dirt-tl.png";
@@ -30,6 +30,8 @@ const DIRT_PARTS = [
 	[ null, null, dirtCl, dirtCc, dirtCc, dirtCr ],
 	[ null, null, dirtBl, dirtBc, dirtBc, dirtBr ],
 ];
+
+export const DIRT_ZONE_BOXES = gridToRects( DIRT_PARTS, startX, startY, tileSize );
 
 export default function AreaDirt() {
 	return (
