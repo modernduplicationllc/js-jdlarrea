@@ -8,3 +8,10 @@ export type Rect = {
 	width: number,
 	height: number
 }
+
+export type ZoneGroup = {
+	name: "trees" | "lake" | "dirt" | "grass" | "house",
+	rects: Rect[],
+	debugColor: string,
+	kind: "solid" | "walkable"
+}

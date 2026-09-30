@@ -22,7 +22,7 @@ export default function DebugZones() {
 								opacity: .3
 							}}
 							className={rectClass}
-							data-wander={group.wander}
+							data-kind={group.kind}
 						/>
 					})
 				))
