@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "cn"
-import { spriteSize, clampToCanvas, type Position } from "../_lib/utils";
+import { spriteSize, clampToCanvas } from "../_lib/utils";
+import { type Position, type Direction } from "../_lib/types";
+import DPad from "./d-pad";
 
-import charStill from '../_assets/character/char-still.png';
-import charMotion from '../_assets/character/char-motion.png';
+import charStill from "../_assets/character/char-still.png";
+import charMotion from "../_assets/character/char-motion.png";
 
-type Direction = "up" | "down" | "left" | "right";
 type SpriteFrames = {
 	still: number;
 	walk: [number, number];
@@ -155,40 +156,7 @@ export default function Character() {
 				)}
 			/>
 
-			<div className="controls absolute z-100 -bottom-10 right-0">
-				<Button
-					onPointerDown={() => startMoving("left")}
-					onPointerUp={() => stopMoving("left")}
-					onPointerLeave={() => stopMoving("left")}
-					onPointerCancel={() => stopMoving("left")}
-				>
-					<ArrowLeft />
-				</Button>
-				<Button
-					onPointerDown={() => startMoving("right")}
-					onPointerUp={() => stopMoving("right")}
-					onPointerLeave={() => stopMoving("right")}
-					onPointerCancel={() => stopMoving("right")}
-				>
-					<ArrowRight />
-				</Button>
-				<Button
-					onPointerDown={() => startMoving("up")}
-					onPointerUp={() => stopMoving("up")}
-					onPointerLeave={() => stopMoving("up")}
-					onPointerCancel={() => stopMoving("up")}
-				>
-					<ArrowUp />
-				</Button>
-				<Button
-					onPointerDown={() => startMoving("down")}
-					onPointerUp={() => stopMoving("down")}
-					onPointerLeave={() => stopMoving("down")}
-					onPointerCancel={() => stopMoving("down")}
-				>
-					<ArrowDown />
-				</Button>
-			</div>
+			<DPad startMoving={startMoving} stopMoving={stopMoving} />
 		</>
 	)
 }

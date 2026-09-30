@@ -1,13 +1,5 @@
-const SIZE_CANVAS = 640;
-
-export type Position = { x: number, y:number };
-
-export type Rect = {
-	x: number,
-	y: number,
-	width: number,
-	height: number
-}
+import { SIZE_CANVAS } from "./constants";
+import { type Position, type Rect } from "./types";
 
 export function spriteSize( px: number ) {
 	return (px / SIZE_CANVAS) * 100;
