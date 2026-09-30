@@ -37,8 +37,8 @@ export default function AreaTreeCluster() {
 			{
 				TREE_CLUSTER_GRID.map((clusterRow, rowIndex) => (
 					clusterRow.map((tileImg, colIndex) => {
-						const xCoord = colIndex * tileSize;
-						const yCoord = rowIndex * tileSize;
+						const xCoord = startX + colIndex * tileSize;
+						const yCoord = startY + rowIndex * tileSize;
 
 						return tileImg && <Image
 							key={`${rowIndex}-${colIndex}`}

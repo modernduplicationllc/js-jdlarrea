@@ -6,6 +6,7 @@ import AreaGrass from "./_components/area-grass";
 import AreaLake from "./_components/area-lake";
 import AreaDirt from "./_components/area-dirt";
 import TerrainObjects from "./_components/terrain-objects";
+import DebugZones from "./_components/debug-zones";
 
 export default function Page() {
 	return (
@@ -36,6 +37,8 @@ export default function Page() {
 				<AreaLake />
 				<AreaDirt />
 				<TerrainObjects />
+
+				<DebugZones />
 				</div>
 			</section>
 	)

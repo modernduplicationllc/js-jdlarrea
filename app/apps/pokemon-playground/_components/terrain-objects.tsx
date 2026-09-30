@@ -35,6 +35,15 @@ const SUNFLOWER_PARTS = [
 	{ src: sunflower, size: sunflowerSize, x: 33, y: 87 },
 ];
 
+const TREEFILLER_PARTS = [
+	{ src: tree, size: treeSize, x: 40, y: 0 },
+	{ src: tree, size: treeSize, x: 36, y: 5 },
+	{ src: tree, size: treeSize, x: 35, y: 10 },
+	{ src: tree, size: treeSize, x: 30, y: 14 },
+	{ src: tree, size: treeSize, x: 20, y: 18 },
+	{ src: tree, size: treeSize, x: 16, y: 25 },
+];
+
 export default function TerrainObjects() {
 	return (
 		<>
@@ -68,6 +77,26 @@ export default function TerrainObjects() {
 							width: `${sunflowerPart.size}%`,
 							top: `${sunflowerPart.y}%`,
 							left: `${sunflowerPart.x}%`,
+						}}
+						className={cn(
+							// guideClass,
+							spriteClass,
+						)}
+						unoptimized
+					/>
+				))
+			}
+
+			{
+				TREEFILLER_PARTS.map( (treefillerPart) => (
+					<Image
+						key={`${treefillerPart.x}-${treefillerPart.y}`}
+						src={treefillerPart.src}
+						alt=""
+						style={{
+							width: `${treefillerPart.size}%`,
+							top: `${treefillerPart.y}%`,
+							left: `${treefillerPart.x}%`,
 						}}
 						className={cn(
 							// guideClass,

@@ -150,7 +150,7 @@ export default function Character() {
 					imageRendering: "pixelated",
 				}}
 				className={cn(
-					guideClass,
+					// guideClass,
 					'absolute z-10'
 				)}
 			/>
