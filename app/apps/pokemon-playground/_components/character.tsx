@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "cn"
 import { spriteSize, clampToCanvas } from "../_lib/utils";
 import { type Position, type Direction } from "../_lib/types";
@@ -32,13 +30,6 @@ const DIRECTION_DELTAS: Record<Direction, {dx: number; dy: number;}> = {
 	right: { dx: 1, dy: 0 },
 }
 
-const KEY_DIRECTIONS: Record<string, Direction> = {
-	ArrowUp: "up",
-	ArrowDown: "down",
-	ArrowLeft: "left",
-	ArrowRight: "right",
-}
-
 const DIRECTION_SPRITES: Record<Direction, SpriteFrames> = {
 	up: { still: 1, walk: [2, 3] },
 	down: { still: 0, walk: [0, 1] },
@@ -64,28 +55,6 @@ export default function Character() {
 	function stopMoving(direction: Direction) {
 		activeDirections.current.delete(direction);
 	}
-
-	// KEYBOARD - set directions
-	useEffect(() => {
-		function handleKeyDown( e: KeyboardEvent ) {
-			const direction = KEY_DIRECTIONS[e.key];
-			if (direction) startMoving(direction);
-		}
-
-		function handleKeyUp( e: KeyboardEvent ) {
-			const direction = KEY_DIRECTIONS[e.key];
-			if (direction) stopMoving(direction);
-		}
-
-		window.addEventListener("keydown", handleKeyDown);
-		window.addEventListener("keyup", handleKeyUp);
-
-		return () => {
-			window.removeEventListener("keydown", handleKeyDown);
-			window.removeEventListener("keyup", handleKeyUp);
-		}
-
-	}, []);
 
 	// GAME LOOP - runs every frame
 	useEffect(() => {
