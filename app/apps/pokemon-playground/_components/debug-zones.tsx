@@ -1,4 +1,5 @@
 import { ALL_ZONES } from "../_lib/zones";
+import { spriteSize } from "../_lib/utils";
 
 const DEBUG_ON = true;
 const rectClass = 'absolute z-5 pointer-events-none';
@@ -8,6 +9,15 @@ export default function DebugZones() {
 
 	return (
 		<>
+			<div
+				aria-hidden="true"
+				className="absolute inset-0 pointer-events-none"
+				style={{
+					backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px)`,
+					backgroundSize: `${spriteSize(16)}% ${spriteSize(16)}%`,
+				}}
+			/>
+
 			{
 				ALL_ZONES.map( group => (
 					group.rects.map( (rect, i) => {

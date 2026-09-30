@@ -1,5 +1,5 @@
 import { SIZE_CANVAS } from "./constants";
-import { type Position, type Rect } from "./types";
+import { type ZoneGroup, type Position, type Rect } from "./types";
 
 export function spriteSize( px: number ) {
 	return (px / SIZE_CANVAS) * 100;
@@ -44,4 +44,14 @@ export function gridToRects( grid: unknown[][], startX: number, startY: number, 
 	});
 
 	return rects;
+}
+
+export function findOverlappingZone( zones:ZoneGroup[], box:Rect): ZoneGroup | null {
+	const overlappedZone = zones.find(zone => (
+		zone.rects.some(rect => (
+			rectsOverlap(rect, box)
+		))
+	));
+
+	return overlappedZone ?? null;
 }

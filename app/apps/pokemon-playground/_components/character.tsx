@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { cn } from "cn"
-import { spriteSize, clampToCanvas } from "../_lib/utils";
+import { spriteSize, clampToCanvas, findOverlappingZone } from "../_lib/utils";
 import { type Position, type Direction } from "../_lib/types";
-import DPad from "./d-pad";
+import { SOLID_ZONES, WALKABLE_ZONES } from "../_lib/zones";
 
+import DPad from "./d-pad";
 import charStill from "../_assets/character/char-still.png";
 import charMotion from "../_assets/character/char-motion.png";
 
@@ -74,7 +75,16 @@ export default function Character() {
 						y: pos.y + dy * MOVE_SPEED
 					};
 
-					return clampToCanvas(nextPosition, CHARACTER_SIZE)
+					const newPosition = clampToCanvas(nextPosition, CHARACTER_SIZE);
+
+					const solidZone = findOverlappingZone( SOLID_ZONES, {...newPosition, width: CHARACTER_SIZE, height: CHARACTER_SIZE} );
+
+					if (solidZone) {
+						// do something.
+						return pos;
+					}
+
+					return newPosition;
 				});
 
 				walkFrameCounter.current += 1;
