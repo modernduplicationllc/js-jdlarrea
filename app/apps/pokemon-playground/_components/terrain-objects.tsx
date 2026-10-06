@@ -40,8 +40,9 @@ const TREEFILLER_PARTS = [
 	{ src: tree, size: treeSize, x: 36, y: 5 },
 	{ src: tree, size: treeSize, x: 35, y: 10 },
 	{ src: tree, size: treeSize, x: 30, y: 14 },
-	{ src: tree, size: treeSize, x: 20, y: 18 },
+	{ src: tree, size: treeSize, x: 20.25, y: 19 },
 	{ src: tree, size: treeSize, x: 16, y: 25 },
+	{ src: tree, size: treeSize, x: 10.5, y: 30 },
 ];
 
 export default function TerrainObjects() {

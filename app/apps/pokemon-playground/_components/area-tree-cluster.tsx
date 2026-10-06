@@ -26,7 +26,7 @@ const TREE_CLUSTER_GRID = [
 	[ clusterCc, clusterCc, clusterCc, clusterCc, clusterCc, clusterCc, clusterCr ],
 	[ clusterCc, clusterCc, clusterCc, clusterCc, clusterCr ],
 	[ clusterCc, clusterCc, clusterCc, clusterBr ],
-	[ clusterBl, clusterCc, clusterBr ],
+	[ clusterCc, clusterCc, clusterBr ],
 ];
 
 export const TREE_ZONE_BOXES = gridToRects( TREE_CLUSTER_GRID, startX, startY, tileSize );
