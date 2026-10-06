@@ -67,16 +67,18 @@ File map (all under `app/apps/pokemon-playground/`):
 
 | File | Job |
 |---|---|
-| `page.tsx` | Server component. Renders the canvas + all areas, `Character`, `DebugZones`. |
+| `page.tsx` | Server component. Page + `#game-window` layout, debug grid lines, `<ArtBoardElements />` and `<GameEngine />` as **siblings**. |
+| `_components/artboard-elements.tsx` | Server component. All static scenery (areas, terrain, `DebugZones`). Sibling of `GameEngine`, so game-state re-renders never touch the ~250 images, and it ships no client JS. |
+| `_components/game-engine.tsx` | `'use client'` boundary. Owns shared game state (`activeMode: GameModes` = `"exploring" \| "interaction" \| "sleeping"`), renders `Character` (and soon the dialog), passes `activeMode` down and `handleBump` as `onBump`. |
 | `_components/area-*.tsx` (lake, tree-cluster, dirt, grass, house) | Each draws its tile grid (`*_PARTS` 2D array, `null` = empty cell) **and** exports its hitboxes as a named export `*_ZONE_BOXES = gridToRects(PARTS, startX, startY, tileSize)` below the grid. Default export = the component. |
 | `_components/terrain-objects.tsx` | Shrubs (decorative, no collision) + sunflowers (collision TBD). |
 | `_components/character.tsx` | `'use client'`. Position/facing/walk state, the `requestAnimationFrame` game loop (`tick`), sprite rendering. Owns `startMoving`/`stopMoving`; renders `<DPad>` and passes them down as props. |
 | `_components/d-pad.tsx` | On-screen buttons (`BUTTONS: ButtonObject[]` of `{ direction, ariaLabel, Icon }` + one `.map()`, `<Icon />` renders a component stored in a variable) **and** the keyboard listeners (`KEY_DIRECTIONS`, `preventDefault()` only for our arrow keys so the page doesn't scroll). Props typed as `DPadProps` with `(direction: Direction) => void`. No `'use client'` needed — only imported by `Character`, already client. |
 | `_components/debug-zones.tsx` | Hitbox overlay: maps `ALL_ZONES` → one translucent `<div>` per rect, colored by `debugColor` (inline `style`, not a dynamic Tailwind class), `z-5` (above areas `z-1`, below character `z-10`), `pointer-events-none`, `DEBUG_ON` flag → `return null`. Key = `${group.name}-${i}`. |
-| `_lib/types.ts` | **Shared** types only: `Position`, `Rect`, `Direction`. |
-| `_lib/constants.tsx` | `SIZE_CANVAS = 640`. (Should be renamed `.ts` — no JSX in it.) |
-| `_lib/utils.ts` | Pure helpers: `spriteSize`, `clamp`, `clampToCanvas`, `rectsOverlap`, `gridToRects`. |
-| `_lib/zones.ts` | **Single source of truth for areas**: `ZoneGroup` type + `ALL_ZONES` (`{ name, rects, debugColor, wander }` per area). Both the overlay and (soon) collision read from here. |
+| `_lib/types.ts` | **Shared** types only: `Position`, `Rect`, `Direction`, `ZoneGroup`, `GameModes`. |
+| `_lib/constants.ts` | `SIZE_CANVAS = 640`. |
+| `_lib/utils.ts` | Pure helpers: `spriteSize`, `clamp`, `clampToCanvas`, `rectsOverlap`, `gridToRects`, `findOverlappingZone`. |
+| `_lib/zones.ts` | **Single source of truth for areas**: `ALL_ZONES` (`{ name, rects, debugColor, kind }` per area) + derived `SOLID_ZONES` / `WALKABLE_ZONES`. Both the overlay and collision read from here. |
 
 Conventions agreed:
 - **Double quotes** (matches the rest of the repo + Next/shadcn/Prettier defaults). Backticks only for interpolation.
@@ -102,14 +104,15 @@ Conventions agreed:
 **Renumbered again 2026-09-27** to match the redesigned area model. Each step adds one new concept.
 
 - [x] 5. Collision foundation — done 2026-09-30. `Rect` (in `types.ts`) + `rectsOverlap(a, b)` (strict `<`, so touching edges ≠ overlap — lets the character slide along a shore without getting stuck) + `gridToRects(grid, startX, startY, tileSize)` in `utils.ts`. **Hitboxes are generated from the same grid that draws each area** (one tile-sized rect per non-null cell) — visuals and hitboxes can't drift apart. ~90 solid rects checked per frame is trivially cheap; interior tiles are unreachable but not worth pruning. Debug overlay built (`debug-zones.tsx`). Caught via review: `area-tree-cluster.tsx`'s `.map()` ignored `startX`/`startY` while its hitboxes used them (invisible drift the moment it moved) — fixed.
-- [ ] 6. Solid blocking — **next up.** Plan as of 2026-09-30:
-  1. In `zones.ts`: export `ZoneGroup`; export a derived list of **solid zone groups** with `.filter()` — **keep them grouped, don't `flatMap` to a flat rect list** (reversed from the earlier suggestion): step 8 needs to know *which* area blocked you (lake → fishing prompt, trees → bird prompt), and a flat list loses the group `name`. Derive at module top level (runs once), not in `Character` (would re-run every render, ~60×/s).
-  2. Consider replacing `wander: boolean` with `kind: "solid" | "wander" | "trigger"` — the house is neither solid nor wander; a boolean can't express a third kind.
-  3. **Settle the house first** — it's currently `wander: false`, so filtering for solid will make it a wall.
-  4. Helper in `utils.ts` returning **the first group with any rect overlapping the character's rect, or `null`** (lesson question posed: which array methods — `.find()` over groups + `.some()` over each group's rects). One function serves step 6 (`null` = not blocked) and step 8 (`.name` = which prompt).
-  5. Character hitbox = **whole sprite** (user's decision 2026-09-30 — stops a body-length short when approaching the lake/trees from below; acceptable for this demo). Build it via one function (e.g. `getCharacterHitbox(position)` → `{ ...position, width: CHARACTER_SIZE, height: CHARACTER_SIZE }`) so switching to a feet-only box later is a one-line change.
-  6. In the `setPosition` updater: propose → `clampToCanvas` → blocked? `return pos` (keep old position) : `return next`.
-  7. Decide walk-in-place-vs-stand animation when blocked (original Game Boy games walk in place against walls, with a bump sound).
+- [x] 6. Solid blocking + first piece of state lifting — done 2026-10-06. Final shape:
+  - `zones.ts`: `ALL_ZONES` uses `kind: "solid" | "walkable"` (union, not boolean/string) and `name` as a union; `SOLID_ZONES` / `WALKABLE_ZONES` derived with `.filter()` at module top level, **kept grouped** (no `flatMap`) so callers know *which* zone was hit. `ZoneGroup` type lives in `types.ts`. **House is `solid` for now** (user's call: "triggerable wherever it is", refine later).
+  - `utils.ts`: `findOverlappingZone(zones, box): ZoneGroup | null` — pure, zones passed as a parameter (an earlier version imported `SOLID_ZONES` into `utils.ts`, creating a circular import utils → zones → area files → utils). `.find()` over groups + `.some()` over rects, `?? null`.
+  - `character.tsx` loop: **"two worlds" model** — the `rAF` loop runs from the mount-time closure and can't see new props/state; React can't see ref changes. Bridges: React → loop = mirror into a ref (`activeModeRef` synced by `useEffect(..., [activeMode])`); loop → React = setters / callbacks. `positionRef` (loop's working copy) + `position` state (for rendering), both seeded from `CHAR_START_POSITION`. Collision runs in plain `tick` code (propose → clamp → `findOverlappingZone(SOLID_ZONES, box)` → blocked: `stopMoving(currentDirection)` + `setIsMoving(false)` + `onBump(...)`; else write ref + `setPosition(next)`). **The `setPosition` updater was removed** — calling `onBump` inside it caused "Cannot update a component (`GameEngine`) while rendering a different component (`Character`)" (updaters run during render; no side effects in them).
+  - **"Schedule first" loop pattern:** `requestAnimationFrame(tick)` is the *first* line of `tick` (so no early `return` can kill the loop — bit the user twice) plus one kickoff call after `tick` is defined. A frozen-tab incident came from an intermediate save without the rAF wrapper (direct/synchronous recursion), not from the loop itself.
+  - Freeze: `tick` returns early while `activeModeRef.current !== "exploring"`.
+  - Verified in browser: stops flush at solids, slides along edges, exactly one `onBump` per bump even with key repeat, standing pose while frozen.
+  - Character hitbox = whole sprite (inline `{ ...newPosition, width, height }`).
+  - Still open: walk-in-place vs. stand (currently stand), `onBump` passes a string (switch to `ZoneGroup` in step 7), stale `onBump` in the mount-time closure (lint `exhaustive-deps` warning — fix with a ref mirror like `activeModeRef`), `e.repeat` guard.
 - [ ] 7. State restructure + first dialog — house sleep/wake. Lift the state dialogs need (game state, movement freeze) out of `character.tsx`; watch for re-rendering all ~250 area images at 60fps (memo the areas or keep position out of page-level state). Decide whether the house body is solid with a door trigger.
 - [ ] 8. Edge prompts — lake/trees "moving into the edge" detection (reuses step 6's block + held direction), prompt dialog, 3s spinning icon, pre-rolled result, no-encounter messages.
 - [ ] 9. Grass/dirt live tiles → shared encounter dialog with **hardcoded fake Pokémon** (throw / berry / run, catch number + threshold).

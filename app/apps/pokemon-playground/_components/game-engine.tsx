@@ -2,21 +2,28 @@
 
 import { useState } from "react";
 import Character from "./character";
-import { gameModes } from "../_lib/types";
+import DialogBox from "./dialog-box";
+import { type ZoneGroup } from "../_lib/types";
 
 export default function GameEngine() {
-	const [activeMode, setActiveMode] = useState<gameModes>('exploring');
+	const [activeZone, setActiveZone] = useState<ZoneGroup|null>(null);
 
-	function handleBump(message: string) {
-		console.log(message);
-		console.log('updating Ref');
+	function handleBump( zone:ZoneGroup ) {
+		console.log(`Handling ${zone.kind} ${zone.name} Zone`);
 
-		setActiveMode('interaction');
+		setActiveZone(zone );
+	}
+
+	function handleClose() {
+		console.log(`Closed out ${activeZone?.name} zone.`);
+
+		setActiveZone( null );
 	}
 
 	return (
 		<>
-			<Character activeMode={activeMode} onBump={handleBump} />
+			<Character activeZone={activeZone} onBump={handleBump} />
+			<DialogBox activeZone={activeZone} closeDialog={handleClose} />
 		</>
 	)
 }

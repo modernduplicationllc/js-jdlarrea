@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { cn } from "cn"
 import { spriteSize, clampToCanvas, findOverlappingZone } from "../_lib/utils";
-import { type Position, type Direction } from "../_lib/types";
+import { type Position, type Direction, type ZoneGroup } from "../_lib/types";
 import { SOLID_ZONES, WALKABLE_ZONES } from "../_lib/zones";
 
 import DPad from "./d-pad";
@@ -16,6 +16,11 @@ type SpriteFrames = {
 	flip?: boolean;
 }
 
+type CharacterProps = {
+	activeZone: ZoneGroup | null,
+	onBump: (zone:ZoneGroup) => void
+}
+
 const guideClass = 'outline outline-black/15';
 
 const MOVE_SPEED = 0.1;
@@ -23,6 +28,7 @@ const CHARACTER_SIZE = spriteSize(32);
 const STILL_FRAME_COUNT = 3;
 const MOTION_FRAME_COUNT = 6;
 const WALK_FRAME_INTERVAL = 8;
+const CHAR_START_POSITION = {x: 47, y: 56};
 
 const DIRECTION_DELTAS: Record<Direction, {dx: number; dy: number;}> = {
 	up: { dx: 0, dy: -1 },
@@ -38,13 +44,15 @@ const DIRECTION_SPRITES: Record<Direction, SpriteFrames> = {
 	right: { still: 2, walk: [4, 5] },
 }
 
-export default function Character() {
+export default function Character({ activeZone, onBump }: CharacterProps) {
 	// STATE
-	const [ position, setPosition ] = useState<Position>({x: 47, y: 56});
+	const [ position, setPosition ] = useState<Position>(CHAR_START_POSITION);
 	const [ facingDirection, setFacingDirection ] = useState<Direction>("down");
 	const [ isMoving, setIsMoving ] = useState(false);
 	const [ walkFrameIndex, setWalkFrameIndex ] = useState(0);
 
+	const positionRef = useRef<Position>(CHAR_START_POSITION);
+	const activeZoneRef = useRef<ZoneGroup>(activeZone);
 	const activeDirections = useRef<Set<Direction>>(new Set());
 	const animationFrameId = useRef<number | null>(null);
 	const walkFrameCounter = useRef(0);
@@ -57,35 +65,43 @@ export default function Character() {
 		activeDirections.current.delete(direction);
 	}
 
+	// ACTIVE MODE - update mirrored Ref
+	useEffect(() => {
+		activeZoneRef.current = activeZone;
+	}, [activeZone]);
+
 	// GAME LOOP - runs every frame
 	useEffect(() => {
 		function tick() {
+			animationFrameId.current = requestAnimationFrame(tick);
+
+			if (activeZoneRef.current?.kind !== 'walkable') { return; }
+
 			const currentDirection = [...activeDirections.current].at(-1) ?? null;
 
-			setIsMoving(currentDirection !== null);
+			setIsMoving( currentDirection !== null);
 
 			if (currentDirection) {
 				setFacingDirection(currentDirection);
 
 				const { dx, dy } = DIRECTION_DELTAS[currentDirection];
 
-				setPosition((pos) => {
-					const nextPosition = {
-						x: pos.x + dx * MOVE_SPEED,
-						y: pos.y + dy * MOVE_SPEED
-					};
+				const nextPosition = {
+					x: positionRef.current.x + dx * MOVE_SPEED,
+					y: positionRef.current.y + dy * MOVE_SPEED
+				};
+				const newPosition = clampToCanvas(nextPosition, CHARACTER_SIZE);
 
-					const newPosition = clampToCanvas(nextPosition, CHARACTER_SIZE);
+				const solidZone = findOverlappingZone( SOLID_ZONES, {...newPosition, width: CHARACTER_SIZE, height: CHARACTER_SIZE} );
 
-					const solidZone = findOverlappingZone( SOLID_ZONES, {...newPosition, width: CHARACTER_SIZE, height: CHARACTER_SIZE} );
+				if (solidZone) {
+					setIsMoving(false);
 
-					if (solidZone) {
-						// do something.
-						return pos;
-					}
+					// do something.
+					onBump( solidZone );
 
-					return newPosition;
-				});
+					return;
+				}
 
 				walkFrameCounter.current += 1;
 
@@ -93,12 +109,13 @@ export default function Character() {
 					walkFrameCounter.current = 0;
 					setWalkFrameIndex((frame) => (frame === 0 ? 1 : 0));
 				}
+
+				positionRef.current = newPosition;
+				setPosition(newPosition);
 			}
 			else {
 				walkFrameCounter.current = 0;
 			}
-
-			animationFrameId.current = requestAnimationFrame(tick);
 		}
 
 		animationFrameId.current = requestAnimationFrame(tick);
