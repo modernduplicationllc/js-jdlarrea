@@ -35,6 +35,9 @@ export default function DPad( {startMoving, stopMoving}: DPadProps) {
 			const direction = KEY_DIRECTIONS[e.key];
 			if (direction) {
 				e.preventDefault();
+
+				if (e.repeat) return;
+
 				startMoving(direction);
 			}
 		}

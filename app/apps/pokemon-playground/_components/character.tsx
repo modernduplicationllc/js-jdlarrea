@@ -75,7 +75,7 @@ export default function Character({ activeZone, onBump }: CharacterProps) {
 		function tick() {
 			animationFrameId.current = requestAnimationFrame(tick);
 
-			if (activeZoneRef.current?.kind !== 'walkable') { return; }
+			if (activeZoneRef.current && activeZoneRef.current.kind !== 'walkable') { return; }
 
 			const currentDirection = [...activeDirections.current].at(-1) ?? null;
 
@@ -96,6 +96,7 @@ export default function Character({ activeZone, onBump }: CharacterProps) {
 
 				if (solidZone) {
 					setIsMoving(false);
+					stopMoving(currentDirection);
 
 					// do something.
 					onBump( solidZone );
